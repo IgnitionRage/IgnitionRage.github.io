@@ -5,16 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@IgnitionRage Social Links</title>
     <style>
+        :root {
+            --fire-red: #ff4500;
+            --fire-orange: #ff7b00;
+            --fire-yellow: #ffcc00;
+            --dark-bg: #0a0a0a;
+        }
+        
         body {
             margin: 0;
             padding: 0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #121212 0%, #2d2d2d 100%);
+            background: #0a0a0a;
             color: #fff;
             min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
             overflow-x: hidden;
         }
         
@@ -25,22 +29,36 @@
             position: relative;
             z-index: 1;
             padding: 20px 10px;
-            margin: 40px 0;
+            margin: 60px auto 40px;
         }
         
         h1 {
-            font-size: clamp(2rem, 5vw, 3rem);
+            font-size: clamp(2rem, 5vw, 3.5rem);
             margin-bottom: 0.5rem;
-            background: linear-gradient(90deg, #ff6b6b, #ffa6a6);
+            background: linear-gradient(90deg, var(--fire-red), var(--fire-orange), var(--fire-yellow));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            text-shadow: 0 2px 15px rgba(255, 107, 107, 0.3);
+            text-shadow: 0 2px 15px rgba(255, 107, 107, 0.5);
+            font-weight: 800;
+            letter-spacing: 1px;
+            animation: flicker 3s infinite alternate;
+        }
+        
+        @keyframes flicker {
+            0%, 19.999%, 22%, 62.999%, 64%, 64.999%, 70%, 100% {
+                opacity: 1;
+            }
+            20%, 21.999%, 63%, 63.999%, 65%, 69.999% {
+                opacity: 0.8;
+            }
         }
         
         .subtitle {
             font-size: clamp(0.9rem, 3vw, 1.2rem);
-            opacity: 0.8;
+            opacity: 0.9;
             margin-bottom: 2rem;
+            color: var(--fire-yellow);
+            text-shadow: 0 0 5px rgba(255, 204, 0, 0.5);
         }
         
         .social-links {
@@ -58,25 +76,45 @@
             width: calc(50% - 16px);
             max-width: 180px;
             padding: 15px 10px;
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 69, 0, 0.15);
             border-radius: 12px;
             backdrop-filter: blur(5px);
             color: white;
             text-decoration: none;
             transition: all 0.3s ease;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 123, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .social-link:before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--fire-red), var(--fire-orange));
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s ease;
+        }
+        
+        .social-link:hover:before {
+            transform: scaleX(1);
         }
         
         .social-link:hover, .social-link:active {
             transform: translateY(-5px);
-            background: rgba(255, 255, 255, 0.2);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 123, 0, 0.25);
+            box-shadow: 0 10px 20px rgba(255, 69, 0, 0.2);
+            border: 1px solid rgba(255, 204, 0, 0.5);
         }
         
         .social-link i {
             font-size: clamp(18px, 4vw, 24px);
             margin-right: 8px;
+            color: var(--fire-yellow);
         }
         
         .social-link span {
@@ -89,8 +127,21 @@
             height: 120px;
             border-radius: 50%;
             object-fit: cover;
-            border: 4px solid rgba(255, 107, 107, 0.7);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            border: 4px solid var(--fire-orange);
+            box-shadow: 0 0 20px rgba(255, 123, 0, 0.5);
+            animation: pulse 3s infinite;
+        }
+        
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 20px rgba(255, 123, 0, 0.5);
+            }
+            50% {
+                box-shadow: 0 0 30px rgba(255, 69, 0, 0.8);
+            }
+            100% {
+                box-shadow: 0 0 20px rgba(255, 123, 0, 0.5);
+            }
         }
 
         .particles {
@@ -106,14 +157,13 @@
         .particle {
             position: absolute;
             border-radius: 50%;
-            background: #AA4203;
             animation: float 15s infinite linear;
         }
 
         @keyframes float {
             0% {
                 transform: translateY(0) rotate(0deg);
-                opacity: 1;
+                opacity: 0.8;
             }
             100% {
                 transform: translateY(-1000px) rotate(720deg);
@@ -126,18 +176,130 @@
             width: 120px;
             height: 120px;
             border-radius: 50%;
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 69, 0, 0.2);
             display: flex;
             align-items: center;
             justify-content: center;
-            color: rgba(255, 255, 255, 0.5);
+            color: var(--fire-yellow);
+        }
+        
+        /* Navigation Bar */
+        .nav-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            border-bottom: 1px solid var(--fire-red);
+            box-shadow: 0 2px 15px rgba(255, 69, 0, 0.2);
+        }
+        
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0.8rem 2rem;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: white;
+            text-decoration: none;
+        }
+        
+        .logo i {
+            color: var(--fire-red);
+            margin-right: 8px;
+            font-size: 1.5rem;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+        
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            position: relative;
+        }
+        
+        .nav-link:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, var(--fire-red), var(--fire-orange));
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+        
+        .nav-link:hover:after {
+            transform: scaleX(1);
+        }
+        
+        .nav-link:hover {
+            color: var(--fire-yellow);
+        }
+        
+        .nav-link.active {
+            background: rgba(255, 69, 0, 0.15);
+            color: var(--fire-yellow);
+        }
+        
+        .mobile-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Fire effect for background */
+        .fire-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(ellipse at bottom, #1b1b1b 0%, #090a0f 100%);
+            z-index: -1;
+        }
+        
+        .fire-glow {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 150%;
+            height: 150%;
+            background: 
+                radial-gradient(ellipse at center, rgba(255, 69, 0, 0.15) 0%, 
+                rgba(10, 10, 10, 0) 70%);
+            z-index: -1;
+            pointer-events: none;
         }
 
         /* Mobile-specific styles */
-        @media (max-width: 600px) {
+        @media (max-width: 768px) {
             .container {
                 padding: 15px 10px;
-                margin: 20px 0;
+                margin: 60px 0 20px;
                 width: 95%;
             }
             
@@ -159,6 +321,43 @@
                 width: 100px;
                 height: 100px;
             }
+            
+            .nav-container {
+                padding: 0.8rem 1rem;
+            }
+            
+            .nav-links {
+                position: fixed;
+                top: 60px;
+                left: 0;
+                width: 100%;
+                flex-direction: column;
+                background: rgba(10, 10, 10, 0.95);
+                padding: 1rem 0;
+                gap: 0;
+                transform: translateY(-150%);
+                transition: transform 0.3s ease;
+                border-bottom: 1px solid var(--fire-red);
+            }
+            
+            .nav-links.active {
+                transform: translateY(0);
+            }
+            
+            .nav-link {
+                width: 100%;
+                padding: 1rem 2rem;
+                text-align: center;
+                border-radius: 0;
+            }
+            
+            .nav-link:after {
+                display: none;
+            }
+            
+            .mobile-toggle {
+                display: block;
+            }
         }
 
         /* For extremely small screens */
@@ -173,7 +372,26 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css">
 </head>
 <body>
+    <div class="fire-background"></div>
+    <div class="fire-glow"></div>
     <div class="particles" id="particles"></div>
+    
+    <!-- Navigation Bar -->
+    <nav class="nav-bar">
+        <div class="nav-container">
+            <a href="#" class="logo">
+                <i class="fas fa-fire"></i>
+                IgnitionRage
+            </a>
+            <div class="nav-links" id="navLinks">
+                <a href="#" class="nav-link active">Home</a>
+                <a href="#social" class="nav-link">Social</a>
+            </div>
+            <button class="mobile-toggle" id="mobileToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
     
     <div class="container">
         <div id="profile-container">
@@ -182,7 +400,7 @@
         <h1>@IgnitionRage</h1>
         <div class="subtitle">Connect with The StreamTeam!</div>
         
-        <div class="social-links">
+        <div class="social-links" id="social">
             <a href="https://x.com/TheIgnitionRage" class="social-link">
                 <i class="fa-brands fa-x-twitter"></i>
                 <span>Twitter</span>
@@ -203,10 +421,11 @@
     </div>
 
     <script>
-        // Create fewer particles on mobile for better performance
+        // Create particles with fire colors
         const particlesContainer = document.getElementById('particles');
         const isMobile = window.innerWidth <= 768;
         const particleCount = isMobile ? 15 : 30;
+        const fireColors = ['#ff4500', '#ff7b00', '#ffcc00', '#ff5722', '#ff9800'];
         
         for (let i = 0; i < particleCount; i++) {
             const particle = document.createElement('div');
@@ -221,6 +440,10 @@
             // Random position
             particle.style.left = `${Math.random() * 100}%`;
             particle.style.top = `${Math.random() * 100}%`;
+            
+            // Random fire color
+            const colorIndex = Math.floor(Math.random() * fireColors.length);
+            particle.style.background = fireColors[colorIndex];
             
             // Random opacity
             particle.style.opacity = Math.random() * 0.5 + 0.1;
@@ -265,6 +488,62 @@
                 img.className = 'profile-pic';
                 profileContainer.appendChild(img);
             });
+            
+        // Mobile navigation toggle
+        const mobileToggle = document.getElementById('mobileToggle');
+        const navLinks = document.getElementById('navLinks');
+        
+        mobileToggle.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            const icon = mobileToggle.querySelector('i');
+            if (navLinks.classList.contains('active')) {
+                icon.className = 'fas fa-times';
+            } else {
+                icon.className = 'fas fa-bars';
+            }
+        });
+        
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                // Only process links with hash
+                if (this.getAttribute('href').startsWith('#')) {
+                    e.preventDefault();
+                    
+                    // Hide mobile menu if open
+                    navLinks.classList.remove('active');
+                    mobileToggle.querySelector('i').className = 'fas fa-bars';
+                    
+                    // Get target element
+                    const targetId = this.getAttribute('href').substring(1);
+                    if (targetId) {
+                        const targetElement = document.getElementById(targetId);
+                        if (targetElement) {
+                            // Scroll to element with offset for navbar
+                            const navHeight = document.querySelector('.nav-bar').offsetHeight;
+                            const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - navHeight;
+                            
+                            window.scrollTo({
+                                top: targetPosition,
+                                behavior: 'smooth'
+                            });
+                        }
+                    } else {
+                        // Scroll to top for home link
+                        window.scrollTo({
+                            top: 0,
+                            behavior: 'smooth'
+                        });
+                    }
+                    
+                    // Update active state
+                    document.querySelectorAll('.nav-link').forEach(navLink => {
+                        navLink.classList.remove('active');
+                    });
+                    this.classList.add('active');
+                }
+            });
+        });
     </script>
 </body>
 </html>
