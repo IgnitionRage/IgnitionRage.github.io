@@ -10,6 +10,7 @@
             --fire-orange: #ff7b00;
             --fire-yellow: #ffcc00;
             --dark-bg: #0a0a0a;
+            --twitch-purple: #9146ff;
         }
         
         body {
@@ -213,6 +214,8 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
         }
 
         .calendar-nav {
@@ -235,6 +238,10 @@
         .calendar-btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(255, 69, 0, 0.4);
+        }
+
+        .calendar-btn.twitch-btn {
+            background: linear-gradient(135deg, var(--twitch-purple), #6441a5);
         }
 
         .month-year {
@@ -311,7 +318,7 @@
         }
 
         .stream-indicator {
-            background: linear-gradient(90deg, var(--fire-red), var(--fire-orange));
+            background: linear-gradient(90deg, var(--twitch-purple), #6441a5);
             color: white;
             font-size: 0.65rem;
             padding: 2px 4px;
@@ -371,73 +378,6 @@
             padding-bottom: 10px;
         }
 
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: var(--fire-yellow);
-        }
-
-        .form-input {
-            width: 100%;
-            padding: 10px;
-            border-radius: 8px;
-            border: 1px solid rgba(255, 123, 0, 0.3);
-            background: rgba(50, 50, 50, 0.8);
-            color: white;
-            font-family: inherit;
-        }
-
-        .form-input:focus {
-            outline: none;
-            border-color: var(--fire-orange);
-            box-shadow: 0 0 10px rgba(255, 123, 0, 0.5);
-        }
-
-        .form-input.error {
-            border-color: var(--fire-red);
-            box-shadow: 0 0 10px rgba(255, 69, 0, 0.5);
-        }
-
-        .error-message {
-            color: var(--fire-red);
-            font-size: 0.8rem;
-            margin-top: 5px;
-            display: none;
-        }
-
-        .error-message.active {
-            display: block;
-        }
-
-        .form-actions {
-            display: flex;
-            gap: 10px;
-            justify-content: flex-end;
-            margin-top: 20px;
-        }
-
-        .btn-delete {
-            background: linear-gradient(135deg, #ff4500, #d93600);
-            border: none;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            margin-right: auto;
-        }
-
-        .btn-delete:hover {
-            background: linear-gradient(135deg, #ff3300, #b52e00);
-            transform: translateY(-2px);
-        }
-
         .streams-list {
             max-height: 50vh;
             overflow-y: auto;
@@ -450,7 +390,7 @@
             border-radius: 8px;
             padding: 12px;
             margin-bottom: 10px;
-            border-left: 3px solid var(--fire-orange);
+            border-left: 3px solid var(--twitch-purple);
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -469,25 +409,6 @@
         .stream-item-time {
             font-size: 0.85rem;
             opacity: 0.8;
-        }
-
-        .stream-item-actions {
-            display: flex;
-            gap: 10px;
-        }
-
-        .stream-item-btn {
-            background: none;
-            border: none;
-            color: var(--fire-yellow);
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 1rem;
-        }
-
-        .stream-item-btn:hover {
-            color: var(--fire-red);
-            transform: scale(1.1);
         }
 
         .countdown-container {
@@ -655,73 +576,26 @@
                         <i class="fas fa-chevron-right"></i>
                     </button>
                 </div>
-                <div class="month-year" id="monthYearDisplay">May 2023</div>
-                <button class="calendar-btn" id="addStreamBtn">
-                    <i class="fas fa-plus"></i> Add Stream
-                </button>
+                <div class="month-year" id="monthYearDisplay">May 2025</div>
+                <div class="calendar-nav">
+                    <button class="calendar-btn twitch-btn" id="fetchTwitchBtn">
+                        <i class="fab fa-twitch"></i> Fetch Twitch Schedule
+                    </button>
+                </div>
             </div>
             
             <div class="calendar-grid" id="calendarDays"></div>
         </div>
     </div>
     
-    <div class="modal" id="streamModal">
-        <div class="modal-content">
-            <span class="close-modal" id="closeModal"><i class="fas fa-times"></i></span>
-            <h3 class="modal-title" id="modalTitle">Add Stream</h3>
-            
-            <form id="streamForm">
-                <input type="hidden" id="streamDate" name="streamDate" value="">
-                <input type="hidden" id="streamId" name="streamId" value="">
-                
-                <div class="form-group">
-                    <label for="streamTitle" class="form-label">Stream Title</label>
-                    <input type="text" id="streamTitle" name="streamTitle" class="form-input" placeholder="What are you streaming?" required>
-                    <div class="error-message" id="streamTitleError"></div>
-                </div>
-                
-                <div class="form-group">
-                    <label for="streamCategory" class="form-label">Category</label>
-                    <select id="streamCategory" name="streamCategory" class="form-input">
-                        <option value="gaming">Gaming</option>
-                        <option value="irl">IRL</option>
-                        <option value="art">Art</option>
-                        <option value="music">Music</option>
-                        <option value="other">Other</option>
-                    </select>
-                    <div class="error-message" id="streamCategoryError"></div>
-                </div>
-                
-                <div class="form-group">
-                    <label for="streamTime" class="form-label">Stream Time</label>
-                    <input type="time" id="streamTime" name="streamTime" class="form-input" required>
-                    <div class="error-message" id="streamTimeError"></div>
-                </div>
-                
-                <div class="form-group">
-                    <label for="streamDuration" class="form-label">Duration (hours)</label>
-                    <input type="number" id="streamDuration" name="streamDuration" class="form-input" min="0.5" step="0.5" value="2" required>
-                    <div class="error-message" id="streamDurationError"></div>
-                </div>
-                
-                <div class="form-actions">
-                    <button type="button" id="deleteStreamBtn" class="btn-delete">Delete</button>
-                    <button type="button" class="calendar-btn" id="cancelStreamBtn">Cancel</button>
-                    <button type="submit" class="calendar-btn">Save Stream</button>
-                </div>
-            </form>
-        </div>
-    </div>
-    
     <div class="modal" id="viewStreamsModal">
         <div class="modal-content">
             <span class="close-modal" id="closeViewModal"><i class="fas fa-times"></i></span>
-            <h3 class="modal-title" id="viewModalTitle">Streams on May 15, 2023</h3>
+            <h3 class="modal-title" id="viewModalTitle">Streams on May 15, 2025</h3>
             
             <div class="streams-list" id="streamsList"></div>
             
             <div class="form-actions">
-                <button type="button" class="calendar-btn" id="addNewStreamBtn">Add New Stream</button>
                 <button type="button" class="calendar-btn" id="closeViewBtn">Close</button>
             </div>
         </div>
@@ -769,21 +643,19 @@
                 this.selectedYear = this.currentDate.getFullYear();
                 this.selectedMonth = this.currentDate.getMonth();
                 this.streams = this.loadStreams();
-                this.selectedStreamId = null;
+                // Twitch API credentials
+                this.twitchClientId = 'kkgcvrjgusmxk6630zt711e2hw4wb9e'; // Replace with your Client ID
+                this.twitchAccessToken = 'nyko8r58l2m0t6uxzqssqj5pkork7m'; // Replace with App Access Token
+                this.broadcasterId = '86851816'; // Hardcoded broadcaster ID
                 
                 this.calendarDays = document.getElementById('calendarDays');
                 this.monthYearDisplay = document.getElementById('monthYearDisplay');
-                this.streamModal = document.getElementById('streamModal');
                 this.viewStreamsModal = document.getElementById('viewStreamsModal');
-                this.streamForm = document.getElementById('streamForm');
-                this.streamDate = document.getElementById('streamDate');
-                this.streamId = document.getElementById('streamId');
-                this.modalTitle = document.getElementById('modalTitle');
                 this.viewModalTitle = document.getElementById('viewModalTitle');
-                this.deleteStreamBtn = document.getElementById('deleteStreamBtn');
                 this.countdownContainer = document.getElementById('countdownContainer');
                 
                 this.initEventListeners();
+                this.fetchTwitchSchedule(); // Auto-fetch on load
                 this.renderCalendar();
                 this.updateCountdown();
                 setInterval(() => this.updateCountdown(), 1000);
@@ -796,39 +668,15 @@
                     this.selectedYear = this.currentDate.getFullYear();
                     this.selectedMonth = this.currentDate.getMonth();
                     this.renderCalendar();
+                    this.fetchTwitchSchedule();
                 });
                 
-                document.getElementById('addStreamBtn').addEventListener('click', () => {
-                    this.openAddStreamModal(new Date());
+                document.getElementById('fetchTwitchBtn').addEventListener('click', () => {
+                    this.fetchTwitchSchedule();
                 });
-                
-                document.getElementById('closeModal').addEventListener('click', () => this.closeModal(this.streamModal));
-                document.getElementById('cancelStreamBtn').addEventListener('click', () => this.closeModal(this.streamModal));
-                
-                this.streamForm.addEventListener('submit', (e) => {
-                    e.preventDefault();
-                    this.saveStream();
-                });
-                
-                this.deleteStreamBtn.addEventListener('click', () => this.deleteStream());
                 
                 document.getElementById('closeViewModal').addEventListener('click', () => this.closeModal(this.viewStreamsModal));
                 document.getElementById('closeViewBtn').addEventListener('click', () => this.closeModal(this.viewStreamsModal));
-                
-                document.getElementById('addNewStreamBtn').addEventListener('click', () => {
-                    const dateParts = this.viewModalTitle.textContent.replace('Streams on ', '').split(', ');
-                    const month = this.getMonthNumberFromName(dateParts[0].split(' ')[0]);
-                    const day = parseInt(dateParts[0].split(' ')[1]);
-                    const year = parseInt(dateParts[1]);
-                    const selectedDate = new Date(year, month, day);
-                    this.closeModal(this.viewStreamsModal);
-                    this.openAddStreamModal(selectedDate);
-                });
-            }
-            
-            getMonthNumberFromName(monthName) {
-                const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-                return months.indexOf(monthName);
             }
             
             navigateMonth(direction) {
@@ -841,6 +689,77 @@
                     this.selectedYear++;
                 }
                 this.renderCalendar();
+                this.fetchTwitchSchedule(); // Fetch schedule for new month
+            }
+            
+            async fetchTwitchSchedule() {
+                try {
+                    let allSegments = [];
+                    let cursor = null;
+                    const startTime = `${this.selectedYear}-${String(this.selectedMonth + 1).padStart(2, '0')}-01T00:00:00Z`;
+                    
+                    do {
+                        const url = `https://api.twitch.tv/helix/schedule?broadcaster_id=${this.broadcasterId}&first=25${cursor ? `&after=${cursor}` : ''}&start_time=${startTime}`;
+                        const response = await fetch(url, {
+                            headers: {
+                                'Client-Id': this.twitchClientId,
+                                'Authorization': `Bearer ${this.twitchAccessToken}`
+                            }
+                        });
+                        if (response.status === 404) {
+                            this.streams = [];
+                            this.saveStreams();
+                            this.renderCalendar();
+                            this.updateCountdown();
+                            alert('No schedule found for this broadcaster.');
+                            return;
+                        }
+                        if (!response.ok) {
+                            throw new Error(`Failed to fetch schedule: ${response.status} ${response.statusText}`);
+                        }
+                        const data = await response.json();
+                        allSegments = allSegments.concat(data.data.segments || []);
+                        cursor = data.pagination?.cursor;
+                    } while (cursor);
+                    
+                    this.streams = [];
+                    allSegments.forEach(segment => {
+                        const startTime = new Date(segment.start_time);
+                        const endTime = new Date(segment.end_time);
+                        const duration = ((endTime - startTime) / (1000 * 60 * 60)).toFixed(2);
+                        const dateString = `${startTime.getFullYear()}-${String(startTime.getMonth() + 1).padStart(2, '0')}-${String(startTime.getDate()).padStart(2, '0')}`;
+                        const timeString = `${String(startTime.getHours()).padStart(2, '0')}:${String(startTime.getMinutes()).padStart(2, '0')}`;
+                        const category = segment.category?.name?.toLowerCase() || 'other';
+                        const categoryMap = {
+                            'just chatting': 'irl',
+                            'fortnite': 'gaming',
+                            'minecraft': 'gaming',
+                            'valorant': 'gaming',
+                            'art': 'art',
+                            'music': 'music'
+                        };
+                        
+                        this.streams.push({
+                            id: this.generateId(),
+                            segment_id: segment.id,
+                            date: dateString,
+                            title: segment.title || 'Stream',
+                            category: categoryMap[category] || 'other',
+                            time: timeString,
+                            duration: duration,
+                            twitch: true,
+                            is_recurring: segment.is_recurring
+                        });
+                    });
+                    
+                    this.saveStreams();
+                    this.renderCalendar();
+                    this.updateCountdown();
+                    alert('Twitch schedule loaded successfully!');
+                } catch (error) {
+                    console.error('Error fetching Twitch schedule:', error);
+                    alert(`Failed to fetch Twitch schedule: ${error.message}. Please check your credentials or try again later.`);
+                }
             }
             
             renderCalendar() {
@@ -914,14 +833,11 @@
                     dayElement.appendChild(indicator);
                 }
                 
-                dayElement.addEventListener('click', () => {
-                    if (streams.length > 0) {
+                if (streams.length > 0) {
+                    dayElement.addEventListener('click', () => {
                         this.openViewStreamsModal(dateString, streams);
-                    } else {
-                        const selectedDate = new Date(dateString);
-                        this.openAddStreamModal(selectedDate);
-                    }
-                });
+                    });
+                }
                 
                 this.calendarDays.appendChild(dayElement);
             }
@@ -946,57 +862,6 @@
                 return `${hour}:${minutes} ${ampm}`;
             }
             
-            openAddStreamModal(date) {
-                const dateString = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
-                this.streamDate.value = dateString;
-                this.streamId.value = '';
-                document.getElementById('streamTitle').value = '';
-                document.getElementById('streamCategory').value = 'gaming';
-                document.getElementById('streamTime').value = '20:00';
-                document.getElementById('streamDuration').value = '2';
-                
-                ['streamTitleError', 'streamCategoryError', 'streamTimeError', 'streamDurationError'].forEach(id => {
-                    const el = document.getElementById(id);
-                    el.classList.remove('active');
-                    el.textContent = '';
-                });
-                ['streamTitle', 'streamCategory', 'streamTime', 'streamDuration'].forEach(id => {
-                    document.getElementById(id).classList.remove('error');
-                });
-                
-                this.modalTitle.textContent = `Add Stream for ${this.formatDate(date)}`;
-                this.deleteStreamBtn.style.display = 'none';
-                this.streamModal.style.display = 'flex';
-                document.getElementById('streamTitle').focus();
-            }
-            
-            openEditStreamModal(streamId) {
-                const stream = this.streams.find(s => s.id === streamId);
-                if (!stream) return;
-                
-                this.streamDate.value = stream.date;
-                this.streamId.value = stream.id;
-                document.getElementById('streamTitle').value = stream.title;
-                document.getElementById('streamCategory').value = stream.category;
-                document.getElementById('streamTime').value = stream.time;
-                document.getElementById('streamDuration').value = stream.duration;
-                
-                ['streamTitleError', 'streamCategoryError', 'streamTimeError', 'streamDurationError'].forEach(id => {
-                    const el = document.getElementById(id);
-                    el.classList.remove('active');
-                    el.textContent = '';
-                });
-                ['streamTitle', 'streamCategory', 'streamTime', 'streamDuration'].forEach(id => {
-                    document.getElementById(id).classList.remove('error');
-                });
-                
-                this.modalTitle.textContent = `Edit Stream for ${this.formatDate(stream.date)}`;
-                this.deleteStreamBtn.style.display = 'block';
-                this.streamModal.style.display = 'flex';
-                document.getElementById('streamTitle').focus();
-                this.closeModal(this.viewStreamsModal);
-            }
-            
             openViewStreamsModal(dateString, streams) {
                 this.viewModalTitle.textContent = `Streams on ${this.formatDate(dateString)}`;
                 const streamsList = document.getElementById('streamsList');
@@ -1012,7 +877,7 @@
                         
                         const streamTitle = document.createElement('div');
                         streamTitle.className = 'stream-item-title';
-                        streamTitle.textContent = `${stream.title} (${stream.category.charAt(0).toUpperCase() + stream.category.slice(1)})`;
+                        streamTitle.textContent = `${stream.title} (${stream.category.charAt(0).toUpperCase() + stream.category.slice(1)}${stream.is_recurring ? ', Recurring' : ''})`;
                         
                         const streamTime = document.createElement('div');
                         streamTime.className = 'stream-item-time';
@@ -1021,21 +886,7 @@
                         streamInfo.appendChild(streamTitle);
                         streamInfo.appendChild(streamTime);
                         
-                        const streamActions = document.createElement('div');
-                        streamActions.className = 'stream-item-actions';
-                        
-                        const editBtn = document.createElement('button');
-                        editBtn.className = 'stream-item-btn';
-                        editBtn.innerHTML = '<i class="fas fa-edit"></i>';
-                        editBtn.addEventListener('click', (e) => {
-                            e.stopPropagation();
-                            this.openEditStreamModal(stream.id);
-                        });
-                        
-                        streamActions.appendChild(editBtn);
-                        
                         streamItem.appendChild(streamInfo);
-                        streamItem.appendChild(streamActions);
                         streamsList.appendChild(streamItem);
                     });
                 } else {
@@ -1050,113 +901,6 @@
             
             closeModal(modal) {
                 modal.style.display = 'none';
-            }
-            
-            saveStream() {
-                const streamDate = this.streamDate.value;
-                const streamId = this.streamId.value;
-                const streamTitle = document.getElementById('streamTitle');
-                const streamCategory = document.getElementById('streamCategory');
-                const streamTime = document.getElementById('streamTime');
-                const streamDuration = document.getElementById('streamDuration');
-                
-                // Reset errors
-                const errors = ['streamTitleError', 'streamCategoryError', 'streamTimeError', 'streamDurationError'];
-                errors.forEach(id => {
-                    const el = document.getElementById(id);
-                    el.classList.remove('active');
-                    el.textContent = '';
-                });
-                [streamTitle, streamCategory, streamTime, streamDuration].forEach(input => input.classList.remove('error'));
-                
-                // Validate form
-                let hasError = false;
-                if (!streamTitle.value) {
-                    document.getElementById('streamTitleError').textContent = 'Stream title is required.';
-                    document.getElementById('streamTitleError').classList.add('active');
-                    streamTitle.classList.add('error');
-                    hasError = true;
-                }
-                if (!streamCategory.value) {
-                    document.getElementById('streamCategoryError').textContent = 'Category is required.';
-                    document.getElementById('streamCategoryError').classList.add('active');
-                    streamCategory.classList.add('error');
-                    hasError = true;
-                }
-                if (!streamTime.value) {
-                    document.getElementById('streamTimeError').textContent = 'Stream time is required.';
-                    document.getElementById('streamTimeError').classList.add('active');
-                    streamTime.classList.add('error');
-                    hasError = true;
-                }
-                if (!streamDuration.value || streamDuration.value <= 0) {
-                    document.getElementById('streamDurationError').textContent = 'Duration must be greater than 0.';
-                    document.getElementById('streamDurationError').classList.add('active');
-                    streamDuration.classList.add('error');
-                    hasError = true;
-                }
-                
-                // Check for overlapping streams
-                const newStart = new Date(`${streamDate}T${streamTime.value}`);
-                const newEnd = new Date(newStart.getTime() + parseFloat(streamDuration.value) * 60 * 60 * 1000);
-                const hasOverlap = this.streams.some(stream => {
-                    if (stream.id === streamId || stream.date !== streamDate) return false;
-                    const existingStart = new Date(`${stream.date}T${stream.time}`);
-                    const existingEnd = new Date(existingStart.getTime() + stream.duration * 60 * 60 * 1000);
-                    return newStart < existingEnd && newEnd > existingStart;
-                });
-                
-                if (hasOverlap) {
-                    document.getElementById('streamTimeError').textContent = 'This stream overlaps with another on the same day.';
-                    document.getElementById('streamTimeError').classList.add('active');
-                    streamTime.classList.add('error');
-                    hasError = true;
-                }
-                
-                if (hasError) return;
-                
-                // Save stream
-                if (streamId) {
-                    const index = this.streams.findIndex(s => s.id === streamId);
-                    if (index !== -1) {
-                        this.streams[index] = {
-                            id: streamId,
-                            date: streamDate,
-                            title: streamTitle.value,
-                            category: streamCategory.value,
-                            time: streamTime.value,
-                            duration: streamDuration.value
-                        };
-                    }
-                } else {
-                    const newStream = {
-                        id: this.generateId(),
-                        date: streamDate,
-                        title: streamTitle.value,
-                        category: streamCategory.value,
-                        time: streamTime.value,
-                        duration: streamDuration.value
-                    };
-                    this.streams.push(newStream);
-                }
-                
-                this.saveStreams();
-                this.closeModal(this.streamModal);
-                this.renderCalendar();
-                this.updateCountdown();
-            }
-            
-            deleteStream() {
-                const streamId = this.streamId.value;
-                if (!streamId) return;
-                
-                if (confirm('Are you sure you want to delete this stream?')) {
-                    this.streams = this.streams.filter(s => s.id !== streamId);
-                    this.saveStreams();
-                    this.closeModal(this.streamModal);
-                    this.renderCalendar();
-                    this.updateCountdown();
-                }
             }
             
             getStreamsForDate(dateString) {
@@ -1178,19 +922,19 @@
             
             updateCountdown() {
                 const sortedStreams = [...this.streams].sort((a, b) => {
-                    const dateTimeA = new Date(`${a.date}T${a.time}`);
-                    const dateTimeB = new Date(`${b.date}T${b.time}`);
+                    const dateTimeA = new Date(`${a.date}T${a.time}:00Z`);
+                    const dateTimeB = new Date(`${b.date}T${b.time}:00Z`);
                     return dateTimeA - dateTimeB;
                 });
                 
                 const now = new Date();
                 const nextStream = sortedStreams.find(stream => {
-                    const streamDateTime = new Date(`${stream.date}T${stream.time}`);
+                    const streamDateTime = new Date(`${stream.date}T${stream.time}:00Z`);
                     return streamDateTime > now;
                 });
                 
                 if (nextStream) {
-                    const streamDateTime = new Date(`${nextStream.date}T${nextStream.time}`);
+                    const streamDateTime = new Date(`${nextStream.date}T${nextStream.time}:00Z`);
                     const timeLeft = streamDateTime - now;
                     
                     if (timeLeft > 0) {
@@ -1225,7 +969,7 @@
                 } else {
                     this.countdownContainer.innerHTML = `
                         <div class="no-stream">No upcoming streams scheduled</div>
-                        <div class="no-stream">Click on a day to add a new stream</div>
+                        <div class="no-stream">Click "Fetch Twitch Schedule" to refresh</div>
                     `;
                 }
             }
