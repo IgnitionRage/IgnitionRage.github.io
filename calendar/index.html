@@ -646,7 +646,7 @@
                 // Twitch API credentials
                 this.twitchClientId = 'kkgcvrjgusmxk6630zt711e2hw4wb9e'; // Replace with your Client ID
                 this.twitchAccessToken = 'nyko8r58l2m0t6uxzqssqj5pkork7m'; // Replace with App Access Token
-                this.broadcasterId = '86851816'; // Hardcoded broadcaster ID
+                this.broadcasterId = '59663773'; // Hardcoded broadcaster ID
                 
                 this.calendarDays = document.getElementById('calendarDays');
                 this.monthYearDisplay = document.getElementById('monthYearDisplay');
@@ -692,6 +692,31 @@
                 this.fetchTwitchSchedule(); // Fetch schedule for new month
             }
             
+            generateRecurringStreams() {
+                const recurringStreams = [];
+                const lastDay = new Date(this.selectedYear, this.selectedMonth + 1, 0).getDate();
+                
+                for (let day = 1; day <= lastDay; day++) {
+                    const date = new Date(Date.UTC(this.selectedYear, this.selectedMonth, day));
+                    const dayOfWeek = date.getUTCDay(); // 0=Sun, 5=Fri, 6=Sat
+                    if (dayOfWeek === 5 || dayOfWeek === 6 || dayOfWeek === 0) { // Fri, Sat, Sun
+                        const dateString = `${this.selectedYear}-${String(this.selectedMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                        recurringStreams.push({
+                            id: this.generateId(),
+                            segment_id: `recurring-${dateString}-weekend`,
+                            date: dateString,
+                            title: 'Weekend Stream',
+                            category: 'gaming',
+                            time: '22:00', // 10:00 PM UTC
+                            duration: '2.00', // 2 hours
+                            twitch: true,
+                            is_recurring: true
+                        });
+                    }
+                }
+                return recurringStreams;
+            }
+            
             async fetchTwitchSchedule() {
                 try {
                     let allSegments = [];
@@ -708,11 +733,8 @@
                         });
                         if (response.status === 404) {
                             this.streams = [];
-                            this.saveStreams();
-                            this.renderCalendar();
-                            this.updateCountdown();
-                            alert('No schedule found for this broadcaster.');
-                            return;
+                            alert('No schedule found for this broadcaster. Showing recurring streams only.');
+                            break;
                         }
                         if (!response.ok) {
                             throw new Error(`Failed to fetch schedule: ${response.status} ${response.statusText}`);
@@ -727,8 +749,8 @@
                         const startTime = new Date(segment.start_time);
                         const endTime = new Date(segment.end_time);
                         const duration = ((endTime - startTime) / (1000 * 60 * 60)).toFixed(2);
-                        const dateString = `${startTime.getFullYear()}-${String(startTime.getMonth() + 1).padStart(2, '0')}-${String(startTime.getDate()).padStart(2, '0')}`;
-                        const timeString = `${String(startTime.getHours()).padStart(2, '0')}:${String(startTime.getMinutes()).padStart(2, '0')}`;
+                        const dateString = `${startTime.getUTCFullYear()}-${String(startTime.getUTCMonth() + 1).padStart(2, '0')}-${String(startTime.getUTCDate()).padStart(2, '0')}`;
+                        const timeString = `${String(startTime.getUTCHours()).padStart(2, '0')}:${String(startTime.getUTCMinutes()).padStart(2, '0')}`;
                         const category = segment.category?.name?.toLowerCase() || 'other';
                         const categoryMap = {
                             'just chatting': 'irl',
@@ -736,7 +758,8 @@
                             'minecraft': 'gaming',
                             'valorant': 'gaming',
                             'art': 'art',
-                            'music': 'music'
+                            'music': 'music',
+                            'software and game development': 'gaming'
                         };
                         
                         this.streams.push({
@@ -752,13 +775,31 @@
                         });
                     });
                     
+                    // Add recurring streams (Fri, Sat, Sun, 10 PM to 12 AM)
+                    const recurringStreams = this.generateRecurringStreams();
+                    recurringStreams.forEach(recurring => {
+                        // Avoid duplicates by checking segment_id and date/time
+                        const exists = this.streams.some(s => 
+                            s.segment_id === recurring.segment_id || 
+                            (s.date === recurring.date && s.time === recurring.time)
+                        );
+                        if (!exists) {
+                            this.streams.push(recurring);
+                        }
+                    });
+                    
                     this.saveStreams();
                     this.renderCalendar();
                     this.updateCountdown();
-                    alert('Twitch schedule loaded successfully!');
+                    alert('Twitch schedule loaded successfully with recurring weekend streams!');
                 } catch (error) {
                     console.error('Error fetching Twitch schedule:', error);
-                    alert(`Failed to fetch Twitch schedule: ${error.message}. Please check your credentials or try again later.`);
+                    // Load recurring streams even if API fails
+                    this.streams = this.generateRecurringStreams();
+                    this.saveStreams();
+                    this.renderCalendar();
+                    this.updateCountdown();
+                    alert(`Failed to fetch Twitch schedule: ${error.message}. Showing recurring streams only. Please check your credentials or try again later.`);
                 }
             }
             
