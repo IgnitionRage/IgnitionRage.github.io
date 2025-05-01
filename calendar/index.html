@@ -1,0 +1,1250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@IgnitionRage Stream Calendar</title>
+    <style>
+        :root {
+            --fire-red: #ff4500;
+            --fire-orange: #ff7b00;
+            --fire-yellow: #ffcc00;
+            --dark-bg: #0a0a0a;
+        }
+        
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0a0a0a;
+            color: #fff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            max-width: 1000px;
+            width: 90%;
+            position: relative;
+            z-index: 1;
+            padding: 20px 10px;
+            margin: 60px auto 40px;
+        }
+        
+        h1 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            margin-bottom: 0.5rem;
+            text-align: center;
+            background: linear-gradient(90deg, var(--fire-red), var(--fire-orange), var(--fire-yellow));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 2px 15px rgba(255, 107, 107, 0.5);
+            font-weight: 800;
+            letter-spacing: 1px;
+            animation: flicker 3s infinite alternate;
+        }
+        
+        @keyframes flicker {
+            0%, 19.999%, 22%, 62.999%, 64%, 64.999%, 70%, 100% {
+                opacity: 1;
+            }
+            20%, 21.999%, 63%, 63.999%, 65%, 69.999% {
+                opacity: 0.8;
+            }
+        }
+        
+        .subtitle {
+            font-size: clamp(0.9rem, 3vw, 1.2rem);
+            opacity: 0.9;
+            margin-bottom: 2rem;
+            color: var(--fire-yellow);
+            text-shadow: 0 0 5px rgba(255, 204, 0, 0.5);
+            text-align: center;
+        }
+
+        /* Fire effect for background */
+        .fire-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(ellipse at bottom, #1b1b1b 0%, #090a0f 100%);
+            z-index: -1;
+        }
+        
+        .fire-glow {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 150%;
+            height: 150%;
+            background: 
+                radial-gradient(ellipse at center, rgba(255, 69, 0, 0.15) 0%, 
+                rgba(10, 10, 10, 0) 70%);
+            z-index: -1;
+            pointer-events: none;
+        }
+        
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            animation: float 15s infinite linear;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 0.8;
+            }
+            100% {
+                transform: translateY(-1000px) rotate(720deg);
+                opacity: 0;
+            }
+        }
+        
+        /* Navigation Bar */
+        .nav-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            border-bottom: 1px solid var(--fire-red);
+            box-shadow: 0 2px 15px rgba(255, 69, 0, 0.2);
+        }
+        
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0.8rem 2rem;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: white;
+            text-decoration: none;
+        }
+        
+        .logo i {
+            color: var(--fire-red);
+            margin-right: 8px;
+            font-size: 1.5rem;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+        
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            position: relative;
+        }
+        
+        .nav-link:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, var(--fire-red), var(--fire-orange));
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+        
+        .nav-link:hover:after {
+            transform: scaleX(1);
+        }
+        
+        .nav-link:hover {
+            color: var(--fire-yellow);
+        }
+        
+        .nav-link.active {
+            background: rgba(255, 69, 0, 0.15);
+            color: var(--fire-yellow);
+        }
+        
+        .mobile-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Calendar Styles */
+        .calendar-container {
+            background: rgba(20, 20, 20, 0.8);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(255, 69, 0, 0.2);
+            border: 1px solid rgba(255, 123, 0, 0.3);
+            backdrop-filter: blur(5px);
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .calendar-nav {
+            display: flex;
+            gap: 10px;
+        }
+
+        .calendar-btn {
+            background: linear-gradient(135deg, var(--fire-red), var(--fire-orange));
+            border: none;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 3px 10px rgba(255, 69, 0, 0.2);
+        }
+
+        .calendar-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 69, 0, 0.4);
+        }
+
+        .month-year {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, var(--fire-red), var(--fire-yellow));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 10px;
+        }
+
+        .calendar-day-header {
+            text-align: center;
+            font-weight: 600;
+            padding: 10px;
+            color: var(--fire-yellow);
+        }
+
+        .calendar-day {
+            aspect-ratio: 1;
+            border-radius: 10px;
+            background: rgba(30, 30, 30, 0.7);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            padding: 5px;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 123, 0, 0.1);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .calendar-day:hover {
+            background: rgba(50, 50, 50, 0.8);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(255, 69, 0, 0.3);
+            border: 1px solid rgba(255, 123, 0, 0.3);
+        }
+
+        .day-number {
+            font-weight: 600;
+            font-size: 1rem;
+            margin-bottom: 5px;
+        }
+
+        .other-month {
+            opacity: 0.4;
+        }
+
+        .today {
+            border: 2px solid var(--fire-red);
+            box-shadow: 0 0 15px rgba(255, 69, 0, 0.5);
+            background: rgba(50, 30, 30, 0.8);
+        }
+
+        .has-stream {
+            position: relative;
+        }
+
+        .has-stream::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--fire-red), var(--fire-orange));
+        }
+
+        .stream-indicator {
+            background: linear-gradient(90deg, var(--fire-red), var(--fire-orange));
+            color: white;
+            font-size: 0.65rem;
+            padding: 2px 4px;
+            border-radius: 3px;
+            margin-top: 2px;
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* Stream Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1001;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: rgba(30, 30, 30, 0.95);
+            border-radius: 15px;
+            padding: 25px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 10px 30px rgba(255, 69, 0, 0.3);
+            border: 1px solid var(--fire-orange);
+            backdrop-filter: blur(10px);
+            position: relative;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 1.5rem;
+            color: var(--fire-yellow);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .close-modal:hover {
+            color: var(--fire-red);
+            transform: scale(1.2);
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: var(--fire-yellow);
+            border-bottom: 1px solid rgba(255, 123, 0, 0.3);
+            padding-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--fire-yellow);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 123, 0, 0.3);
+            background: rgba(50, 50, 50, 0.8);
+            color: white;
+            font-family: inherit;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--fire-orange);
+            box-shadow: 0 0 10px rgba(255, 123, 0, 0.5);
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 20px;
+        }
+
+        .btn-delete {
+            background: linear-gradient(135deg, #ff4500, #d93600);
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-right: auto;
+        }
+
+        .btn-delete:hover {
+            background: linear-gradient(135deg, #ff3300, #b52e00);
+            transform: translateY(-2px);
+        }
+
+        .streams-list {
+            max-height: 50vh;
+            overflow-y: auto;
+            margin-top: 20px;
+            padding: 0 10px;
+        }
+
+        .stream-item {
+            background: rgba(40, 40, 40, 0.8);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 10px;
+            border-left: 3px solid var(--fire-orange);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .stream-item-info {
+            flex-grow: 1;
+        }
+
+        .stream-item-title {
+            font-weight: 600;
+            color: var(--fire-yellow);
+            margin-bottom: 5px;
+        }
+
+        .stream-item-time {
+            font-size: 0.85rem;
+            opacity: 0.8;
+        }
+
+        .stream-item-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .stream-item-btn {
+            background: none;
+            border: none;
+            color: var(--fire-yellow);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+
+        .stream-item-btn:hover {
+            color: var(--fire-red);
+            transform: scale(1.1);
+        }
+
+        .countdown-container {
+            background: rgba(30, 30, 30, 0.7);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            text-align: center;
+            border: 1px solid rgba(255, 123, 0, 0.3);
+        }
+
+        .next-stream {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            color: var(--fire-yellow);
+        }
+
+        .countdown {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .countdown-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .countdown-value {
+            background: linear-gradient(135deg, var(--fire-red), var(--fire-orange));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 2rem;
+        }
+
+        .countdown-label {
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
+
+        .no-stream {
+            color: var(--fire-yellow);
+            text-align: center;
+            font-style: italic;
+        }
+
+        /* Mobile-specific styles */
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px 10px;
+                margin: 60px 0 20px;
+                width: 95%;
+            }
+            
+            .nav-container {
+                padding: 0.8rem 1rem;
+            }
+            
+            .nav-links {
+                position: fixed;
+                top: 60px;
+                left: 0;
+                width: 100%;
+                flex-direction: column;
+                background: rgba(10, 10, 10, 0.95);
+                padding: 1rem 0;
+                gap: 0;
+                transform: translateY(-150%);
+                transition: transform 0.3s ease;
+                border-bottom: 1px solid var(--fire-red);
+            }
+            
+            .nav-links.active {
+                transform: translateY(0);
+            }
+            
+            .nav-link {
+                width: 100%;
+                padding: 1rem 2rem;
+                text-align: center;
+                border-radius: 0;
+            }
+            
+            .nav-link:after {
+                display: none;
+            }
+            
+            .mobile-toggle {
+                display: block;
+            }
+
+            .calendar-day {
+                padding: 3px;
+            }
+
+            .day-number {
+                font-size: 0.9rem;
+            }
+
+            .stream-indicator {
+                font-size: 0.6rem;
+                padding: 1px 2px;
+            }
+
+            .countdown {
+                gap: 10px;
+                font-size: 1.2rem;
+            }
+
+            .countdown-value {
+                font-size: 1.5rem;
+            }
+        }
+
+        /* For extremely small screens */
+        @media (max-width: 350px) {
+            .calendar-grid {
+                gap: 5px;
+            }
+            
+            .day-number {
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+    <!-- Using the latest Font Awesome version -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css">
+</head>
+<body>
+    <div class="fire-background"></div>
+    <div class="fire-glow"></div>
+    <div class="particles" id="particles"></div>
+    
+    <!-- Navigation Bar -->
+    <nav class="nav-bar">
+        <div class="nav-container">
+            <a href="#" class="logo">
+                <i class="fas fa-fire"></i>
+                IgnitionRage
+            </a>
+            <div class="nav-links" id="navLinks">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="#" class="nav-link active">Calendar</a>
+                <a href="#streams" class="nav-link">Streams</a>
+            </div>
+            <button class="mobile-toggle" id="mobileToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+    
+    <div class="container">
+        <h1>Stream Calendar</h1>
+        <div class="subtitle">Never Miss a Stream!</div>
+        
+        <div class="countdown-container" id="countdownContainer">
+            <!-- Countdown will be inserted here -->
+        </div>
+        
+        <div id="calendar-container" class="calendar-container">
+            <div class="calendar-header">
+                <div class="calendar-nav">
+                    <button class="calendar-btn" id="prevMonth">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <button class="calendar-btn" id="currentMonth">Today</button>
+                    <button class="calendar-btn" id="nextMonth">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+                <div class="month-year" id="monthYearDisplay">May 2023</div>
+                <button class="calendar-btn" id="addStreamBtn">
+                    <i class="fas fa-plus"></i> Add Stream
+                </button>
+            </div>
+            
+            <div class="calendar-grid" id="calendarDays">
+                <!-- Calendar days will be inserted here -->
+            </div>
+        </div>
+    </div>
+    
+    <!-- Stream Modal -->
+    <div class="modal" id="streamModal">
+        <div class="modal-content">
+            <span class="close-modal" id="closeModal"><i class="fas fa-times"></i></span>
+            <h3 class="modal-title" id="modalTitle">Add Stream</h3>
+            
+            <form id="streamForm">
+                <input type="hidden" id="streamDate" name="streamDate" value="">
+                <input type="hidden" id="streamId" name="streamId" value="">
+                
+                <div class="form-group">
+                    <label for="streamTitle" class="form-label">Stream Title</label>
+                    <input type="text" id="streamTitle" name="streamTitle" class="form-input" placeholder="What are you streaming?" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="streamTime" class="form-label">Stream Time</label>
+                    <input type="time" id="streamTime" name="streamTime" class="form-input" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="streamDuration" class="form-label">Duration (hours)</label>
+                    <input type="number" id="streamDuration" name="streamDuration" class="form-input" min="0.5" step="0.5" value="2" required>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" id="deleteStreamBtn" class="btn-delete">Delete</button>
+                    <button type="button" class="calendar-btn" id="cancelStreamBtn">Cancel</button>
+                    <button type="submit" class="calendar-btn">Save Stream</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- View Day Streams Modal -->
+    <div class="modal" id="viewStreamsModal">
+        <div class="modal-content">
+            <span class="close-modal" id="closeViewModal"><i class="fas fa-times"></i></span>
+            <h3 class="modal-title" id="viewModalTitle">Streams on May 15, 2023</h3>
+            
+            <div class="streams-list" id="streamsList">
+                <!-- Stream items will be inserted here -->
+            </div>
+            
+            <div class="form-actions">
+                <button type="button" class="calendar-btn" id="addNewStreamBtn">Add New Stream</button>
+                <button type="button" class="calendar-btn" id="closeViewBtn">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Create particles with fire colors
+        const particlesContainer = document.getElementById('particles');
+        const isMobile = window.innerWidth <= 768;
+        const particleCount = isMobile ? 15 : 30;
+        const fireColors = ['#ff4500', '#ff7b00', '#ffcc00', '#ff5722', '#ff9800'];
+        
+        for (let i = 0; i < particleCount; i++) {
+            const particle = document.createElement('div');
+            particle.classList.add('particle');
+            
+            // Smaller particles on mobile
+            const maxSize = isMobile ? 15 : 25;
+            const size = Math.random() * (maxSize - 5) + 5;
+            particle.style.width = `${size}px`;
+            particle.style.height = `${size}px`;
+            
+            // Random position
+            particle.style.left = `${Math.random() * 100}%`;
+            particle.style.top = `${Math.random() * 100}%`;
+            
+            // Random fire color
+            const colorIndex = Math.floor(Math.random() * fireColors.length);
+            particle.style.background = fireColors[colorIndex];
+            
+            // Random opacity
+            particle.style.opacity = Math.random() * 0.5 + 0.1;
+            
+            // Random animation duration (shorter on mobile)
+            const duration = Math.random() * (isMobile ? 15 : 20) + 10;
+            particle.style.animationDuration = `${duration}s`;
+            
+            // Random animation delay
+            particle.style.animationDelay = `${Math.random() * 5}s`;
+            
+            particlesContainer.appendChild(particle);
+        }
+        
+        // Mobile navigation toggle
+        const mobileToggle = document.getElementById('mobileToggle');
+        const navLinks = document.getElementById('navLinks');
+        
+        mobileToggle.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            const icon = mobileToggle.querySelector('i');
+            if (navLinks.classList.contains('active')) {
+                icon.className = 'fas fa-times';
+            } else {
+                icon.className = 'fas fa-bars';
+            }
+        });
+        
+        // Calendar Functionality
+        class StreamCalendar {
+            constructor() {
+                this.currentDate = new Date();
+                this.selectedYear = this.currentDate.getFullYear();
+                this.selectedMonth = this.currentDate.getMonth();
+                this.streams = this.loadStreams();
+                this.selectedStreamId = null;
+                
+                // DOM elements
+                this.calendarDays = document.getElementById('calendarDays');
+                this.monthYearDisplay = document.getElementById('monthYearDisplay');
+                this.streamModal = document.getElementById('streamModal');
+                this.viewStreamsModal = document.getElementById('viewStreamsModal');
+                this.streamForm = document.getElementById('streamForm');
+                this.streamDate = document.getElementById('streamDate');
+                this.streamId = document.getElementById('streamId');
+                this.modalTitle = document.getElementById('modalTitle');
+                this.viewModalTitle = document.getElementById('viewModalTitle');
+                this.deleteStreamBtn = document.getElementById('deleteStreamBtn');
+                this.countdownContainer = document.getElementById('countdownContainer');
+                
+                // Initialize the calendar
+                this.initEventListeners();
+                this.renderCalendar();
+                this.updateCountdown();
+                
+                // Start countdown timer
+                setInterval(() => this.updateCountdown(), 1000);
+            }
+            
+            initEventListeners() {
+                // Month navigation
+                document.getElementById('prevMonth').addEventListener('click', () => {
+                    this.navigateMonth(-1);
+                });
+                
+                document.getElementById('nextMonth').addEventListener('click', () => {
+                    this.navigateMonth(1);
+                });
+                
+                document.getElementById('currentMonth').addEventListener('click', () => {
+                    this.selectedYear = this.currentDate.getFullYear();
+                    this.selectedMonth = this.currentDate.getMonth();
+                    this.renderCalendar();
+                });
+                
+                // Stream modal
+                document.getElementById('addStreamBtn').addEventListener('click', () => {
+                    this.openAddStreamModal(new Date());
+                });
+                
+                document.getElementById('closeModal').addEventListener('click', () => {
+                    this.closeModal(this.streamModal);
+                });
+                
+                document.getElementById('cancelStreamBtn').addEventListener('click', () => {
+                    this.closeModal(this.streamModal);
+                });
+                
+                this.streamForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.saveStream();
+                });
+                
+                this.deleteStreamBtn.addEventListener('click', () => {
+                    this.deleteStream();
+                });
+                
+                // View streams modal
+                document.getElementById('closeViewModal').addEventListener('click', () => {
+                    this.closeModal(this.viewStreamsModal);
+                });
+                
+                document.getElementById('closeViewBtn').addEventListener('click', () => {
+                    this.closeModal(this.viewStreamsModal);
+                });
+                
+                document.getElementById('addNewStreamBtn').addEventListener('click', () => {
+                    const dateParts = this.viewModalTitle.textContent.replace('Streams on ', '').split(', ');
+                    const month = this.getMonthNumberFromName(dateParts[0].split(' ')[0]);
+                    const day = parseInt(dateParts[0].split(' ')[1]);
+                    const year = parseInt(dateParts[1]);
+                    
+                    const selectedDate = new Date(year, month, day);
+                    this.closeModal(this.viewStreamsModal);
+                    this.openAddStreamModal(selectedDate);
+                });
+            }
+            
+            getMonthNumberFromName(monthName) {
+                const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+                return months.indexOf(monthName);
+            }
+            
+            navigateMonth(direction) {
+                this.selectedMonth += direction;
+                
+                if (this.selectedMonth < 0) {
+                    this.selectedMonth = 11;
+                    this.selectedYear--;
+                } else if (this.selectedMonth > 11) {
+                    this.selectedMonth = 0;
+                    this.selectedYear++;
+                }
+                
+                this.renderCalendar();
+            }
+            
+            renderCalendar() {
+                this.calendarDays.innerHTML = '';
+                
+                // Set month and year display
+                const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+                this.monthYearDisplay.textContent = `${monthNames[this.selectedMonth]} ${this.selectedYear}`;
+                
+                // Add day headers
+                const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+                dayNames.forEach(day => {
+                    const dayHeader = document.createElement('div');
+                    dayHeader.className = 'calendar-day-header';
+                    dayHeader.textContent = day;
+                    this.calendarDays.appendChild(dayHeader);
+                });
+                
+                // Get first day of month and last day of month
+                const firstDay = new Date(this.selectedYear, this.selectedMonth, 1);
+                const lastDay = new Date(this.selectedYear, this.selectedMonth + 1, 0);
+                
+                // Add days from previous month
+                const firstDayOfWeek = firstDay.getDay();
+                const lastDayOfPrevMonth = new Date(this.selectedYear, this.selectedMonth, 0).getDate();
+                
+                for (let i = firstDayOfWeek - 1; i >= 0; i--) {
+                    const day = lastDayOfPrevMonth - i;
+                    const prevMonth = this.selectedMonth - 1 < 0 ? 11 : this.selectedMonth - 1;
+                    const prevYear = prevMonth === 11 ? this.selectedYear - 1 : this.selectedYear;
+                    
+                    const dateString = `${prevYear}-${String(prevMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                    const dayStreams = this.getStreamsForDate(dateString);
+                    
+                    this.createDayElement(day, true, false, dayStreams, dateString);
+                }
+                
+                // Add days of current month
+                for (let day = 1; day <= lastDay.getDate(); day++) {
+                    const dateString = `${this.selectedYear}-${String(this.selectedMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                    const dayStreams = this.getStreamsForDate(dateString);
+                    
+                    const isToday = this.isToday(day);
+                    this.createDayElement(day, false, isToday, dayStreams, dateString);
+                }
+                
+                // Add days from next month
+                const daysAdded = firstDayOfWeek + lastDay.getDate();
+                const remainingCells = 42 - daysAdded; // 6 rows of 7 days
+                
+                for (let day = 1; day <= remainingCells; day++) {
+                    const nextMonth = this.selectedMonth + 1 > 11 ? 0 : this.selectedMonth + 1;
+                    const nextYear = nextMonth === 0 ? this.selectedYear + 1 : this.selectedYear;
+                    
+                    const dateString = `${nextYear}-${String(nextMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                    const dayStreams = this.getStreamsForDate(dateString);
+                    
+                    this.createDayElement(day, true, false, dayStreams, dateString);
+                }
+            }
+            
+            createDayElement(day, isOtherMonth, isToday, streams, dateString) {
+                const dayElement = document.createElement('div');
+                dayElement.className = 'calendar-day';
+                
+                if (isOtherMonth) {
+                    dayElement.classList.add('other-month');
+                }
+                
+                if (isToday) {
+                    dayElement.classList.add('today');
+                }
+                
+                if (streams.length > 0) {
+                    dayElement.classList.add('has-stream');
+                }
+                
+                const dayNumber = document.createElement('div');
+                dayNumber.className = 'day-number';
+                dayNumber.textContent = day;
+                dayElement.appendChild(dayNumber);
+                
+                // Add stream indicators
+                streams.slice(0, 2).forEach(stream => {
+                    const indicator = document.createElement('div');
+                    indicator.className = 'stream-indicator';
+                    indicator.textContent = this.formatTime(stream.time);
+                    dayElement.appendChild(indicator);
+                });
+                
+                if (streams.length > 2) {
+                    const indicator = document.createElement('div');
+                    indicator.className = 'stream-indicator';
+                    indicator.textContent = `+${streams.length - 2} more`;
+                    dayElement.appendChild(indicator);
+                }
+                
+                // Add click event to view/add streams
+                dayElement.addEventListener('click', () => {
+                    if (streams.length > 0) {
+                        this.openViewStreamsModal(dateString, streams);
+                    } else {
+                        const selectedDate = new Date(dateString);
+                        this.openAddStreamModal(selectedDate);
+                    }
+                });
+                
+                this.calendarDays.appendChild(dayElement);
+            }
+            
+            isToday(day) {
+                const today = new Date();
+                return day === today.getDate() && 
+                       this.selectedMonth === today.getMonth() && 
+                       this.selectedYear === today.getFullYear();
+            }
+            
+            formatDate(date) {
+                const d = new Date(date);
+                const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+                return `${monthNames[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
+            }
+            
+            formatTime(timeString) {
+                const [hours, minutes] = timeString.split(':');
+                const hour = parseInt(hours) % 12 || 12;
+                const ampm = parseInt(hours) >= 12 ? 'PM' : 'AM';
+                return `${hour}:${minutes} ${ampm}`;
+            }
+            
+            openAddStreamModal(date) {
+                // Format date for the form
+                const dateString = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+                
+                // Set default values
+                this.streamDate.value = dateString;
+                this.streamId.value = '';
+                document.getElementById('streamTitle').value = '';
+                document.getElementById('streamTime').value = '20:00'; // Default to 8 PM
+                document.getElementById('streamDuration').value = '2';
+                
+                // Update modal title and button visibility
+                this.modalTitle.textContent = `Add Stream for ${this.formatDate(date)}`;
+                this.deleteStreamBtn.style.display = 'none';
+                
+                // Show modal
+                this.streamModal.style.display = 'flex';
+            }
+            
+            openEditStreamModal(streamId) {
+                const stream = this.streams.find(s => s.id === streamId);
+                if (!stream) return;
+                
+                // Set form values
+                this.streamDate.value = stream.date;
+                this.streamId.value = stream.id;
+                document.getElementById('streamTitle').value = stream.title;
+                document.getElementById('streamTime').value = stream.time;
+                document.getElementById('streamDuration').value = stream.duration;
+                
+                // Update modal title and button visibility
+                this.modalTitle.textContent = `Edit Stream for ${this.formatDate(stream.date)}`;
+                this.deleteStreamBtn.style.display = 'block';
+                
+                // Show modal
+                this.streamModal.style.display = 'flex';
+                this.closeModal(this.viewStreamsModal);
+            }
+            
+            openViewStreamsModal(dateString, streams) {
+                // Set modal title
+                this.viewModalTitle.textContent = `Streams on ${this.formatDate(dateString)}`;
+                
+                // Clear previous streams
+                const streamsList = document.getElementById('streamsList');
+                streamsList.innerHTML = '';
+                
+                // Add stream items
+                if (streams.length > 0) {
+                    streams.forEach(stream => {
+                        const streamItem = document.createElement('div');
+                        streamItem.className = 'stream-item';
+                        
+                        const streamInfo = document.createElement('div');
+                        streamInfo.className = 'stream-item-info';
+                        
+                        const streamTitle = document.createElement('div');
+                        streamTitle.className = 'stream-item-title';
+                        streamTitle.textContent = stream.title;
+                        
+                        const streamTime = document.createElement('div');
+                        streamTime.className = 'stream-item-time';
+                        streamTime.textContent = `${this.formatTime(stream.time)} for ${stream.duration} hours`;
+                        
+                        streamInfo.appendChild(streamTitle);
+                        streamInfo.appendChild(streamTime);
+                        
+                        const streamActions = document.createElement('div');
+                        streamActions.className = 'stream-item-actions';
+                        
+                        const editBtn = document.createElement('button');
+                        editBtn.className = 'stream-item-btn';
+                        editBtn.innerHTML = '<i class="fas fa-edit"></i>';
+                        editBtn.addEventListener('click', (e) => {
+                            e.stopPropagation();
+                            this.openEditStreamModal(stream.id);
+                        });
+                        
+                        streamActions.appendChild(editBtn);
+                        
+                        streamItem.appendChild(streamInfo);
+                        streamItem.appendChild(streamActions);
+                        
+                        streamsList.appendChild(streamItem);
+                    });
+                } else {
+                    const noStreams = document.createElement('div');
+                    noStreams.className = 'no-stream';
+                    noStreams.textContent = 'No streams scheduled for this day.';
+                    streamsList.appendChild(noStreams);
+                }
+                
+                // Show modal
+                this.viewStreamsModal.style.display = 'flex';
+            }
+            
+            closeModal(modal) {
+                modal.style.display = 'none';
+            }
+            
+            saveStream() {
+                const streamDate = this.streamDate.value;
+                const streamId = this.streamId.value;
+                const streamTitle = document.getElementById('streamTitle').value;
+                const streamTime = document.getElementById('streamTime').value;
+                const streamDuration = document.getElementById('streamDuration').value;
+                
+                // Validate form
+                if (!streamTitle || !streamTime || !streamDuration) {
+                    alert('Please fill in all fields.');
+                    return;
+                }
+                
+                if (streamId) {
+                    // Update existing stream
+                    const index = this.streams.findIndex(s => s.id === streamId);
+                    if (index !== -1) {
+                        this.streams[index] = {
+                            id: streamId,
+                            date: streamDate,
+                            title: streamTitle,
+                            time: streamTime,
+                            duration: streamDuration
+                        };
+                    }
+                } else {
+                    // Add new stream
+                    const newStream = {
+                        id: this.generateId(),
+                        date: streamDate,
+                        title: streamTitle,
+                        time: streamTime,
+                        duration: streamDuration
+                    };
+                    
+                    this.streams.push(newStream);
+                }
+                
+                // Save to local storage
+                this.saveStreams();
+                
+                // Close modal and refresh calendar
+                this.closeModal(this.streamModal);
+                this.renderCalendar();
+                this.updateCountdown();
+            }
+            
+            deleteStream() {
+                const streamId = this.streamId.value;
+                if (!streamId) return;
+                
+                // Confirm delete
+                if (confirm('Are you sure you want to delete this stream?')) {
+                    // Remove stream
+                    this.streams = this.streams.filter(s => s.id !== streamId);
+                    
+                    // Save to local storage
+                    this.saveStreams();
+                    
+                    // Close modal and refresh calendar
+                    this.closeModal(this.streamModal);
+                    this.renderCalendar();
+                    this.updateCountdown();
+                }
+            }
+            
+            getStreamsForDate(dateString) {
+                return this.streams.filter(stream => stream.date === dateString);
+            }
+            
+            generateId() {
+                return Date.now().toString(36) + Math.random().toString(36).substr(2);
+            }
+            
+            loadStreams() {
+                const storedStreams = localStorage.getItem('ignitionRageStreams');
+                return storedStreams ? JSON.parse(storedStreams) : [];
+            }
+            
+            saveStreams() {
+                localStorage.setItem('ignitionRageStreams', JSON.stringify(this.streams));
+            }
+            
+            updateCountdown() {
+                // Sort streams by date and time
+                const sortedStreams = [...this.streams].sort((a, b) => {
+                    const dateTimeA = new Date(`${a.date}T${a.time}`);
+                    const dateTimeB = new Date(`${b.date}T${b.time}`);
+                    return dateTimeA - dateTimeB;
+                });
+                
+                // Find next stream (first stream in the future)
+                const now = new Date();
+                const nextStream = sortedStreams.find(stream => {
+                    const streamDateTime = new Date(`${stream.date}T${stream.time}`);
+                    return streamDateTime > now;
+                });
+                
+                if (nextStream) {
+                    const streamDateTime = new Date(`${nextStream.date}T${nextStream.time}`);
+                    const timeLeft = streamDateTime - now;
+                    
+                    if (timeLeft > 0) {
+                        // Calculate days, hours, minutes, seconds
+                        const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+                        const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                        const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+                        const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+                        
+                        // Update countdown display
+                        this.countdownContainer.innerHTML = `
+                            <div class="next-stream">Next Stream: ${nextStream.title}</div>
+                            <div class="next-stream">${this.formatDate(nextStream.date)} at ${this.formatTime(nextStream.time)}</div>
+                            <div class="countdown">
+                                <div class="countdown-item">
+                                    <div class="countdown-value">${days}</div>
+                                    <div class="countdown-label">Days</div>
+                                </div>
+                                <div class="countdown-item">
+                                    <div class="countdown-value">${hours}</div>
+                                    <div class="countdown-label">Hours</div>
+                                </div>
+                                <div class="countdown-item">
+                                    <div class="countdown-value">${minutes}</div>
+                                    <div class="countdown-label">Minutes</div>
+                                </div>
+                                <div class="countdown-item">
+                                    <div class="countdown-value">${seconds}</div>
+                                    <div class="countdown-label">Seconds</div>
+                                </div>
+                            </div>
+                        `;
+                    }
+                } else {
+                    // No upcoming streams
+                    this.countdownContainer.innerHTML = `
+                        <div class="no-stream">No upcoming streams scheduled</div>
+                        <div class="no-stream">Click on a day to add a new stream</div>
+                    `;
+                }
+            }
+        }
+        
+        // Initialize calendar when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            const calendar = new StreamCalendar();
+        });
