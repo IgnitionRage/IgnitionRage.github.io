@@ -601,425 +601,422 @@
             </div>
         </div>
     </div>
-
-    <script>
-        // Create particles with fire colors
-        const particlesContainer = document.getElementById('particles');
-        const isMobile = window.innerWidth <= 768;
-        const particleCount = isMobile ? 15 : 30;
-        const fireColors = ['#ff4500', '#ff7b00', '#ffcc00', '#ff5722', '#ff9800'];
-        
-        for (let i = 0; i < particleCount; i++) {
-            const particle = document.createElement('div');
-            particle.classList.add('particle');
-            const maxSize = isMobile ? 15 : 25;
-            const size = Math.random() * (maxSize - 5) + 5;
-            particle.style.width = `${size}px`;
-            particle.style.height = `${size}px`;
-            particle.style.left = `${Math.random() * 100}%`;
-            particle.style.top = `${Math.random() * 100}%`;
-            const colorIndex = Math.floor(Math.random() * fireColors.length);
-            particle.style.background = fireColors[colorIndex];
-            particle.style.opacity = Math.random() * 0.5 + 0.1;
-            const duration = Math.random() * (isMobile ? 15 : 20) + 10;
-            particle.style.animationDuration = `${duration}s`;
-            particle.style.animationDelay = `${Math.random() * 5}s`;
-            particlesContainer.appendChild(particle);
+<script>
+    // Create particles with fire colors
+    const particlesContainer = document.getElementById('particles');
+    const isMobile = window.innerWidth <= 768;
+    const particleCount = isMobile ? 15 : 30;
+    const fireColors = ['#ff4500', '#ff7b00', '#ffcc00', '#ff5722', '#ff9800'];
+    
+    for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement('div');
+        particle.classList.add('particle');
+        const maxSize = isMobile ? 15 : 25;
+        const size = Math.random() * (maxSize - 5) + 5;
+        particle.style.width = `${size}px`;
+        particle.style.height = `${size}px`;
+        particle.style.left = `${Math.random() * 100}%`;
+        particle.style.top = `${Math.random() * 100}%`;
+        const colorIndex = Math.floor(Math.random() * fireColors.length);
+        particle.style.background = fireColors[colorIndex];
+        particle.style.opacity = Math.random() * 0.5 + 0.1;
+        const duration = Math.random() * (isMobile ? 15 : 20) + 10;
+        particle.style.animationDuration = `${duration}s`;
+        particle.style.animationDelay = `${Math.random() * 5}s`;
+        particlesContainer.appendChild(particle);
+    }
+    
+    // Mobile navigation toggle
+    const mobileToggle = document.getElementById('mobileToggle');
+    const navLinks = document.getElementById('navLinks');
+    
+    mobileToggle.addEventListener('click', () => {
+        navLinks.classList.toggle('active');
+        const icon = mobileToggle.querySelector('i');
+        icon.className = navLinks.classList.contains('active') ? 'fas fa-times' : 'fas fa-bars';
+    });
+    
+    // Calendar Functionality
+    class StreamCalendar {
+        constructor() {
+            this.currentDate = new Date();
+            this.selectedYear = this.currentDate.getFullYear();
+            this.selectedMonth = this.currentDate.getMonth();
+            this.streams = this.loadStreams();
+            // Twitch API credentials
+            this.twitchClientId = 'kkgcvrjgusmxk6630zt711e2hw4wb9e'; // Replace with your Client ID
+            this.twitchAccessToken = 'nyko8r58l2m0t6uxzqssqj5pkork7m'; // Replace with App Access Token
+            this.broadcasterId = '59663773'; // Hardcoded broadcaster ID
+            
+            this.calendarDays = document.getElementById('calendarDays');
+            this.monthYearDisplay = document.getElementById('monthYearDisplay');
+            this.viewStreamsModal = document.getElementById('viewStreamsModal');
+            this.viewModalTitle = document.getElementById('viewModalTitle');
+            this.countdownContainer = document.getElementById('countdownContainer');
+            
+            this.initEventListeners();
+            this.fetchTwitchSchedule(); // Auto-fetch on load
+            this.renderCalendar();
+            this.updateCountdown();
+            setInterval(() => this.updateCountdown(), 1000);
         }
         
-        // Mobile navigation toggle
-        const mobileToggle = document.getElementById('mobileToggle');
-        const navLinks = document.getElementById('navLinks');
-        
-        mobileToggle.addEventListener('click', () => {
-            navLinks.classList.toggle('active');
-            const icon = mobileToggle.querySelector('i');
-            icon.className = navLinks.classList.contains('active') ? 'fas fa-times' : 'fas fa-bars';
-        });
-        
-        // Calendar Functionality
-        class StreamCalendar {
-            constructor() {
-                this.currentDate = new Date();
+        initEventListeners() {
+            document.getElementById('prevMonth').addEventListener('click', () => this.navigateMonth(-1));
+            document.getElementById('nextMonth').addEventListener('click', () => this.navigateMonth(1));
+            document.getElementById('currentMonth').addEventListener('click', () => {
                 this.selectedYear = this.currentDate.getFullYear();
                 this.selectedMonth = this.currentDate.getMonth();
-                this.streams = this.loadStreams();
-                // Twitch API credentials
-                this.twitchClientId = 'kkgcvrjgusmxk6630zt711e2hw4wb9e'; // Replace with your Client ID
-                this.twitchAccessToken = 'nyko8r58l2m0t6uxzqssqj5pkork7m'; // Replace with App Access Token
-                this.broadcasterId = '59663773'; // Hardcoded broadcaster ID
+                this.renderCalendar();
+                this.fetchTwitchSchedule();
+            });
+            
+            document.getElementById('fetchTwitchBtn').addEventListener('click', () => {
+                this.fetchTwitchSchedule();
+            });
+            
+            document.getElementById('closeViewModal').addEventListener('click', () => this.closeModal(this.viewStreamsModal));
+            document.getElementById('closeViewBtn').addEventListener('click', () => this.closeModal(this.viewStreamsModal));
+        }
+        
+        navigateMonth(direction) {
+            this.selectedMonth += direction;
+            if (this.selectedMonth < 0) {
+                this.selectedMonth = 11;
+                this.selectedYear--;
+            } else if (this.selectedMonth > 11) {
+                this.selectedMonth = 0;
+                this.selectedYear++;
+            }
+            this.renderCalendar();
+            this.fetchTwitchSchedule(); // Fetch schedule for new month
+        }
+        
+        generateRecurringStreams() {
+            const recurringStreams = [];
+            const lastDay = new Date(this.selectedYear, this.selectedMonth + 1, 0).getDate();
+            
+            for (let day = 1; day <= lastDay; day++) {
+                const date = new Date(Date.UTC(this.selectedYear, this.selectedMonth, day));
+                const dayOfWeek = date.getUTCDay(); // 0=Sun, 1=Mon, ..., 6=Sat
+                const dateString = `${this.selectedYear}-${String(this.selectedMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                recurringStreams.push({
+                    id: this.generateId(),
+                    segment_id: `recurring-${dateString}-daily`,
+                    date: dateString,
+                    title: 'HomelessMidgets',
+                    category: 'Variety',
+                    time: '22:00', // 10:00 PM UTC
+                    duration: 'Some What ', // 2 hours
+                    twitch: true,
+                    is_recurring: true
+                });
+            }
+            return recurringStreams;
+        }
+        
+        async fetchTwitchSchedule() {
+            try {
+                let allSegments = [];
+                let cursor = null;
+                const startTime = `${this.selectedYear}-${String(this.selectedMonth + 1).padStart(2, '0')}-01T00:00:00Z`;
                 
-                this.calendarDays = document.getElementById('calendarDays');
-                this.monthYearDisplay = document.getElementById('monthYearDisplay');
-                this.viewStreamsModal = document.getElementById('viewStreamsModal');
-                this.viewModalTitle = document.getElementById('viewModalTitle');
-                this.countdownContainer = document.getElementById('countdownContainer');
+                do {
+                    const url = `https://api.twitch.tv/helix/schedule?broadcaster_id=${this.broadcasterId}&first=25${cursor ? `&after=${cursor}` : ''}&start_time=${startTime}`;
+                    const response = await fetch(url, {
+                        headers: {
+                            'Client-Id': this.twitchClientId,
+                            'Authorization': `Bearer ${this.twitchAccessToken}`
+                        }
+                    });
+                    if (response.status === 404) {
+                        this.streams = [];
+                        alert('No schedule found for this broadcaster. Showing recurring streams only.');
+                        break;
+                    }
+                    if (!response.ok) {
+                        throw new Error(`Failed to fetch schedule: ${response.status} ${response.statusText}`);
+                    }
+                    const data = await response.json();
+                    allSegments = allSegments.concat(data.data.segments || []);
+                    cursor = data.pagination?.cursor;
+                } while (cursor);
                 
-                this.initEventListeners();
-                this.fetchTwitchSchedule(); // Auto-fetch on load
+                this.streams = [];
+                allSegments.forEach(segment => {
+                    const startTime = new Date(segment.start_time);
+                    const endTime = new Date(segment.end_time);
+                    const duration = ((endTime - startTime) / (1000 * 60 * 60)).toFixed(2);
+                    const dateString = `${startTime.getUTCFullYear()}-${String(startTime.getUTCMonth() + 1).padStart(2, '0')}-${String(startTime.getUTCDate()).padStart(2, '0')}`;
+                    const timeString = `${String(startTime.getUTCHours()).padStart(2, '0')}:${String(startTime.getUTCMinutes()).padStart(2, '0')}`;
+                    const category = segment.category?.name?.toLowerCase() || 'other';
+                    const categoryMap = {
+                        'just chatting': 'irl',
+                        'fortnite': 'gaming',
+                        'minecraft': 'gaming',
+                        'valorant': 'gaming',
+                        'art': 'art',
+                        'music': 'music',
+                        'software and game development': 'gaming'
+                    };
+                    
+                    this.streams.push({
+                        id: this.generateId(),
+                        segment_id: segment.id,
+                        date: dateString,
+                        title: segment.title || 'Stream',
+                        category: categoryMap[category] || 'other',
+                        time: timeString,
+                        duration: duration,
+                        twitch: true,
+                        is_recurring: segment.is_recurring
+                    });
+                });
+                
+                // Add recurring streams (every day, 10 PM to 12 AM)
+                const recurringStreams = this.generateRecurringStreams();
+                recurringStreams.forEach(recurring => {
+                    // Avoid duplicates by checking segment_id and date/time
+                    const exists = this.streams.some(s => 
+                        s.segment_id === recurring.segment_id || 
+                        (s.date === recurring.date && s.time === recurring.time)
+                    );
+                    if (!exists) {
+                        this.streams.push(recurring);
+                    }
+                });
+                
+                this.saveStreams();
                 this.renderCalendar();
                 this.updateCountdown();
-                setInterval(() => this.updateCountdown(), 1000);
-            }
-            
-            initEventListeners() {
-                document.getElementById('prevMonth').addEventListener('click', () => this.navigateMonth(-1));
-                document.getElementById('nextMonth').addEventListener('click', () => this.navigateMonth(1));
-                document.getElementById('currentMonth').addEventListener('click', () => {
-                    this.selectedYear = this.currentDate.getFullYear();
-                    this.selectedMonth = this.currentDate.getMonth();
-                    this.renderCalendar();
-                    this.fetchTwitchSchedule();
-                });
-                
-                document.getElementById('fetchTwitchBtn').addEventListener('click', () => {
-                    this.fetchTwitchSchedule();
-                });
-                
-                document.getElementById('closeViewModal').addEventListener('click', () => this.closeModal(this.viewStreamsModal));
-                document.getElementById('closeViewBtn').addEventListener('click', () => this.closeModal(this.viewStreamsModal));
-            }
-            
-            navigateMonth(direction) {
-                this.selectedMonth += direction;
-                if (this.selectedMonth < 0) {
-                    this.selectedMonth = 11;
-                    this.selectedYear--;
-                } else if (this.selectedMonth > 11) {
-                    this.selectedMonth = 0;
-                    this.selectedYear++;
-                }
+                alert('Twitch schedule loaded successfully with recurring daily streams!');
+            } catch (error) {
+                console.error('Error fetching Twitch schedule:', error);
+                // Load recurring streams even if API fails
+                this.streams = this.generateRecurringStreams();
+                this.saveStreams();
                 this.renderCalendar();
-                this.fetchTwitchSchedule(); // Fetch schedule for new month
-            }
-            
-            generateRecurringStreams() {
-                const recurringStreams = [];
-                const lastDay = new Date(this.selectedYear, this.selectedMonth + 1, 0).getDate();
-                
-                for (let day = 1; day <= lastDay; day++) {
-                    const date = new Date(Date.UTC(this.selectedYear, this.selectedMonth, day));
-                    const dayOfWeek = date.getUTCDay(); // 0=Sun, 5=Fri, 6=Sat
-                    if (dayOfWeek === 5 || dayOfWeek === 6 || dayOfWeek === 0) { // Fri, Sat, Sun
-                        const dateString = `${this.selectedYear}-${String(this.selectedMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-                        recurringStreams.push({
-                            id: this.generateId(),
-                            segment_id: `recurring-${dateString}-weekend`,
-                            date: dateString,
-                            title: 'HomelessMidgets',
-                            category: 'Variety',
-                            time: '22:00', // 10:00 PM UTC
-                            duration: 'Some What ', // 2 hours
-                            twitch: true,
-                            is_recurring: true
-                        });
-                    }
-                }
-                return recurringStreams;
-            }
-            
-            async fetchTwitchSchedule() {
-                try {
-                    let allSegments = [];
-                    let cursor = null;
-                    const startTime = `${this.selectedYear}-${String(this.selectedMonth + 1).padStart(2, '0')}-01T00:00:00Z`;
-                    
-                    do {
-                        const url = `https://api.twitch.tv/helix/schedule?broadcaster_id=${this.broadcasterId}&first=25${cursor ? `&after=${cursor}` : ''}&start_time=${startTime}`;
-                        const response = await fetch(url, {
-                            headers: {
-                                'Client-Id': this.twitchClientId,
-                                'Authorization': `Bearer ${this.twitchAccessToken}`
-                            }
-                        });
-                        if (response.status === 404) {
-                            this.streams = [];
-                            alert('No schedule found for this broadcaster. Showing recurring streams only.');
-                            break;
-                        }
-                        if (!response.ok) {
-                            throw new Error(`Failed to fetch schedule: ${response.status} ${response.statusText}`);
-                        }
-                        const data = await response.json();
-                        allSegments = allSegments.concat(data.data.segments || []);
-                        cursor = data.pagination?.cursor;
-                    } while (cursor);
-                    
-                    this.streams = [];
-                    allSegments.forEach(segment => {
-                        const startTime = new Date(segment.start_time);
-                        const endTime = new Date(segment.end_time);
-                        const duration = ((endTime - startTime) / (1000 * 60 * 60)).toFixed(2);
-                        const dateString = `${startTime.getUTCFullYear()}-${String(startTime.getUTCMonth() + 1).padStart(2, '0')}-${String(startTime.getUTCDate()).padStart(2, '0')}`;
-                        const timeString = `${String(startTime.getUTCHours()).padStart(2, '0')}:${String(startTime.getUTCMinutes()).padStart(2, '0')}`;
-                        const category = segment.category?.name?.toLowerCase() || 'other';
-                        const categoryMap = {
-                            'just chatting': 'irl',
-                            'fortnite': 'gaming',
-                            'minecraft': 'gaming',
-                            'valorant': 'gaming',
-                            'art': 'art',
-                            'music': 'music',
-                            'software and game development': 'gaming'
-                        };
-                        
-                        this.streams.push({
-                            id: this.generateId(),
-                            segment_id: segment.id,
-                            date: dateString,
-                            title: segment.title || 'Stream',
-                            category: categoryMap[category] || 'other',
-                            time: timeString,
-                            duration: duration,
-                            twitch: true,
-                            is_recurring: segment.is_recurring
-                        });
-                    });
-                    
-                    // Add recurring streams (Fri, Sat, Sun, 10 PM to 12 AM)
-                    const recurringStreams = this.generateRecurringStreams();
-                    recurringStreams.forEach(recurring => {
-                        // Avoid duplicates by checking segment_id and date/time
-                        const exists = this.streams.some(s => 
-                            s.segment_id === recurring.segment_id || 
-                            (s.date === recurring.date && s.time === recurring.time)
-                        );
-                        if (!exists) {
-                            this.streams.push(recurring);
-                        }
-                    });
-                    
-                    this.saveStreams();
-                    this.renderCalendar();
-                    this.updateCountdown();
-                    alert('Twitch schedule loaded successfully with recurring weekend streams!');
-                } catch (error) {
-                    console.error('Error fetching Twitch schedule:', error);
-                    // Load recurring streams even if API fails
-                    this.streams = this.generateRecurringStreams();
-                    this.saveStreams();
-                    this.renderCalendar();
-                    this.updateCountdown();
-                    alert(`Failed to fetch Twitch schedule: ${error.message}. Showing recurring streams only. Please check your credentials or try again later.`);
-                }
-            }
-            
-            renderCalendar() {
-                this.calendarDays.innerHTML = '';
-                const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-                this.monthYearDisplay.textContent = `${monthNames[this.selectedMonth]} ${this.selectedYear}`;
-                
-                const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-                dayNames.forEach(day => {
-                    const dayHeader = document.createElement('div');
-                    dayHeader.className = 'calendar-day-header';
-                    dayHeader.textContent = day;
-                    this.calendarDays.appendChild(dayHeader);
-                });
-                
-                const firstDay = new Date(this.selectedYear, this.selectedMonth, 1);
-                const lastDay = new Date(this.selectedYear, this.selectedMonth + 1, 0);
-                const firstDayOfWeek = firstDay.getDay();
-                const lastDayOfPrevMonth = new Date(this.selectedYear, this.selectedMonth, 0).getDate();
-                
-                for (let i = firstDayOfWeek - 1; i >= 0; i--) {
-                    const day = lastDayOfPrevMonth - i;
-                    const prevMonth = this.selectedMonth - 1 < 0 ? 11 : this.selectedMonth - 1;
-                    const prevYear = prevMonth === 11 ? this.selectedYear - 1 : this.selectedYear;
-                    const dateString = `${prevYear}-${String(prevMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-                    const dayStreams = this.getStreamsForDate(dateString);
-                    this.createDayElement(day, true, false, dayStreams, dateString);
-                }
-                
-                for (let day = 1; day <= lastDay.getDate(); day++) {
-                    const dateString = `${this.selectedYear}-${String(this.selectedMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-                    const dayStreams = this.getStreamsForDate(dateString);
-                    const isToday = this.isToday(day);
-                    this.createDayElement(day, false, isToday, dayStreams, dateString);
-                }
-                
-                const daysAdded = firstDayOfWeek + lastDay.getDate();
-                const remainingCells = 42 - daysAdded;
-                for (let day = 1; day <= remainingCells; day++) {
-                    const nextMonth = this.selectedMonth + 1 > 11 ? 0 : this.selectedMonth + 1;
-                    const nextYear = nextMonth === 0 ? this.selectedYear + 1 : this.selectedYear;
-                    const dateString = `${nextYear}-${String(nextMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-                    const dayStreams = this.getStreamsForDate(dateString);
-                    this.createDayElement(day, true, false, dayStreams, dateString);
-                }
-            }
-            
-            createDayElement(day, isOtherMonth, isToday, streams, dateString) {
-                const dayElement = document.createElement('div');
-                dayElement.className = 'calendar-day';
-                if (isOtherMonth) dayElement.classList.add('other-month');
-                if (isToday) dayElement.classList.add('today');
-                if (streams.length > 0) dayElement.classList.add('has-stream');
-                
-                const dayNumber = document.createElement('div');
-                dayNumber.className = 'day-number';
-                dayNumber.textContent = day;
-                dayElement.appendChild(dayNumber);
-                
-                streams.slice(0, 2).forEach(stream => {
-                    const indicator = document.createElement('div');
-                    indicator.className = 'stream-indicator';
-                    indicator.textContent = `${stream.category.charAt(0).toUpperCase() + stream.category.slice(1)}: ${this.formatTime(stream.time)}`;
-                    dayElement.appendChild(indicator);
-                });
-                
-                if (streams.length > 2) {
-                    const indicator = document.createElement('div');
-                    indicator.className = 'stream-indicator';
-                    indicator.textContent = `+${streams.length - 2} more`;
-                    dayElement.appendChild(indicator);
-                }
-                
-                if (streams.length > 0) {
-                    dayElement.addEventListener('click', () => {
-                        this.openViewStreamsModal(dateString, streams);
-                    });
-                }
-                
-                this.calendarDays.appendChild(dayElement);
-            }
-            
-            isToday(day) {
-                const today = new Date();
-                return day === today.getDate() && 
-                       this.selectedMonth === today.getMonth() && 
-                       this.selectedYear === today.getFullYear();
-            }
-            
-            formatDate(date) {
-                const d = new Date(date);
-                const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-                return `${monthNames[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
-            }
-            
-            formatTime(timeString) {
-                const [hours, minutes] = timeString.split(':');
-                const hour = parseInt(hours) % 12 || 12;
-                const ampm = parseInt(hours) >= 12 ? 'PM' : 'AM';
-                return `${hour}:${minutes} ${ampm}`;
-            }
-            
-            openViewStreamsModal(dateString, streams) {
-                this.viewModalTitle.textContent = `Streams on ${this.formatDate(dateString)}`;
-                const streamsList = document.getElementById('streamsList');
-                streamsList.innerHTML = '';
-                
-                if (streams.length > 0) {
-                    streams.forEach(stream => {
-                        const streamItem = document.createElement('div');
-                        streamItem.className = 'stream-item';
-                        
-                        const streamInfo = document.createElement('div');
-                        streamInfo.className = 'stream-item-info';
-                        
-                        const streamTitle = document.createElement('div');
-                        streamTitle.className = 'stream-item-title';
-                        streamTitle.textContent = `${stream.title} (${stream.category.charAt(0).toUpperCase() + stream.category.slice(1)}${stream.is_recurring ? ', Recurring' : ''})`;
-                        
-                        const streamTime = document.createElement('div');
-                        streamTime.className = 'stream-item-time';
-                        streamTime.textContent = `${this.formatTime(stream.time)} for ${stream.duration} hours`;
-                        
-                        streamInfo.appendChild(streamTitle);
-                        streamInfo.appendChild(streamTime);
-                        
-                        streamItem.appendChild(streamInfo);
-                        streamsList.appendChild(streamItem);
-                    });
-                } else {
-                    const noStreams = document.createElement('div');
-                    noStreams.className = 'no-stream';
-                    noStreams.textContent = 'No streams scheduled for this day.';
-                    streamsList.appendChild(noStreams);
-                }
-                
-                this.viewStreamsModal.style.display = 'flex';
-            }
-            
-            closeModal(modal) {
-                modal.style.display = 'none';
-            }
-            
-            getStreamsForDate(dateString) {
-                return this.streams.filter(stream => stream.date === dateString);
-            }
-            
-            generateId() {
-                return Date.now().toString(36) + Math.random().toString(36).substr(2);
-            }
-            
-            loadStreams() {
-                const storedStreams = localStorage.getItem('ignitionRageStreams');
-                return storedStreams ? JSON.parse(storedStreams) : [];
-            }
-            
-            saveStreams() {
-                localStorage.setItem('ignitionRageStreams', JSON.stringify(this.streams));
-            }
-            
-            updateCountdown() {
-                const sortedStreams = [...this.streams].sort((a, b) => {
-                    const dateTimeA = new Date(`${a.date}T${a.time}:00Z`);
-                    const dateTimeB = new Date(`${b.date}T${b.time}:00Z`);
-                    return dateTimeA - dateTimeB;
-                });
-                
-                const now = new Date();
-                const nextStream = sortedStreams.find(stream => {
-                    const streamDateTime = new Date(`${stream.date}T${stream.time}:00Z`);
-                    return streamDateTime > now;
-                });
-                
-                if (nextStream) {
-                    const streamDateTime = new Date(`${nextStream.date}T${nextStream.time}:00Z`);
-                    const timeLeft = streamDateTime - now;
-                    
-                    if (timeLeft > 0) {
-                        const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
-                        const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                        const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
-                        const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
-                        
-                        this.countdownContainer.innerHTML = `
-                            <div class="next-stream">Next Stream: ${nextStream.title} (${nextStream.category.charAt(0).toUpperCase() + nextStream.category.slice(1)})</div>
-                            <div class="next-stream">${this.formatDate(nextStream.date)} at ${this.formatTime(nextStream.time)}</div>
-                            <div class="countdown">
-                                <div class="countdown-item">
-                                    <div class="countdown-value">${days}</div>
-                                    <div class="countdown-label">Days</div>
-                                </div>
-                                <div class="countdown-item">
-                                    <div class="countdown-value">${hours}</div>
-                                    <div class="countdown-label">Hours</div>
-                                </div>
-                                <div class="countdown-item">
-                                    <div class="countdown-value">${minutes}</div>
-                                    <div class="countdown-label">Minutes</div>
-                                </div>
-                                <div class="countdown-item">
-                                    <div class="countdown-value">${seconds}</div>
-                                    <div class="countdown-label">Seconds</div>
-                                </div>
-                            </div>
-                        `;
-                    }
-                } else {
-                    this.countdownContainer.innerHTML = `
-                        <div class="no-stream">No upcoming streams scheduled</div>
-                        <div class="no-stream">Click "Fetch Twitch Schedule" to refresh</div>
-                    `;
-                }
+                this.updateCountdown();
+                alert(`Failed to fetch Twitch schedule: ${error.message}. Showing recurring streams only. Please check your credentials or try again later.`);
             }
         }
         
-        document.addEventListener('DOMContentLoaded', () => {
-            new StreamCalendar();
-        });
-    </script>
+        renderCalendar() {
+            this.calendarDays.innerHTML = '';
+            const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+            this.monthYearDisplay.textContent = `${monthNames[this.selectedMonth]} ${this.selectedYear}`;
+            
+            const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+            dayNames.forEach(day => {
+                const dayHeader = document.createElement('div');
+                dayHeader.className = 'calendar-day-header';
+                dayHeader.textContent = day;
+                this.calendarDays.appendChild(dayHeader);
+            });
+            
+            const firstDay = new Date(this.selectedYear, this.selectedMonth, 1);
+            const lastDay = new Date(this.selectedYear, this.selectedMonth + 1, 0);
+            const firstDayOfWeek = firstDay.getDay();
+            const lastDayOfPrevMonth = new Date(this.selectedYear, this.selectedMonth, 0).getDate();
+            
+            for (let i = firstDayOfWeek - 1; i >= 0; i--) {
+                const day = lastDayOfPrevMonth - i;
+                const prevMonth = this.selectedMonth - 1 < 0 ? 11 : this.selectedMonth - 1;
+                const prevYear = prevMonth === 11 ? this.selectedYear - 1 : this.selectedYear;
+                const dateString = `${prevYear}-${String(prevMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                const dayStreams = this.getStreamsForDate(dateString);
+                this.createDayElement(day, true, false, dayStreams, dateString);
+            }
+            
+            for (let day = 1; day <= lastDay.getDate(); day++) {
+                const dateString = `${this.selectedYear}-${String(this.selectedMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                const dayStreams = this.getStreamsForDate(dateString);
+                const isToday = this.isToday(day);
+                this.createDayElement(day, false, isToday, dayStreams, dateString);
+            }
+            
+            const daysAdded = firstDayOfWeek + lastDay.getDate();
+            const remainingCells = 42 - daysAdded;
+            for (let day = 1; day <= remainingCells; day++) {
+                const nextMonth = this.selectedMonth + 1 > 11 ? 0 : this.selectedMonth + 1;
+                const nextYear = nextMonth === 0 ? this.selectedYear + 1 : this.selectedYear;
+                const dateString = `${nextYear}-${String(nextMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                const dayStreams = this.getStreamsForDate(dateString);
+                this.createDayElement(day, true, false, dayStreams, dateString);
+            }
+        }
+        
+        createDayElement(day, isOtherMonth, isToday, streams, dateString) {
+            const dayElement = document.createElement('div');
+            dayElement.className = 'calendar-day';
+            if (isOtherMonth) dayElement.classList.add('other-month');
+            if (isToday) dayElement.classList.add('today');
+            if (streams.length > 0) dayElement.classList.add('has-stream');
+            
+            const dayNumber = document.createElement('div');
+            dayNumber.className = 'day-number';
+            dayNumber.textContent = day;
+            dayElement.appendChild(dayNumber);
+            
+            streams.slice(0, 2).forEach(stream => {
+                const indicator = document.createElement('div');
+                indicator.className = 'stream-indicator';
+                indicator.textContent = `${stream.category.charAt(0).toUpperCase() + stream.category.slice(1)}: ${this.formatTime(stream.time)}`;
+                dayElement.appendChild(indicator);
+            });
+            
+            if (streams.length > 2) {
+                const indicator = document.createElement('div');
+                indicator.className = 'stream-indicator';
+                indicator.textContent = `+${streams.length - 2} more`;
+                dayElement.appendChild(indicator);
+            }
+            
+            if (streams.length > 0) {
+                dayElement.addEventListener('click', () => {
+                    this.openViewStreamsModal(dateString, streams);
+                });
+            }
+            
+            this.calendarDays.appendChild(dayElement);
+        }
+        
+        isToday(day) {
+            const today = new Date();
+            return day === today.getDate() && 
+                   this.selectedMonth === today.getMonth() && 
+                   this.selectedYear === today.getFullYear();
+        }
+        
+        formatDate(date) {
+            const d = new Date(date);
+            const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+            return `${monthNames[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
+        }
+        
+        formatTime(timeString) {
+            const [hours, minutes] = timeString.split(':');
+            const hour = parseInt(hours) % 12 || 12;
+            const ampm = parseInt(hours) >= 12 ? 'PM' : 'AM';
+            return `${hour}:${minutes} ${ampm}`;
+        }
+        
+        openViewStreamsModal(dateString, streams) {
+            this.viewModalTitle.textContent = `Streams on ${this.formatDate(dateString)}`;
+            const streamsList = document.getElementById('streamsList');
+            streamsList.innerHTML = '';
+            
+            if (streams.length > 0) {
+                streams.forEach(stream => {
+                    const streamItem = document.createElement('div');
+                    streamItem.className = 'stream-item';
+                    
+                    const streamInfo = document.createElement('div');
+                    streamInfo.className = 'stream-item-info';
+                    
+                    const streamTitle = document.createElement('div');
+                    streamTitle.className = 'stream-item-title';
+                    streamTitle.textContent = `${stream.title} (${stream.category.charAt(0).toUpperCase() + stream.category.slice(1)}${stream.is_recurring ? ', Recurring' : ''})`;
+                    
+                    const streamTime = document.createElement('div');
+                    streamTime.className = 'stream-item-time';
+                    streamTime.textContent = `${this.formatTime(stream.time)} for ${stream.duration} hours`;
+                    
+                    streamInfo.appendChild(streamTitle);
+                    streamInfo.appendChild(streamTime);
+                    
+                    streamItem.appendChild(streamInfo);
+                    streamsList.appendChild(streamItem);
+                });
+            } else {
+                const noStreams = document.createElement('div');
+                noStreams.className = 'no-stream';
+                noStreams.textContent = 'No streams scheduled for this day.';
+                streamsList.appendChild(noStreams);
+            }
+            
+            this.viewStreamsModal.style.display = 'flex';
+        }
+        
+        closeModal(modal) {
+            modal.style.display = 'none';
+        }
+        
+        getStreamsForDate(dateString) {
+            return this.streams.filter(stream => stream.date === dateString);
+        }
+        
+        generateId() {
+            return Date.now().toString(36) + Math.random().toString(36).substr(2);
+        }
+        
+        loadStreams() {
+            const storedStreams = localStorage.getItem('ignitionRageStreams');
+            return storedStreams ? JSON.parse(storedStreams) : [];
+        }
+        
+        saveStreams() {
+            localStorage.setItem('ignitionRageStreams', JSON.stringify(this.streams));
+        }
+        
+        updateCountdown() {
+            const sortedStreams = [...this.streams].sort((a, b) => {
+                const dateTimeA = new Date(`${a.date}T${a.time}:00Z`);
+                const dateTimeB = new Date(`${b.date}T${b.time}:00Z`);
+                return dateTimeA - dateTimeB;
+            });
+            
+            const now = new Date();
+            const nextStream = sortedStreams.find(stream => {
+                const streamDateTime = new Date(`${stream.date}T${stream.time}:00Z`);
+                return streamDateTime > now;
+            });
+            
+            if (nextStream) {
+                const streamDateTime = new Date(`${nextStream.date}T${nextStream.time}:00Z`);
+                const timeLeft = streamDateTime - now;
+                
+                if (timeLeft > 0) {
+                    const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+                    const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+                    const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+                    
+                    this.countdownContainer.innerHTML = `
+                        <div class="next-stream">Next Stream: ${nextStream.title} (${nextStream.category.charAt(0).toUpperCase() + nextStream.category.slice(1)})</div>
+                        <div class="next-stream">${this.formatDate(nextStream.date)} at ${this.formatTime(nextStream.time)}</div>
+                        <div class="countdown">
+                            <div class="countdown-item">
+                                <div class="countdown-value">${days}</div>
+                                <div class="countdown-label">Days</div>
+                            </div>
+                            <div class="countdown-item">
+                                <div class="countdown-value">${hours}</div>
+                                <div class="countdown-label">Hours</div>
+                            </div>
+                            <div class="countdown-item">
+                                <div class="countdown-value">${minutes}</div>
+                                <div class="countdown-label">Minutes</div>
+                            </div>
+                            <div class="countdown-item">
+                                <div class="countdown-value">${seconds}</div>
+                                <div class="countdown-label">Seconds</div>
+                            </div>
+                        </div>
+                    `;
+                }
+            } else {
+                this.countdownContainer.innerHTML = `
+                    <div class="no-stream">No upcoming streams scheduled</div>
+                    <div class="no-stream">Click "Fetch Twitch Schedule" to refresh</div>
+                `;
+            }
+        }
+    }
+    
+    document.addEventListener('DOMContentLoaded', () => {
+        new StreamCalendar();
+    });
+</script>
 </body>
 </html>
