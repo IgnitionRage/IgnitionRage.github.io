@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ignition Rage Stream Team</title>
     <style>
-        :root {
+         :root {
             --fire-red: #ff4500;
             --fire-orange: #ff7b00;
             --fire-yellow: #ffcc00;
@@ -63,10 +64,22 @@
         }
         
         @keyframes flicker {
-            0%, 19.999%, 22%, 62.999%, 64%, 64.999%, 70%, 100% {
+            0%,
+            19.999%,
+            22%,
+            62.999%,
+            64%,
+            64.999%,
+            70%,
+            100% {
                 opacity: 1;
             }
-            20%, 21.999%, 63%, 63.999%, 65%, 69.999% {
+            20%,
+            21.999%,
+            63%,
+            63.999%,
+            65%,
+            69.999% {
                 opacity: 0.8;
             }
         }
@@ -279,6 +292,34 @@
             margin-right: 10px;
         }
         
+        .discord-members {
+            margin-top: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem;
+        }
+        
+        .discord-member {
+            display: flex;
+            align-items: center;
+            background: var(--card-bg);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            border: 1px solid var(--fire-orange);
+        }
+        
+        .discord-member img {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            margin-right: 0.5rem;
+        }
+        
+        .discord-member span {
+            font-size: 0.9rem;
+        }
+        
         .stream-schedule {
             padding: 3rem 2rem;
         }
@@ -298,15 +339,13 @@
             margin-bottom: 2rem;
         }
         
-        /* Animated background effect */
         .fire-background {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: 
-                radial-gradient(ellipse at bottom, #1b1b1b 0%, #090a0f 100%);
+            background: radial-gradient(ellipse at bottom, #1b1b1b 0%, #090a0f 100%);
             z-index: -2;
         }
         
@@ -317,9 +356,7 @@
             transform: translate(-50%, -50%);
             width: 150%;
             height: 150%;
-            background: 
-                radial-gradient(ellipse at center, rgba(255, 69, 0, 0.15) 0%, 
-                rgba(10, 10, 10, 0) 70%);
+            background: radial-gradient(ellipse at center, rgba(255, 69, 0, 0.15) 0%, rgba(10, 10, 10, 0) 70%);
             z-index: -1;
             pointer-events: none;
         }
@@ -352,7 +389,6 @@
             }
         }
         
-        /* Navigation Bar */
         .nav-bar {
             position: fixed;
             top: 0;
@@ -452,33 +488,26 @@
             .container {
                 padding: 1rem;
             }
-            
             h1 {
                 font-size: 2.5rem;
             }
-            
             h2 {
                 font-size: 2rem;
             }
-            
             .founders-section {
                 flex-direction: column;
                 align-items: center;
             }
-            
             .founder-card {
                 width: 100%;
                 max-width: 350px;
             }
-            
             #twitch-embed {
                 height: 300px;
             }
-            
             .nav-container {
                 padding: 0.8rem 1rem;
             }
-            
             .nav-links {
                 position: fixed;
                 top: 60px;
@@ -492,41 +521,35 @@
                 transition: transform 0.3s ease;
                 border-bottom: 1px solid var(--fire-red);
             }
-            
             .nav-links.active {
                 transform: translateY(0);
             }
-            
             .nav-link {
                 width: 100%;
                 padding: 1rem 2rem;
                 text-align: center;
                 border-radius: 0;
             }
-            
             .nav-link:after {
                 display: none;
             }
-            
             .mobile-toggle {
                 display: block;
             }
         }
     </style>
-    <!-- Using Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css">
 </head>
+
 <body>
     <div class="fire-background"></div>
     <div class="fire-glow"></div>
     <div class="particles" id="particles"></div>
-    
-    <!-- Navigation Bar -->
+
     <nav class="nav-bar">
         <div class="nav-container">
             <a href="#" class="logo">
-                <i class="fas fa-fire"></i>
-                IgnitionRage
+                <i class="fas fa-fire"></i> IgnitionRage
             </a>
             <div class="nav-links" id="navLinks">
                 <a href="#" class="nav-link active">Home</a>
@@ -541,23 +564,21 @@
             </button>
         </div>
     </nav>
-    
+
     <div class="container">
         <header>
-            <!-- Added GitHub Organization Avatar -->
             <a href="https://github.com/IgnitionRage" class="github-link" target="_blank">
-                <img id="github-org-avatar" class="github-logo" alt="IgnitionRage GitHub" 
-                     style="width: 70px; height: 70px; border-radius: 50%; object-fit: cover; border: 3px solid var(--fire-orange);">
+                <img id="github-org-avatar" class="github-logo" alt="IgnitionRage GitHub" style="width: 70px; height: 70px; border-radius: 50%; object-fit: cover; border: 3px solid var(--fire-orange);">
             </a>
             <h1>Ignition Rage</h1>
             <p style="color: var(--fire-yellow); text-shadow: 0 0 5px rgba(255, 204, 0, 0.3);">Gaming Excellence. Streaming Passion.</p>
         </header>
-        
+
         <section id="founders">
             <div class="section-header">
                 <h2>Meet Our Founders</h2>
             </div>
-            
+
             <div class="founders-section">
                 <div class="founder-card">
                     <div class="founder-image">
@@ -569,7 +590,7 @@
                         <p>A passionate gamer with exceptional leadership skills who brought the vision of Ignition Rage to life. Known for strategic gameplay and building communities that last.</p>
                     </div>
                 </div>
-                
+
                 <div class="founder-card">
                     <div class="founder-image">
                         <img src="https://avatars.githubusercontent.com/u/166666971?v=4" alt="Bacon_Space" />
@@ -582,20 +603,23 @@
                 </div>
             </div>
         </section>
-        
+
         <section class="join-section" id="join">
             <div class="section-header">
                 <h2>Join Our Community</h2>
             </div>
             <p>Want to be part of the Ignition Rage family? Join our Discord server to connect with our team members, participate in exclusive events, and stay updated on all our latest streams and announcements!</p>
-            <a href="https://discord.gg/XvEUfqEAFJ" class="discord-button" target="_blank">
+            <a href="#" class="discord-button" id="discordButton" target="_blank">
                 <svg class="discord-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="white">
                     <path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189Z"/>
-                </svg>
-                Join Our Discord
+                </svg> Join Our Discord
             </a>
+            <div class="section-header"></div>
+            <h2 class="founder-role">Discord Members</h2>
+            <div class="founder-role">These Are The Current Online Discord Members</div>
+            <div class="discord-members" id="discordMembers"></div>
         </section>
-        
+
         <section class="stream-schedule" id="streams">
             <div class="section-header">
                 <h2>Upcoming Streams</h2>
@@ -603,11 +627,9 @@
             <div id="twitch-embed"></div>
         </section>
     </div>
-    
-    <!-- Load the Twitch embed script -->
+
     <script src="https://player.twitch.tv/js/embed/v1.js"></script>
-    
-    <!-- Create a Twitch.Player object -->
+
     <script type="text/javascript">
         // Fetch GitHub organization avatar
         fetch('https://api.github.com/orgs/IgnitionRage')
@@ -616,57 +638,88 @@
                 if (data && data.avatar_url) {
                     document.getElementById('github-org-avatar').src = data.avatar_url;
                 } else {
-                    // Fallback to a default GitHub icon if API fails
                     const avatarImg = document.getElementById('github-org-avatar');
                     avatarImg.outerHTML = '<i class="fab fa-github github-logo"></i>';
                 }
             })
             .catch(error => {
                 console.error('Error fetching GitHub data:', error);
-                // Fallback to a default GitHub icon
                 const avatarImg = document.getElementById('github-org-avatar');
                 avatarImg.outerHTML = '<i class="fab fa-github github-logo"></i>';
             });
-            
+
+        // Fetch Discord widget data
+        fetch('https://discord.com/api/guilds/513536780323258374/widget.json')
+            .then(response => response.json())
+            .then(data => {
+                if (data && data.instant_invite) {
+                    document.getElementById('discordButton').href = data.instant_invite;
+                } else {
+                    // Fallback to a default Discord invite link
+                    document.getElementById('discordButton').href = 'https://discord.gg/XvEUfqEAFJ';
+                }
+
+                // Display Discord members, excluding "IgnitionRage" and "Ignition Rage" Auto-Publish
+
+                const membersContainer = document.getElementById('discordMembers');
+                if (data && data.members && data.members.length > 0) {
+                    data.members.forEach(member => {
+                        const username = member.username.toLowerCase();
+                        if (username !== 'ignitionrage' && username !== 'ignition rage' && username !== 'Auto-Publish') {
+                            const memberElement = document.createElement('div');
+                            memberElement.className = 'discord-member';
+
+                            const avatar = member.avatar_url || 'https://cdn.discordapp.com/embed/avatars/0.png';
+                            const statusClass = member.status === 'online' ? 'online' : member.status === 'dnd' ? 'dnd' : 'offline';
+
+                            memberElement.innerHTML = `
+                                <img src="${avatar}" alt="${member.username}">
+                                <span>${member.username}</span>
+                                <span class="status ${statusClass}"></span>
+                            `;
+
+                            membersContainer.appendChild(memberElement);
+                        }
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching Discord data:', error);
+                document.getElementById('discordButton').href = 'https://discord.gg/XvEUfqEAFJ';
+            });
+
         // Create animated fire particles
         document.addEventListener('DOMContentLoaded', function() {
             const particlesContainer = document.getElementById('particles');
             const isMobile = window.innerWidth <= 768;
             const particleCount = isMobile ? 15 : 30;
             const fireColors = ['#ff4500', '#ff7b00', '#ffcc00', '#ff5722', '#ff9800'];
-            
+
             for (let i = 0; i < particleCount; i++) {
                 const particle = document.createElement('div');
                 particle.classList.add('particle');
-                
-                // Smaller particles on mobile
+
                 const maxSize = isMobile ? 15 : 25;
                 const size = Math.random() * (maxSize - 5) + 5;
                 particle.style.width = `${size}px`;
                 particle.style.height = `${size}px`;
-                
-                // Random position
+
                 particle.style.left = `${Math.random() * 100}%`;
                 particle.style.top = `${Math.random() * 100}%`;
-                
-                // Random fire color
+
                 const colorIndex = Math.floor(Math.random() * fireColors.length);
                 particle.style.background = fireColors[colorIndex];
-                
-                // Random opacity
+
                 particle.style.opacity = Math.random() * 0.5 + 0.1;
-                
-                // Random animation duration (shorter on mobile)
+
                 const duration = Math.random() * (isMobile ? 15 : 20) + 10;
                 particle.style.animationDuration = `${duration}s`;
-                
-                // Random animation delay
+
                 particle.style.animationDelay = `${Math.random() * 5}s`;
-                
+
                 particlesContainer.appendChild(particle);
             }
-            
-            // Initialize Twitch player if Twitch is loaded
+
             if (typeof Twitch !== 'undefined') {
                 new Twitch.Player("twitch-embed", {
                     channel: "homelesmidgets",
@@ -674,11 +727,10 @@
                     height: "100%"
                 });
             }
-            
-            // Mobile navigation toggle
+
             const mobileToggle = document.getElementById('mobileToggle');
             const navLinks = document.getElementById('navLinks');
-            
+
             mobileToggle.addEventListener('click', () => {
                 navLinks.classList.toggle('active');
                 const icon = mobileToggle.querySelector('i');
@@ -688,41 +740,34 @@
                     icon.className = 'fas fa-bars';
                 }
             });
-            
-            // Smooth scrolling for navigation links
+
             document.querySelectorAll('.nav-link').forEach(link => {
                 link.addEventListener('click', function(e) {
-                    // Only process links with hash
                     if (this.getAttribute('href').startsWith('#')) {
                         e.preventDefault();
-                        
-                        // Hide mobile menu if open
+
                         navLinks.classList.remove('active');
                         mobileToggle.querySelector('i').className = 'fas fa-bars';
-                        
-                        // Get target element
+
                         const targetId = this.getAttribute('href').substring(1);
                         if (targetId) {
                             const targetElement = document.getElementById(targetId);
                             if (targetElement) {
-                                // Scroll to element with offset for navbar
                                 const navHeight = document.querySelector('.nav-bar').offsetHeight;
                                 const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - navHeight;
-                                
+
                                 window.scrollTo({
                                     top: targetPosition,
                                     behavior: 'smooth'
                                 });
                             }
                         } else {
-                            // Scroll to top for home link
                             window.scrollTo({
                                 top: 0,
                                 behavior: 'smooth'
                             });
                         }
-                        
-                        // Update active state
+
                         document.querySelectorAll('.nav-link').forEach(navLink => {
                             navLink.classList.remove('active');
                         });
@@ -733,4 +778,5 @@
         });
     </script>
 </body>
+
 </html>
