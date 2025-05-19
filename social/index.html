@@ -412,7 +412,7 @@
                 <i class="fa-brands fa-x-twitter"></i>
                 <span>Twitter</span>
             </a>
-            <a href="https://discord.gg/XvEUfqEAFJ" class="social-link">
+            <a href="https://discord.gg/XvEUfqEAFJ" class="social-link" id="discordButton">
                 <i class="fa-brands fa-discord"></i>
                 <span>Discord</span>
             </a>
@@ -481,7 +481,45 @@
             
             particlesContainer.appendChild(particle);
         }
+   // Fetch Discord widget data
+        fetch('https://discord.com/api/guilds/513536780323258374/widget.json')
+            .then(response => response.json())
+            .then(data => {
+                if (data && data.instant_invite) {
+                    document.getElementById('discordButton').href = data.instant_invite;
+                } else {
+                    // Fallback to a default Discord invite link
+                    document.getElementById('discordButton').href = 'https://discord.gg/XvEUfqEAFJ';
+                }
 
+                // Display Discord members, excluding "IgnitionRage" and "Ignition Rage" Auto-Publish
+
+                const membersContainer = document.getElementById('discordMembers');
+                if (data && data.members && data.members.length > 0) {
+                    data.members.forEach(member => {
+                        const username = member.username.toLowerCase();
+                        if (username !== 'ignitionrage' && username !== 'ignition rage' && username !== 'Auto-Publish') {
+                            const memberElement = document.createElement('div');
+                            memberElement.className = 'discord-member';
+
+                            const avatar = member.avatar_url || 'https://cdn.discordapp.com/embed/avatars/0.png';
+                            const statusClass = member.status === 'online' ? 'online' : member.status === 'dnd' ? 'dnd' : 'offline';
+
+                            memberElement.innerHTML = `
+                                <img src="${avatar}" alt="${member.username}">
+                                <span>${member.username}</span>
+                                <span class="status ${statusClass}"></span>
+                            `;
+
+                            membersContainer.appendChild(memberElement);
+                        }
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching Discord data:', error);
+                document.getElementById('discordButton').href = 'https://discord.gg/XvEUfqEAFJ';
+            });
         // Fetch GitHub user profile
         const username = 'IgnitionRage'; // Change this to the correct GitHub username
         const profileContainer = document.getElementById('profile-container');
