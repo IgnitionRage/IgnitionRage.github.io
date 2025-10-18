@@ -411,6 +411,32 @@
       cursor: not-allowed;
       transform: none;
       animation: none;
+      pointer-events: none;
+    }
+    
+    .secondary-button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 0.9em;
+      background: 
+        linear-gradient(135deg, rgba(138, 43, 226, 0.3) 0%, rgba(218, 112, 214, 0.3) 100%);
+      border: 2px solid rgba(138, 43, 226, 0.5);
+      box-shadow: 
+        0 4px 15px rgba(138, 43, 226, 0.2),
+        inset 0 1px 0 rgba(218, 112, 214, 0.1);
+    }
+    
+    .secondary-button:hover {
+      background: 
+        linear-gradient(135deg, rgba(138, 43, 226, 0.5) 0%, rgba(218, 112, 214, 0.5) 100%);
+      border-color: rgba(138, 43, 226, 0.7);
+      box-shadow: 
+        0 6px 20px rgba(138, 43, 226, 0.3),
+        inset 0 1px 0 rgba(218, 112, 214, 0.2);
+    }
+    
+    .primary-button {
+      /* Inherits the main button styles */
     }
     
 
@@ -504,14 +530,14 @@
             </div>
           </div>
 
-          <button type="button" id="addMoreBtn" style="margin-top: 20px; padding: 10px 20px; font-size: 0.9em;">
+          <button type="button" id="addMoreBtn" class="secondary-button">
             + Add Another Platform
           </button>
         </div>
       </div>
 
       <div class="submit-container">
-        <button type="submit" id="submitBtn">
+        <button type="submit" id="submitBtn" class="primary-button">
           Submit Links
         </button>
         <div id="statusMessage" class="status-message"></div>
@@ -650,6 +676,12 @@
           statusMessage.textContent = '✧ Links submitted successfully! ✧';
           statusMessage.style.display = 'block';
           this.reset();
+          
+          // Re-enable button after 3 seconds
+          setTimeout(() => {
+            submitBtn.innerHTML = 'Submit Links';
+            submitBtn.disabled = false;
+          }, 3000);
         } else {
           throw new Error('Failed to submit');
         }
@@ -657,11 +689,11 @@
         statusMessage.className = 'status-message status-error';
         statusMessage.textContent = '✧ Failed to submit. Please try again. ✧';
         statusMessage.style.display = 'block';
+        
+        // Reset button immediately on error
+        submitBtn.innerHTML = 'Submit Links';
+        submitBtn.disabled = false;
       }
-      
-      // Reset button
-      submitBtn.innerHTML = 'Submit Links';
-      submitBtn.disabled = false;
     });
   </script>
 </body>
