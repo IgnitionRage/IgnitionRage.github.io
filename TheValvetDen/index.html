@@ -337,7 +337,7 @@
     
     button {
       background: 
-        linear-gradient(45deg, #8a2be2 0%, #da70d6 50%, #ba55d3 100%);
+        linear-gradient(135deg, #8a2be2 0%, #da70d6 50%, #ba55d3 100%);
       color: #ffffff;
       border: none;
       padding: 15px 40px;
@@ -347,68 +347,73 @@
       font-weight: normal;
       cursor: pointer;
       letter-spacing: 2px;
-      transition: all 0.3s ease;
+      transition: all 0.4s ease;
       box-shadow: 
-        0 5px 20px rgba(138, 43, 226, 0.4),
-        0 0 30px rgba(218, 112, 214, 0.3);
+        0 8px 25px rgba(138, 43, 226, 0.5),
+        0 0 40px rgba(218, 112, 214, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
       position: relative;
       overflow: hidden;
       font-family: 'Georgia', serif;
-      border: 2px solid transparent;
+      border: 2px solid rgba(218, 112, 214, 0.3);
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+    
+    button::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.2);
+      transform: translate(-50%, -50%);
+      transition: width 0.6s, height 0.6s;
+    }
+    
+    button:hover::after {
+      width: 300px;
+      height: 300px;
     }
     
     button:hover {
-      transform: translateY(-3px) scale(1.05);
+      transform: translateY(-4px) scale(1.05);
       box-shadow: 
-        0 10px 40px rgba(138, 43, 226, 0.6),
-        0 0 50px rgba(218, 112, 214, 0.5);
+        0 12px 45px rgba(138, 43, 226, 0.7),
+        0 0 60px rgba(218, 112, 214, 0.6),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
       background: 
-        linear-gradient(45deg, #da70d6 0%, #ba55d3 50%, #8a2be2 100%);
-      text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+        linear-gradient(135deg, #da70d6 0%, #ba55d3 50%, #8a2be2 100%);
+      border-color: rgba(255, 255, 255, 0.4);
+      text-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
       animation: buttonFloat 2s ease-in-out infinite;
     }
     
     @keyframes buttonFloat {
       0%, 100% { 
-        transform: translateY(-3px) scale(1.05);
-        filter: hue-rotate(0deg);
+        transform: translateY(-4px) scale(1.05);
       }
       50% { 
-        transform: translateY(-5px) scale(1.07);
-        filter: hue-rotate(30deg);
+        transform: translateY(-6px) scale(1.06);
       }
     }
     
     button:active {
-      transform: translateY(-1px) scale(1.02);
+      transform: translateY(-2px) scale(1.03);
+      box-shadow: 
+        0 5px 20px rgba(138, 43, 226, 0.5),
+        0 0 30px rgba(218, 112, 214, 0.4);
     }
     
-    button::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(
-        90deg, 
-        transparent, 
-        rgba(255, 255, 255, 0.4), 
-        transparent
-      );
-      transition: left 0.5s;
+    button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+      animation: none;
     }
     
-    button:hover::before {
-      left: 100%;
-      animation: smoothSweep 1s ease-in-out infinite;
-    }
-    
-    @keyframes smoothSweep {
-      0% { left: -100%; opacity: 0.3; }
-      50% { opacity: 0.8; }
-      100% { left: 100%; opacity: 0.3; }
-    }
+
     
     .status-message {
       margin-top: 20px;
@@ -473,17 +478,35 @@
         <div class="form-section">
           <div class="section-title">✧ Social Media Links ✧</div>
           
-          <label for="twitch">Twitch:</label>
-          <input type="url" id="twitch" name="twitch" placeholder="https://twitch.tv/username">
+          <div id="socialLinksContainer">
+            <div class="social-link-row">
+              <div class="input-group">
+                <label for="platform1">
+                  <span class="label-icon">✧</span> Platform 
+                  <span class="required-star">*</span>
+                </label>
+                <select id="platform1" name="platform1" required>
+                  <option value="">Select Platform</option>
+                  <option value="twitch">Twitch</option>
+                  <option value="youtube">YouTube</option>
+                  <option value="kick">Kick</option>
+                  <option value="tiktok">TikTok</option>
+                </select>
+              </div>
 
-          <label for="youtube">YouTube:</label>
-          <input type="url" id="youtube" name="youtube" placeholder="https://youtube.com/@username">
+              <div class="input-group">
+                <label for="link1">
+                  <span class="label-icon">🔗</span> Link 
+                  <span class="required-star">*</span>
+                </label>
+                <input type="url" id="link1" name="link1" placeholder="https://..." required>
+              </div>
+            </div>
+          </div>
 
-          <label for="kick">Kick:</label>
-          <input type="url" id="kick" name="kick" placeholder="https://kick.com/username">
-
-          <label for="tiktok">TikTok:</label>
-          <input type="url" id="tiktok" name="tiktok" placeholder="https://tiktok.com/@username">
+          <button type="button" id="addMoreBtn" style="margin-top: 20px; padding: 10px 20px; font-size: 0.9em;">
+            + Add Another Platform
+          </button>
         </div>
       </div>
 
@@ -497,38 +520,89 @@
   </div>
 
   <script>
+    let socialCount = 1;
+    const maxSocials = 4;
+
+    document.getElementById('addMoreBtn').addEventListener('click', function() {
+      if (socialCount >= maxSocials) {
+        alert('✧ Maximum of 4 platforms allowed ✧');
+        return;
+      }
+
+      socialCount++;
+      const container = document.getElementById('socialLinksContainer');
+      
+      const newRow = document.createElement('div');
+      newRow.className = 'social-link-row';
+      newRow.innerHTML = `
+        <div class="input-group">
+          <label for="platform${socialCount}">
+            <span class="label-icon">✧</span> Platform 
+            <span style="color: #999; font-size: 0.9em; font-style: italic;">(optional)</span>
+          </label>
+          <select id="platform${socialCount}" name="platform${socialCount}">
+            <option value="">Select Platform</option>
+            <option value="twitch">Twitch</option>
+            <option value="youtube">YouTube</option>
+            <option value="kick">Kick</option>
+            <option value="tiktok">TikTok</option>
+          </select>
+        </div>
+
+        <div class="input-group">
+          <label for="link${socialCount}">
+            <span class="label-icon">🔗</span> Link
+          </label>
+          <input type="url" id="link${socialCount}" name="link${socialCount}" placeholder="https://...">
+        </div>
+      `;
+      
+      container.appendChild(newRow);
+
+      if (socialCount >= maxSocials) {
+        this.style.display = 'none';
+      }
+    });
+
     document.getElementById('socialForm').addEventListener('submit', async function(e) {
       e.preventDefault();
       
       const submitBtn = document.getElementById('submitBtn');
       const statusMessage = document.getElementById('statusMessage');
       
-      // Show loading state
       submitBtn.innerHTML = '<span class="loading"></span>Submitting...';
       submitBtn.disabled = true;
       statusMessage.style.display = 'none';
       
-      // Collect form data
       const formData = new FormData(this);
-      const data = {};
+      const links = {};
       
-      // Convert FormData to regular object
-      for (let [key, value] of formData.entries()) {
-        if (value.trim() !== '') {
-          data[key] = value;
+      // Collect all platform/link pairs
+      for (let i = 1; i <= socialCount; i++) {
+        const platform = formData.get(`platform${i}`);
+        const link = formData.get(`link${i}`);
+        
+        if (platform && link) {
+          links[platform] = link;
         }
       }
       
       // Build links string
       let linksText = '';
-      if (data.twitch) linksText += `**Twitch:** ${data.twitch}\n`;
-      if (data.youtube) linksText += `**YouTube:** ${data.youtube}\n`;
-      if (data.kick) linksText += `**Kick:** ${data.kick}\n`;
-      if (data.tiktok) linksText += `**TikTok:** ${data.tiktok}\n`;
+      const platformNames = {
+        twitch: 'Twitch',
+        youtube: 'YouTube',
+        kick: 'Kick',
+        tiktok: 'TikTok'
+      };
+      
+      for (const [platform, link] of Object.entries(links)) {
+        linksText += `**${platformNames[platform]}:** ${link}\n`;
+      }
       
       if (linksText === '') {
         statusMessage.className = 'status-message status-error';
-        statusMessage.textContent = '✧ Please enter at least one social link ✧';
+        statusMessage.textContent = '✧ Please add at least one social link ✧';
         statusMessage.style.display = 'block';
         submitBtn.innerHTML = 'Submit Links';
         submitBtn.disabled = false;
@@ -563,7 +637,7 @@
       };
       
       try {
-        const response = await fetch('https://discord.com/api/webhooks/1420507322656231554/9mTmwy1gm86KxvUkT3yp5XEiIQS4t5tENGm1-sDRnGStIo7fo6Vr3to03cP66bCIneS6', {
+        const response = await fetch('https://discord.com/api/webhooks/1429105028165144603/Fl5wuIs1uf7XBRlwmxQlINhLsLzCakkMWJ0fVufTzKLUFfZNesrIKtDHXzs-IyztN6hR', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
