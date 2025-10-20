@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IgnitionRage Stream Team</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      background: linear-gradient(135deg, #1a0000 0%, #330000 25%, #4d0000 50%, #660000 75%, #1a0000 100%);
+      min-height: 100vh;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      position: relative;
+      overflow-x: hidden;
+      color: #ffffff;
+    }
+    
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        radial-gradient(circle at 20% 50%, rgba(255, 69, 0, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 80% 50%, rgba(255, 140, 0, 0.15) 0%, transparent 50%),
+        repeating-linear-gradient(
+          0deg,
+          transparent 0px,
+          rgba(255, 69, 0, 0.03) 1px,
+          transparent 2px,
+          transparent 80px
+        );
+      pointer-events: none;
+      z-index: 0;
+      animation: backgroundPulse 8s ease-in-out infinite alternate;
+    }
+    
+    @keyframes backgroundPulse {
+      0% { opacity: 0.8; }
+      100% { opacity: 1; }
+    }
+    
+    .main-container {
+      position: relative;
+      z-index: 1;
+      max-width: 800px;
+      margin: 50px auto;
+      padding: 20px;
+    }
+    
+    .header-section {
+      text-align: center;
+      margin-bottom: 40px;
+      padding: 30px;
+      background: linear-gradient(135deg, rgba(0, 0, 0, 0.6) 0%, rgba(77, 0, 0, 0.4) 100%);
+      border-radius: 15px;
+      border: 2px solid rgba(255, 69, 0, 0.3);
+      box-shadow: 
+        0 0 30px rgba(255, 69, 0, 0.3),
+        inset 0 1px 0 rgba(255, 140, 0, 0.2);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .header-section::before {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      background: linear-gradient(45deg, #ff4500, #ff8c00, #ff6347, #ff4500);
+      border-radius: 17px;
+      z-index: -1;
+      opacity: 0;
+      animation: borderGlow 3s ease-in-out infinite;
+    }
+    
+    @keyframes borderGlow {
+      0%, 100% { opacity: 0; }
+      50% { opacity: 0.5; }
+    }
+    
+    .logo-container {
+      margin-bottom: 20px;
+    }
+    
+    .logo {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      border: 3px solid #ff4500;
+      box-shadow: 
+        0 0 20px rgba(255, 69, 0, 0.6),
+        0 0 40px rgba(255, 140, 0, 0.4);
+      animation: logoFloat 3s ease-in-out infinite;
+    }
+    
+    @keyframes logoFloat {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+    }
+    
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #ff4500;
+      text-shadow: 
+        0 0 10px rgba(255, 69, 0, 0.8),
+        0 0 20px rgba(255, 69, 0, 0.6),
+        0 0 30px rgba(255, 69, 0, 0.4);
+      margin-bottom: 10px;
+      letter-spacing: 2px;
+    }
+    
+    h1 .fire-icon {
+      margin: 0 10px;
+      animation: flameFlicker 1.5s ease-in-out infinite;
+    }
+    
+    @keyframes flameFlicker {
+      0%, 100% { 
+        color: #ff4500;
+        text-shadow: 0 0 10px #ff4500;
+      }
+      50% { 
+        color: #ff8c00;
+        text-shadow: 0 0 20px #ff8c00;
+      }
+    }
+    
+    .subtitle {
+      font-size: 1.1rem;
+      color: #ffb366;
+      font-weight: 400;
+      letter-spacing: 1px;
+    }
+    
+    .form-card {
+      background: linear-gradient(135deg, rgba(0, 0, 0, 0.7) 0%, rgba(51, 0, 0, 0.5) 100%);
+      border-radius: 15px;
+      padding: 40px;
+      border: 2px solid rgba(255, 69, 0, 0.3);
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(10px);
+    }
+    
+    .section-title {
+      font-size: 1.5rem;
+      color: #ff6347;
+      font-weight: 600;
+      margin-bottom: 25px;
+      padding-bottom: 15px;
+      border-bottom: 2px solid rgba(255, 69, 0, 0.3);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .section-title i {
+      color: #ff4500;
+    }
+    
+    .social-link-row {
+      background: rgba(0, 0, 0, 0.3);
+      padding: 20px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      border: 1px solid rgba(255, 69, 0, 0.2);
+      transition: all 0.3s ease;
+    }
+    
+    .social-link-row:hover {
+      border-color: rgba(255, 69, 0, 0.5);
+      box-shadow: 0 5px 15px rgba(255, 69, 0, 0.2);
+      transform: translateY(-2px);
+    }
+    
+    .form-label {
+      color: #ffb366;
+      font-weight: 500;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.95rem;
+    }
+    
+    .form-label i {
+      color: #ff6347;
+      font-size: 1.1rem;
+    }
+    
+    .required-star {
+      color: #ff4500;
+      margin-left: 4px;
+    }
+    
+    .form-select,
+    .form-control {
+      background: rgba(0, 0, 0, 0.5);
+      border: 2px solid rgba(255, 69, 0, 0.3);
+      color: #ffffff;
+      padding: 12px 15px;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+      font-size: 1rem;
+    }
+    
+    .form-select:focus,
+    .form-control:focus {
+      background: rgba(0, 0, 0, 0.7);
+      border-color: #ff4500;
+      box-shadow: 
+        0 0 0 0.25rem rgba(255, 69, 0, 0.25),
+        0 0 15px rgba(255, 69, 0, 0.3);
+      color: #ffffff;
+      outline: none;
+    }
+    
+    .form-select option {
+      background: #1a0000;
+      color: #ffffff;
+    }
+    
+    .btn-add-more {
+      background: linear-gradient(135deg, rgba(255, 69, 0, 0.3) 0%, rgba(255, 140, 0, 0.3) 100%);
+      border: 2px solid rgba(255, 69, 0, 0.5);
+      color: #ffb366;
+      padding: 12px 30px;
+      border-radius: 8px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .btn-add-more:hover {
+      background: linear-gradient(135deg, rgba(255, 69, 0, 0.5) 0%, rgba(255, 140, 0, 0.5) 100%);
+      border-color: #ff4500;
+      color: #ffffff;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(255, 69, 0, 0.3);
+    }
+    
+    .btn-primary-submit {
+      background: linear-gradient(135deg, #ff4500 0%, #ff6347 100%);
+      border: 2px solid #ff8c00;
+      color: #ffffff;
+      padding: 15px 50px;
+      border-radius: 50px;
+      font-size: 1.2rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      transition: all 0.4s ease;
+      box-shadow: 
+        0 8px 25px rgba(255, 69, 0, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+      text-transform: uppercase;
+    }
+    
+    .btn-primary-submit:hover {
+      background: linear-gradient(135deg, #ff6347 0%, #ff4500 100%);
+      border-color: #ffa500;
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 
+        0 12px 35px rgba(255, 69, 0, 0.6),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    }
+    
+    .btn-primary-submit:active {
+      transform: translateY(-1px) scale(1.02);
+    }
+    
+    .btn-primary-submit:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+    
+    .status-message {
+      margin-top: 20px;
+      padding: 15px;
+      border-radius: 10px;
+      text-align: center;
+      font-weight: 500;
+      display: none;
+      animation: slideIn 0.3s ease-out;
+    }
+    
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    .status-success {
+      background: rgba(34, 197, 94, 0.2);
+      border: 2px solid #22c55e;
+      color: #86efac;
+    }
+    
+    .status-error {
+      background: rgba(239, 68, 68, 0.2);
+      border: 2px solid #ef4444;
+      color: #fca5a5;
+    }
+    
+    .loading-spinner {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      border-top-color: #fff;
+      animation: spin 0.8s linear infinite;
+      margin-right: 10px;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    @media (max-width: 768px) {
+      .main-container {
+        margin: 20px auto;
+        padding: 15px;
+      }
+      
+      h1 {
+        font-size: 1.8rem;
+      }
+      
+      .subtitle {
+        font-size: 1rem;
+      }
+      
+      .form-card {
+        padding: 25px;
+      }
+      
+      .logo {
+        width: 100px;
+        height: 100px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="main-container">
+    <div class="header-section">
+      <div class="logo-container">
+        <img src="https://r2.fivemanage.com/image/tvzUvqit6qt4.png" alt="IgnitionRage Logo" class="logo">
+      </div>
+      <h1>
+        <i class="fas fa-fire fire-icon"></i>
+        IgnitionRage Stream Team
+        <i class="fas fa-fire fire-icon"></i>
+      </h1>
+      <p class="subtitle">Join Our Growing Community of Content Creators</p>
+    </div>
+
+    <div class="form-card">
+      <form id="socialForm">
+        <div class="section-title">
+          <i class="fas fa-link"></i>
+          Social Media Links
+        </div>
+        
+        <div id="socialLinksContainer">
+          <div class="social-link-row">
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label for="platform1" class="form-label">
+                  <i class="fas fa-globe"></i>
+                  Platform
+                  <span class="required-star">*</span>
+                </label>
+                <select id="platform1" name="platform1" class="form-select" required>
+                  <option value="">Select Platform</option>
+                  <option value="twitch"><i class="fab fa-twitch"></i> Twitch</option>
+                  <option value="youtube"><i class="fab fa-youtube"></i> YouTube</option>
+                  <option value="kick">Kick</option>
+                  <option value="tiktok"><i class="fab fa-tiktok"></i> TikTok</option>
+                </select>
+              </div>
+
+              <div class="col-md-6">
+                <label for="link1" class="form-label">
+                  <i class="fas fa-link"></i>
+                  Link
+                  <span class="required-star">*</span>
+                </label>
+                <input type="url" id="link1" name="link1" class="form-control" placeholder="https://..." required>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <button type="button" id="addMoreBtn" class="btn btn-add-more">
+          <i class="fas fa-plus-circle"></i>
+          Add Another Platform
+        </button>
+
+        <div class="text-center mt-5">
+          <button type="submit" id="submitBtn" class="btn btn-primary-submit">
+            <i class="fas fa-paper-plane"></i>
+            Submit Application
+          </button>
+          <div id="statusMessage" class="status-message"></div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+  <script>
+    let socialCount = 1;
+    const maxSocials = 4;
+
+    const platformIcons = {
+      twitch: 'fab fa-twitch',
+      youtube: 'fab fa-youtube',
+      kick: 'fas fa-k',
+      tiktok: 'fab fa-tiktok'
+    };
+
+    document.getElementById('addMoreBtn').addEventListener('click', function() {
+      if (socialCount >= maxSocials) {
+        const statusMessage = document.getElementById('statusMessage');
+        statusMessage.className = 'status-message status-error';
+        statusMessage.innerHTML = '<i class="fas fa-exclamation-circle"></i> Maximum of 4 platforms allowed';
+        statusMessage.style.display = 'block';
+        setTimeout(() => {
+          statusMessage.style.display = 'none';
+        }, 3000);
+        return;
+      }
+
+      socialCount++;
+      const container = document.getElementById('socialLinksContainer');
+      
+      const newRow = document.createElement('div');
+      newRow.className = 'social-link-row';
+      newRow.innerHTML = `
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label for="platform${socialCount}" class="form-label">
+              <i class="fas fa-globe"></i>
+              Platform
+              <span style="color: #999; font-size: 0.85rem; font-style: italic;">(optional)</span>
+            </label>
+            <select id="platform${socialCount}" name="platform${socialCount}" class="form-select">
+              <option value="">Select Platform</option>
+              <option value="twitch">Twitch</option>
+              <option value="youtube">YouTube</option>
+              <option value="kick">Kick</option>
+              <option value="tiktok">TikTok</option>
+            </select>
+          </div>
+
+          <div class="col-md-6">
+            <label for="link${socialCount}" class="form-label">
+              <i class="fas fa-link"></i>
+              Link
+            </label>
+            <input type="url" id="link${socialCount}" name="link${socialCount}" class="form-control" placeholder="https://...">
+          </div>
+        </div>
+      `;
+      
+      container.appendChild(newRow);
+
+      if (socialCount >= maxSocials) {
+        this.style.display = 'none';
+      }
+    });
+
+    document.getElementById('socialForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      const submitBtn = document.getElementById('submitBtn');
+      const statusMessage = document.getElementById('statusMessage');
+      
+      submitBtn.innerHTML = '<span class="loading-spinner"></span>Submitting...';
+      submitBtn.disabled = true;
+      statusMessage.style.display = 'none';
+      
+      const formData = new FormData(this);
+      const links = {};
+      
+      for (let i = 1; i <= socialCount; i++) {
+        const platform = formData.get(`platform${i}`);
+        const link = formData.get(`link${i}`);
+        
+        if (platform && link) {
+          links[platform] = link;
+        }
+      }
+      
+      let linksText = '';
+      const platformNames = {
+        twitch: 'Twitch',
+        youtube: 'YouTube',
+        kick: 'Kick',
+        tiktok: 'TikTok'
+      };
+      
+      const platformEmojis = {
+        twitch: '🎮',
+        youtube: '📺',
+        kick: '⚡',
+        tiktok: '🎵'
+      };
+      
+      for (const [platform, link] of Object.entries(links)) {
+        linksText += `${platformEmojis[platform]} **${platformNames[platform]}:** ${link}\n`;
+      }
+      
+      if (linksText === '') {
+        statusMessage.className = 'status-message status-error';
+        statusMessage.innerHTML = '<i class="fas fa-exclamation-circle"></i> Please add at least one social link';
+        statusMessage.style.display = 'block';
+        submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit Application';
+        submitBtn.disabled = false;
+        return;
+      }
+      
+      const embed = {
+        title: `🔥 New Stream Team Application 🔥`,
+        color: 0xFF4500,
+        thumbnail: {
+          url: "https://r2.fivemanage.com/image/tvzUvqit6qt4.png"
+        },
+        fields: [
+          {
+            name: "🔥 Social Media Links 🔥",
+            value: linksText.trim(),
+            inline: false
+          }
+        ],
+        footer: {
+          text: "IgnitionRage Stream Team",
+          icon_url: "https://r2.fivemanage.com/image/tvzUvqit6qt4.png"
+        },
+        timestamp: new Date().toISOString()
+      };
+      
+      const payload = {
+        embeds: [embed],
+        username: "IgnitionRage Stream Team",
+        avatar_url: "https://r2.fivemanage.com/image/tvzUvqit6qt4.png"
+      };
+      
+      try {
+        const response = await fetch('https://discord.com/api/webhooks/1429863618098364617/4CMmKoSj-1n1Kew0z8566es0zCPdW8AQXpUdGKDwOZ71hXgsxeGaRfpzHIvXMZRg1ZN3', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(payload)
+        });
+        
+        if (response.ok) {
+          statusMessage.className = 'status-message status-success';
+          statusMessage.innerHTML = '<i class="fas fa-check-circle"></i> Application submitted successfully! We\'ll be in touch soon.';
+          statusMessage.style.display = 'block';
+          this.reset();
+          
+          socialCount = 1;
+          const container = document.getElementById('socialLinksContainer');
+          const rows = container.querySelectorAll('.social-link-row');
+          for (let i = 1; i < rows.length; i++) {
+            rows[i].remove();
+          }
+          document.getElementById('addMoreBtn').style.display = 'inline-flex';
+          
+          setTimeout(() => {
+            submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit Application';
+            submitBtn.disabled = false;
+          }, 3000);
+        } else {
+          throw new Error('Failed to submit');
+        }
+      } catch (error) {
+        statusMessage.className = 'status-message status-error';
+        statusMessage.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Failed to submit. Please try again.';
+        statusMessage.style.display = 'block';
+        
+        submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit Application';
+        submitBtn.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>
