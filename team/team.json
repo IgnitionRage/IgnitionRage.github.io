@@ -106,5 +106,41 @@
     "tiktok": "",
     "avatar": "https://avatar.url",
     "role": "\"Streamer\""
+  },
+  {
+    "name": "TestUser123",
+    "twitch": "twitchTest",
+    "youtube": "https://youtube.com/test",
+    "kick": "",
+    "tiktok": "https://tiktok.com/test",
+    "avatar": "https://i.imgur.com/testAvatar.png",
+    "role": "\"Streamer\""
+  },
+  {
+    "name": "TestUser1223",
+    "twitch": "twitchTest",
+    "youtube": "https://youtube.com/test",
+    "kick": "",
+    "tiktok": "https://tiktok.com/test",
+    "avatar": "https://i.imgur.com/testAvatar.png",
+    "role": "\"Streamer\""
+  },
+  {
+    "name": "TestUser",
+    "twitch": "twitchuser",
+    "youtube": "https://youtube.com/test",
+    "kick": "https://kick.com/test",
+    "tiktok": "https://tiktok.com/test",
+    "avatar": "https://i.imgur.com/avatar.png",
+    "role": "\"Test Role\""
+  },
+  {
+    "name": "TestUs2er",
+    "twitch": "TwitchUser",
+    "youtube": "https://youtube.com/xyz",
+    "kick": "https://kick.com/xyz",
+    "tiktok": "https://tiktok.com/xyz",
+    "avatar": "https://avatarurl.com/avatar.png",
+    "role": "\"Streamer\""
   }
 ]
