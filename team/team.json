@@ -99,15 +99,6 @@
     "role": "Ignition Elite"
   },
   {
-    "name": "JohnDoe",
-    "twitch": "johnTwitch",
-    "youtube": "https://youtube.com/john",
-    "kick": "https://kick.com/john",
-    "tiktok": "",
-    "avatar": "https://avatar.url",
-    "role": "\"Streamer\""
-  },
-  {
     "name": "TestUser123",
     "twitch": "twitchTest",
     "youtube": "https://youtube.com/test",
