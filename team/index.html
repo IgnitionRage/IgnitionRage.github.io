@@ -194,9 +194,9 @@ canvas#bgCanvas {
 </div>
 
 <script>
-// ================================
-// Canvas Fire + Smoke + Mouse Glow
-// ================================
+ // ================================
+ // Canvas Fire + Smoke + Mouse Glow
+ // ================================
 const canvas = document.getElementById('bgCanvas');
 const ctx = canvas.getContext('2d');
 let width = window.innerWidth;
@@ -240,26 +240,24 @@ function animateFire(){
 animateFire();
 
 window.addEventListener('resize',()=>{ width=window.innerWidth; height=window.innerHeight; canvas.width=width; canvas.height=height; });
-
 // ========
-// Channels
+// Channels (LOAD FROM JSON)
 // ========
-const channelsConfig=[
-{name:"HomelesMidgets", twitch:"HomelesMidgets", youtube:"https://youtube.com/@HomelesMidgets", tiktok:"https://youtube.com/@HomelesMidgets", avatar:"https://i.gyazo.com/1535ae7accbe2eb341567bd2859922d3.png", kick:"https://kick.com/flamewarrior", role:"Ignition Master"},
-{name:"Bacon_Space", twitch:"Bacon_Space", youtube:"https://youtube.com/@Bacon_Space", tiktok:"https://youtube.com/@Bacon_Space", avatar:"https://github.com/BaconSpaces.png", kick:"https://kick.com/Bacon_Space", role:"Ignition Master"},
-{name:"katattackahh", twitch:"katattackahh", tiktok:"https://tiktok.com/@katattackahh", avatar:"https://r2.fivemanage.com/image/iQTouyDoFmWt.jpeg", role:"Ignition Elite"},
-{name:"KamoBentz", twitch:"KamoBentz", avatar:"https://r2.fivemanage.com/image/iQTouyDoFmWt.jpeg", role:"Ignition Elite"},
-{name:"devilmedlar", twitch:"devilmedlar", avatar:"https://r2.fivemanage.com/image/iQTouyDoFmWt.jpeg", role:"Ignition Elite"},
-{name:"mukorinite", twitch:"mukorinite", avatar:"https://r2.fivemanage.com/image/iQTouyDoFmWt.jpeg", role:"Ignition Elite"},
-{name:"fireprimoidgaf", kick:"https://kick.com/fireprimoidgaf", avatar:"https://r2.fivemanage.com/TUppkHSOByRILTYhWVarA/fireprimoidgaf.png", role:"Ignition Elite"},
-{name:"brodantes", twitch:"brodantes", avatar:"https://r2.fivemanage.com/TUppkHSOByRILTYhWVarA/brodantes.jpeg", role:"Ignition Elite"},
-{name:"⛓𝓢𝓲𝓻𝓮𝓷 𝓡𝓪𝓮⛓", twitch:"itsraeort", avatar:"https://r2.fivemanage.com/image/iQTouyDoFmWt.jpeg", role:"Ignition Member"},
-{name:"sae__ttv", twitch:"sae__ttv", kick:"https://kick.com/saettv", avatar:"https://r2.fivemanage.com/image/iQTouyDoFmWt.jpeg", role:"Ignition Guest"},
-{name:"MYLING", twitch:"myllng", kick:"https://kick.com/myllng", avatar:"https://r2.fivemanage.com/4jrDLdAalrDySIKwrvG5x/unnamed.jpg", role:"Ignition Member"}
-];
+let channelsConfig = [];
 
-function renderChannels(channels=channelsConfig){
-  const container=document.getElementById('channelsContainer');
+async function loadChannels() {
+  try {
+    const response = await fetch('team.json');
+    if (!response.ok) throw new Error("Failed to load team.json");
+    channelsConfig = await response.json();
+    renderChannels(channelsConfig);
+  } catch (err) {
+    console.error("Error loading channels:", err);
+  }
+}
+
+function renderChannels(channels = channelsConfig) {
+  const container = document.getElementById('channelsContainer');
   container.innerHTML = '';
   channels.forEach(ch => {
     const card = document.createElement('div');
@@ -295,19 +293,22 @@ function renderChannels(channels=channelsConfig){
   });
 }
 
-renderChannels();
-
+// Search functionality
 document.getElementById('searchInput').addEventListener('input', e => {
   const searchTerm = e.target.value.toLowerCase();
   const filtered = channelsConfig.filter(c => c.name.toLowerCase().includes(searchTerm));
   renderChannels(filtered);
 });
 
+// Mobile toggle
 const mobileToggle = document.getElementById('mobileToggle');
 const navLinks = document.getElementById('navLinks');
 mobileToggle.addEventListener('click', () => {
   navLinks.classList.toggle('open');
 });
+
+// Initial load
+loadChannels();
 </script>
 
 </body>
