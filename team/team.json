@@ -99,15 +99,6 @@
     "role": "Ignition Elite"
   },
   {
-    "name": "TestUser",
-    "twitch": "twitchuser",
-    "youtube": "https://youtube.com/test",
-    "kick": "https://kick.com/test",
-    "tiktok": "https://tiktok.com/test",
-    "avatar": "https://i.imgur.com/avatar.png",
-    "role": "\"Test Role\""
-  },
-  {
     "name": "TestUs2er",
     "twitch": "TwitchUser",
     "youtube": "https://youtube.com/xyz",
