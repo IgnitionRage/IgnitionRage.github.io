@@ -97,5 +97,14 @@
     "tiktok": "",
     "avatar": "https://r2.fivemanage.com/4jrDLdAalrDySIKwrvG5x/unnamed.jpg",
     "role": "Ignition Elite"
+  },
+  {
+    "name": "TestUs2er",
+    "twitch": "TwitchUser",
+    "youtube": "https://youtube.com/xyz",
+    "kick": "https://kick.com/xyz",
+    "tiktok": "https://tiktok.com/xyz",
+    "avatar": "https://avatarurl.com/avatar.png",
+    "role": "\"Nerd\""
   }
 ]
