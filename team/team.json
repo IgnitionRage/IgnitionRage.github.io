@@ -80,6 +80,15 @@
     "avatar": "https://r2.fivemanage.com/image/iQTouyDoFmWt.jpeg",
     "role": "Ignition Elite"
   },
+      {
+    "name": "victorbugged",
+    "twitch": "victorbugged",
+    "youtube": "victorbugged",
+    "kick": "https://kick.com/victorbugged",
+    "tiktok": "victorbugged",
+    "avatar": "https://r2.fivemanage.com/image/ZlEnv7IZLyYD.png",
+    "role": "Ignition Member"
+  },
   {
     "name": "sae__ttv",
     "twitch": "sae__ttv",
@@ -88,15 +97,6 @@
     "tiktok": "",
     "avatar": "https://r2.fivemanage.com/image/DPT2uFFLtPqB.png",
     "role": "Ignition Guest"
-  },
-    {
-    "name": "victorbugged",
-    "twitch": "victorbugged",
-    "youtube": "victorbugged",
-    "kick": "https://kick.com/victorbugged",
-    "tiktok": "victorbugged",
-    "avatar": "https://r2.fivemanage.com/image/ZlEnv7IZLyYD.png",
-    "role": "Ignition Member"
   },
     {
     "name": "khorelia",
