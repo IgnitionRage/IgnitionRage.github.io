@@ -283,7 +283,7 @@ function renderChannels(channels = channelsConfig) {
       </div>
       <div class="platform-links">
         ${ch.twitch?`<a class="platform-link platform-twitch" href="https://twitch.tv/${ch.twitch}" target="_blank"><i class="fab fa-twitch"></i> Twitch</a>`:''}
-        ${ch.youtube?`<a class="platform-link platform-youtube" href="${ch.youtube}" target="_blank"><i class="fab fa-youtube"></i> YouTube</a>`:''}
+        ${ch.youtube?`<a class="platform-link platform-youtube" href="https://youtube.com/@${ch.youtube}" target="_blank"><i class="fab fa-youtube"></i> YouTube</a>`:''}
         ${ch.kick?`<a class="platform-link platform-kick" href="${ch.kick}" target="_blank"><i class="fas fa-fire"></i> Kick</a>`:''}
         ${ch.tiktok?`<a class="platform-link platform-tiktok" href="${ch.tiktok}" target="_blank"><i class="fab fa-tiktok"></i> TikTok</a>`:''}
       </div>
