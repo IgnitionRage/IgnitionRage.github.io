@@ -170,7 +170,17 @@
         /* ===============================
    Page Layout / Cards / Buttons
 ================================*/
-        
+        .fa-kick {
+            position: relative;
+            display: inline-block;
+            width: 1em;
+            height: 1em;
+            font-size: 2rem; /* Adjust size as needed */
+            background: url('https://r2.fivemanage.com/image/LMrhZOIca7Qk.png') no-repeat center center;
+            background-size: contain;
+            text-indent: -9999px; /* Hide any fallback text */
+            overflow: hidden;
+        }
         .container {
             width: 100%;
             padding: 40px;
@@ -589,7 +599,7 @@
       <div class="platform-links">
         ${ch.twitch?`<a class="platform-link platform-twitch" href="https://twitch.tv/${ch.twitch}" target="_blank"><i class="fab fa-twitch"></i> Twitch</a>`:''}
         ${ch.youtube?`<a class="platform-link platform-youtube" href="https://youtube.com/@${ch.youtube}" target="_blank"><i class="fab fa-youtube"></i> YouTube</a>`:''}
-        ${ch.kick?`<a class="platform-link platform-kick" href="https://kick.com/${ch.kick}" target="_blank"><i class="fas fa-fire"></i> Kick</a>`:''}
+        ${ch.kick?`<a class="platform-link platform-kick" href="https://kick.com/${ch.kick}" target="_blank"><i class="fa-kick"></i> Kick</a>`:''}
         ${ch.tiktok?`<a class="platform-link platform-tiktok" href="https://tiktok.com/@${ch.tiktok}" target="_blank"><i class="fab fa-tiktok"></i> TikTok</a>`:''}
       </div>
     `;
