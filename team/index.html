@@ -598,7 +598,7 @@
         </div>
       </div>
       <div class="platform-links">
-        ${ch.twitch?`<a class="platform-link platform-twitch" href="https://twitch.tv/${ch.twitch}" target="_blank"><i class="fab fa-twitch"></i> Twitch</a>`:''}
+        ${ch.twitch?`<a class="platform-link platform-twitch" href="https://twitch.tv/${ch.twitch}" target="_blank"><i class="fab fa-twitch"></i> <img alt="Twitch Status" src="https://img.shields.io/twitch/status/${ch.name}"></a>`:''}
         ${ch.youtube?`<a class="platform-link platform-youtube" href="https://youtube.com/@${ch.youtube}" target="_blank"><i class="fab fa-youtube"></i> YouTube</a>`:''}
         ${ch.kick?`<a class="platform-link platform-kick" href="https://kick.com/${ch.kick}" target="_blank"><i class="fa-kick"></i> Kick</a>`:''}
         ${ch.tiktok?`<a class="platform-link platform-tiktok" href="https://tiktok.com/@${ch.tiktok}" target="_blank"><i class="fab fa-tiktok"></i> TikTok</a>`:''}
