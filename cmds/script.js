@@ -127,7 +127,7 @@ const commands = [
         permissions: "super admin",
         cooldown: "none"
     },
-    
+
     // Archery Commands
     {
         name: "archery",
@@ -192,7 +192,7 @@ const commands = [
         permissions: "all",
         cooldown: "none"
     },
-    
+
     // Bite Commands
     {
         name: "bite",
@@ -221,7 +221,7 @@ const commands = [
         permissions: "all",
         cooldown: "none"
     },
-    
+
     // Circus Commands
     {
         name: "circus",
@@ -268,7 +268,7 @@ const commands = [
         permissions: "all",
         cooldown: "none"
     },
-    
+
     // Lick Commands
     {
         name: "lick",
@@ -297,7 +297,7 @@ const commands = [
         permissions: "all",
         cooldown: "none"
     },
-    
+
     // Social Commands
     {
         name: "hug",
@@ -353,7 +353,7 @@ const commands = [
         permissions: "all",
         cooldown: "none"
     },
-    
+
     // Gambling Commands
     {
         name: "slots",
@@ -546,7 +546,7 @@ const commands = [
         permissions: "all",
         cooldown: "none"
     },
-    
+
     // Economy Commands
     {
         name: "crayons",
@@ -661,7 +661,7 @@ const commands = [
         permissions: "all",
         cooldown: "none"
     },
-    
+
     // Utility Commands
     {
         name: "help",
@@ -690,7 +690,7 @@ const commands = [
         permissions: "all",
         cooldown: "none"
     },
-    
+
     // Quest Commands
     {
         name: "quest",
@@ -710,7 +710,7 @@ const commands = [
         permissions: "all",
         cooldown: "none"
     },
-    
+
     // Detective Commands
     {
         name: "detective",
@@ -721,7 +721,7 @@ const commands = [
         permissions: "all",
         cooldown: "none"
     },
-    
+
     // Additional Fun Commands
     {
         name: "fistbump",
@@ -741,7 +741,7 @@ const commands = [
         permissions: "all",
         cooldown: "none"
     },
-    
+
     // Other Game Commands
     {
         name: "duel",
@@ -761,7 +761,7 @@ const commands = [
         permissions: "all",
         cooldown: "none"
     },
-    
+
     // Admin/System Commands
     {
         name: "reloadconfig",
@@ -772,7 +772,7 @@ const commands = [
         permissions: "super admin",
         cooldown: "none"
     },
-    
+
     // Social Commands
     {
         name: "so",
@@ -783,7 +783,7 @@ const commands = [
         permissions: "moderator",
         cooldown: "none"
     },
-    
+
     // Content Commands
     {
         name: "joke",
@@ -892,8 +892,7 @@ const commands = [
         examples: ["?ir"],
         permissions: "all",
         cooldown: "none"
-    }
-];
+    },
     {
         name: "gamble",
         category: "games",
@@ -905,136 +904,140 @@ const commands = [
     },
     {
         name: "pool",
+                            cooldown: "none"
+},
+{
+    name: "pool",
         category: "games",
-        description: "Play pool",
-        usage: "?pool [action]",
-        examples: ["?pool", "?pool shoot"],
-        permissions: "all",
-        cooldown: "none"
-    },
-    {
-        name: "bowling",
+            description: "Play pool",
+                usage: "?pool [action]",
+                    examples: ["?pool", "?pool shoot"],
+                        permissions: "all",
+                            cooldown: "none"
+},
+{
+    name: "bowling",
         category: "games",
-        description: "Play bowling",
-        usage: "?bowling [action]",
-        examples: ["?bowling", "?bowling roll"],
-        permissions: "all",
-        cooldown: "none"
-    },
-    
-    // Admin Commands
-    {
-        name: "reload",
+            description: "Play bowling",
+                usage: "?bowling [action]",
+                    examples: ["?bowling", "?bowling roll"],
+                        permissions: "all",
+                            cooldown: "none"
+},
+
+// Admin Commands
+{
+    name: "reload",
         category: "admin",
-        description: "Reload bot cogs (admin only)",
-        usage: "?reload [cog]",
-        examples: ["?reload", "?reload ai"],
-        permissions: "admin",
-        cooldown: "none"
-    },
-    {
-        name: "clear",
+            description: "Reload bot cogs (admin only)",
+                usage: "?reload [cog]",
+                    examples: ["?reload", "?reload ai"],
+                        permissions: "admin",
+                            cooldown: "none"
+},
+{
+    name: "clear",
         category: "admin",
-        description: "Clear chat (moderator only)",
-        usage: "?clear",
-        examples: ["?clear"],
-        permissions: "moderator",
-        cooldown: "none"
-    },
-    
-    // Stream Commands
-    {
-        name: "live",
+            description: "Clear chat (moderator only)",
+                usage: "?clear",
+                    examples: ["?clear"],
+                        permissions: "moderator",
+                            cooldown: "none"
+},
+
+// Stream Commands
+{
+    name: "live",
         category: "utility",
-        description: "Check if stream is live",
-        usage: "?live [channel]",
-        examples: ["?live", "?live channelname"],
-        permissions: "all",
-        cooldown: "none"
-    },
-    {
-        name: "so",
+            description: "Check if stream is live",
+                usage: "?live [channel]",
+                    examples: ["?live", "?live channelname"],
+                        permissions: "all",
+                            cooldown: "none"
+},
+{
+    name: "so",
         category: "utility",
-        description: "Shoutout another channel",
-        usage: "?so [channel]",
-        examples: ["?so channelname"],
-        permissions: "all",
-        cooldown: "none"
-    },
-    
-    // Other Commands
-    {
-        name: "joke",
+            description: "Shoutout another channel",
+                usage: "?so [channel]",
+                    examples: ["?so channelname"],
+                        permissions: "all",
+                            cooldown: "none"
+},
+
+// Other Commands
+{
+    name: "joke",
         category: "fun",
-        description: "Get a random joke",
-        usage: "?joke",
-        examples: ["?joke"],
-        permissions: "all",
-        cooldown: "none"
-    },
-    {
-        name: "translate",
+            description: "Get a random joke",
+                usage: "?joke",
+                    examples: ["?joke"],
+                        permissions: "all",
+                            cooldown: "none"
+},
+{
+    name: "translate",
         category: "utility",
-        description: "Translate text",
-        usage: "?translate [text]",
-        examples: ["?translate hello world"],
-        permissions: "all",
-        cooldown: "none"
-    },
-    {
-        name: "wyr",
+            description: "Translate text",
+                usage: "?translate [text]",
+                    examples: ["?translate hello world"],
+                        permissions: "all",
+                            cooldown: "none"
+},
+{
+    name: "wyr",
         category: "fun",
-        description: "Would you rather question",
-        usage: "?wyr",
-        examples: ["?wyr"],
-        permissions: "all",
-        cooldown: "none"
-    },
-    {
-        name: "steam",
+            description: "Would you rather question",
+                usage: "?wyr",
+                    examples: ["?wyr"],
+                        permissions: "all",
+                            cooldown: "none"
+},
+{
+    name: "steam",
         category: "utility",
-        description: "Get Steam game information",
-        usage: "?steam [game]",
-        examples: ["?steam valorant", "?steam minecraft"],
-        permissions: "all",
-        cooldown: "none"
-    },
-    {
-        name: "7tv",
+            description: "Get Steam game information",
+                usage: "?steam [game]",
+                    examples: ["?steam valorant", "?steam minecraft"],
+                        permissions: "all",
+                            cooldown: "none"
+},
+{
+    name: "7tv",
         category: "utility",
-        description: "Get 7TV emote information",
-        usage: "?7tv [emote]",
-        examples: ["?7tv pepe", "?7tv pog"],
-        permissions: "all",
-        cooldown: "none"
-    },
-    {
-        name: "info",
+            description: "Get 7TV emote information",
+                usage: "?7tv [emote]",
+                    examples: ["?7tv pepe", "?7tv pog"],
+                        permissions: "all",
+                            cooldown: "none"
+},
+{
+    name: "info",
         category: "utility",
-        description: "Get information about the bot",
-        usage: "?info",
-        examples: ["?info"],
-        permissions: "all",
-        cooldown: "none"
-    },
-    {
-        name: "mark",
+            description: "Get information about the bot",
+                usage: "?info",
+                    examples: ["?info"],
+                        permissions: "all",
+                            cooldown: "none"
+},
+{
+    name: "mark",
         category: "utility",
-        description: "Mark something for later",
-        usage: "?mark [text]",
-        examples: ["?mark remember this"],
-        permissions: "all",
-        cooldown: "none"
-    },
-    {
-        name: "ir",
+            description: "Mark something for later",
+                usage: "?mark [text]",
+                    examples: ["?mark remember this"],
+                        permissions: "all",
+                            cooldown: "none"
+},
+{
+    name: "ir",
         category: "utility",
-        description: "IgnitionRage specific command",
-        usage: "?ir [action]",
-        examples: ["?ir status", "?ir hello"],
-        permissions: "all",
-        cooldown: "none"
-    }
+            description: "IgnitionRage specific command",
+                usage: "?ir [action]",
+                    examples: ["?ir status", "?ir hello"],
+                        permissions: "all",
+                            cooldown: "none"
+}
 ];
 
 // Update command statistics
@@ -1042,25 +1045,25 @@ function updateCommandStats() {
     const commandCount = commands.length;
     const categories = new Set(commands.map(cmd => cmd.category));
     const categoryCount = categories.size;
-    
+
     // Count commands per category
     const categoryCounts = {};
     commands.forEach(cmd => {
         categoryCounts[cmd.category] = (categoryCounts[cmd.category] || 0) + 1;
     });
-    
+
     // Update the main stats
     const commandCountElement = document.getElementById('commandCount');
     const categoryCountElement = document.getElementById('categoryCount');
-    
+
     if (commandCountElement) {
         commandCountElement.textContent = commandCount;
     }
-    
+
     if (categoryCountElement) {
         categoryCountElement.textContent = categoryCount;
     }
-    
+
     // Update category tabs with counts
     const categoryTabs = document.querySelectorAll('.category-tab');
     categoryTabs.forEach(tab => {
@@ -1073,12 +1076,12 @@ function updateCommandStats() {
             tab.textContent = `${categoryName} (${categoryCounts[category]})`;
         }
     });
-    
+
     console.log(`Updated stats: ${commandCount} commands in ${categoryCount} categories`);
 }
 
 // Initialize the page
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     initializeParticles();
     updateCommandStats();
     renderCommands('all');
@@ -1090,28 +1093,28 @@ document.addEventListener('DOMContentLoaded', function() {
 function initializeParticles() {
     const particlesContainer = document.getElementById('particles');
     const particleCount = 50;
-    
+
     for (let i = 0; i < particleCount; i++) {
         const particle = document.createElement('div');
         particle.className = 'particle';
-        
+
         // Random size
         const size = Math.random() * 4 + 1;
         particle.style.width = size + 'px';
         particle.style.height = size + 'px';
-        
+
         // Random position
         particle.style.left = Math.random() * 100 + '%';
         particle.style.top = Math.random() * 100 + '%';
-        
+
         // Random color (fire themed)
         const colors = ['#ff4500', '#ff7b00', '#ffcc00', '#aa4203'];
         particle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-        
+
         // Random animation delay
         particle.style.animationDelay = Math.random() * 15 + 's';
         particle.style.animationDuration = (Math.random() * 10 + 15) + 's';
-        
+
         particlesContainer.appendChild(particle);
     }
 }
@@ -1120,16 +1123,16 @@ function initializeParticles() {
 function renderCommands(category = 'all') {
     const commandsGrid = document.getElementById('commandsGrid');
     commandsGrid.innerHTML = '';
-    
-    const filteredCommands = category === 'all' 
-        ? commands 
+
+    const filteredCommands = category === 'all'
+        ? commands
         : commands.filter(cmd => cmd.category === category);
-    
+
     filteredCommands.forEach(command => {
         const commandCard = createCommandCard(command);
         commandsGrid.appendChild(commandCard);
     });
-    
+
     if (filteredCommands.length === 0) {
         commandsGrid.innerHTML = '<p style="text-align: center; color: var(--fire-yellow);">No commands found in this category.</p>';
     }
@@ -1141,7 +1144,7 @@ function createCommandCard(command) {
     card.className = 'command-card';
     card.dataset.category = command.category;
     card.dataset.name = command.name.toLowerCase();
-    
+
     const categoryColors = {
         ai: 'var(--fire-red)',
         games: 'var(--fire-orange)',
@@ -1150,7 +1153,7 @@ function createCommandCard(command) {
         utility: '#4169e1',
         admin: '#8b008b'
     };
-    
+
     card.innerHTML = `
         <div class="command-header">
             <div class="command-name">?${command.name}</div>
@@ -1169,7 +1172,7 @@ function createCommandCard(command) {
             <strong>Cooldown:</strong> ${command.cooldown}
         </div>
     `;
-    
+
     return card;
 }
 
@@ -1178,7 +1181,7 @@ function setupEventListeners() {
     // Category tabs
     const categoryTabs = document.querySelectorAll('.category-tab');
     categoryTabs.forEach(tab => {
-        tab.addEventListener('click', function() {
+        tab.addEventListener('click', function () {
             // Remove active class from all tabs
             categoryTabs.forEach(t => t.classList.remove('active'));
             // Add active class to clicked tab
@@ -1187,25 +1190,25 @@ function setupEventListeners() {
             renderCommands(this.dataset.category);
         });
     });
-    
+
     // Search functionality
     const searchInput = document.getElementById('commandSearch');
     const clearButton = document.getElementById('clearSearch');
-    
-    searchInput.addEventListener('input', function() {
+
+    searchInput.addEventListener('input', function () {
         const searchTerm = this.value.toLowerCase();
         filterCommands(searchTerm);
     });
-    
-    clearButton.addEventListener('click', function() {
+
+    clearButton.addEventListener('click', function () {
         searchInput.value = '';
         renderCommands(getCurrentCategory());
     });
-    
+
     // Category cards click handlers
     const categoryCards = document.querySelectorAll('.category-card');
     categoryCards.forEach(card => {
-        card.addEventListener('click', function() {
+        card.addEventListener('click', function () {
             const category = this.dataset.category;
             // Switch to commands section
             document.getElementById('commands').scrollIntoView({ behavior: 'smooth' });
@@ -1223,16 +1226,16 @@ function setupEventListeners() {
 // Filter commands based on search term
 function filterCommands(searchTerm) {
     const commandCards = document.querySelectorAll('.command-card');
-    
+
     commandCards.forEach(card => {
         const name = card.dataset.name;
         const description = card.querySelector('.command-description').textContent.toLowerCase();
         const usage = card.querySelector('.command-usage').textContent.toLowerCase();
-        
-        const matchesSearch = name.includes(searchTerm) || 
-                           description.includes(searchTerm) || 
-                           usage.includes(searchTerm);
-        
+
+        const matchesSearch = name.includes(searchTerm) ||
+            description.includes(searchTerm) ||
+            usage.includes(searchTerm);
+
         card.style.display = matchesSearch ? 'block' : 'none';
     });
 }
@@ -1248,46 +1251,46 @@ function setupNavigation() {
     const navLinks = document.querySelectorAll('.nav-link');
     const mobileToggle = document.getElementById('mobileToggle');
     const navLinksContainer = document.getElementById('navLinks');
-    
+
     // Handle nav link clicks
     navLinks.forEach(link => {
-        link.addEventListener('click', function(e) {
+        link.addEventListener('click', function (e) {
             e.preventDefault();
-            
+
             // Remove active class from all links
             navLinks.forEach(l => l.classList.remove('active'));
             // Add active class to clicked link
             this.classList.add('active');
-            
+
             // Scroll to section
             const targetId = this.getAttribute('href').substring(1);
             const targetSection = document.getElementById(targetId);
             if (targetSection) {
                 targetSection.scrollIntoView({ behavior: 'smooth' });
             }
-            
+
             // Close mobile menu
             navLinksContainer.classList.remove('active');
         });
     });
-    
+
     // Mobile menu toggle
-    mobileToggle.addEventListener('click', function() {
+    mobileToggle.addEventListener('click', function () {
         navLinksContainer.classList.toggle('active');
     });
-    
+
     // Close mobile menu when clicking outside
-    document.addEventListener('click', function(e) {
+    document.addEventListener('click', function (e) {
         if (!mobileToggle.contains(e.target) && !navLinksContainer.contains(e.target)) {
             navLinksContainer.classList.remove('active');
         }
     });
-    
+
     // Update active nav link on scroll
-    window.addEventListener('scroll', function() {
+    window.addEventListener('scroll', function () {
         let current = '';
         const sections = document.querySelectorAll('section[id]');
-        
+
         sections.forEach(section => {
             const sectionTop = section.offsetTop;
             const sectionHeight = section.clientHeight;
@@ -1295,7 +1298,7 @@ function setupNavigation() {
                 current = section.getAttribute('id');
             }
         });
-        
+
         navLinks.forEach(link => {
             link.classList.remove('active');
             if (link.getAttribute('href') === `#${current}`) {
