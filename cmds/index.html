@@ -5,6 +5,2388 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ignition Rage Bot Commands</title>
     <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+:root {
+    --fire-red: #ff4500;
+    --fire-orange: #ff7b00;
+    --fire-yellow: #ffcc00;
+    --fire-deep: #aa4203;
+    --dark-bg: #0a0a0a;
+    --card-bg: #1a1a1a;
+    --secondary-bg: #1e1e1e;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Rajdhani', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: var(--dark-bg);
+    color: #fff;
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+header {
+    text-align: center;
+    margin: 80px 0 4rem;
+    position: relative;
+}
+
+.github-logo {
+    margin-bottom: 1rem;
+    animation: pulse 3s infinite;
+    box-shadow: 0 0 20px rgba(255, 123, 0, 0.7);
+    display: inline-block;
+    fill: var(--fire-orange);
+}
+
+h1 {
+    font-size: clamp(2.5rem, 5vw, 3.5rem);
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    margin-bottom: 1rem;
+    position: relative;
+    display: inline-block;
+    background: linear-gradient(90deg, var(--fire-red), var(--fire-orange), var(--fire-yellow));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 0 10px rgba(255, 69, 0, 0.6);
+    animation: flicker 3s infinite alternate;
+}
+
+@keyframes flicker {
+    0%, 19.999%, 22%, 62.999%, 64%, 64.999%, 70%, 100% {
+        opacity: 1;
+    }
+    20%, 21.999%, 63%, 63.999%, 65%, 69.999% {
+        opacity: 0.8;
+    }
+}
+
+h1::after {
+    content: "";
+    position: absolute;
+    width: 80%;
+    height: 4px;
+    background: linear-gradient(90deg, transparent, var(--fire-orange), transparent);
+    bottom: -10px;
+    left: 10%;
+    box-shadow: 0 0 15px var(--fire-red);
+}
+
+h2 {
+    font-size: clamp(2rem, 4vw, 2.5rem);
+    text-transform: uppercase;
+    margin-bottom: 2rem;
+    text-align: center;
+    position: relative;
+    display: inline-block;
+    color: var(--fire-yellow);
+    text-shadow: 0 0 8px rgba(255, 204, 0, 0.5);
+}
+
+section {
+    margin-bottom: 5rem;
+    padding: 2rem;
+    background-color: var(--secondary-bg);
+    border-radius: 10px;
+    border: 1px solid rgba(255, 123, 0, 0.3);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    position: relative;
+    overflow: hidden;
+}
+
+section::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--fire-red), var(--fire-orange), var(--fire-yellow));
+    box-shadow: 0 0 15px var(--fire-orange);
+}
+
+.section-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+/* Navigation */
+.nav-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: rgba(10, 10, 10, 0.95);
+    backdrop-filter: blur(10px);
+    z-index: 1000;
+    border-bottom: 1px solid var(--fire-red);
+    box-shadow: 0 2px 15px rgba(255, 69, 0, 0.2);
+}
+
+.nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0.8rem 2rem;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    font-weight: 700;
+    font-size: 1.2rem;
+    color: white;
+    text-decoration: none;
+}
+
+.logo i {
+    color: var(--fire-red);
+    margin-right: 8px;
+    font-size: 1.5rem;
+}
+
+.nav-links {
+    display: flex;
+    gap: 1.5rem;
+}
+
+.nav-link {
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    position: relative;
+}
+
+.nav-link:after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, var(--fire-red), var(--fire-orange));
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+}
+
+.nav-link:hover:after {
+    transform: scaleX(1);
+}
+
+.nav-link:hover {
+    color: var(--fire-yellow);
+}
+
+.nav-link.active {
+    background: rgba(255, 69, 0, 0.15);
+    color: var(--fire-yellow);
+}
+
+.mobile-toggle {
+    display: none;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+/* Stats Grid */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.stat-card {
+    background: var(--card-bg);
+    padding: 2rem;
+    border-radius: 10px;
+    text-align: center;
+    border: 1px solid rgba(255, 123, 0, 0.2);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(255, 69, 0, 0.3);
+    border: 1px solid var(--fire-orange);
+}
+
+.stat-card h3 {
+    color: var(--fire-yellow);
+    margin-bottom: 0.5rem;
+    font-size: 1.5rem;
+}
+
+/* Search */
+.search-container {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.search-input {
+    flex: 1;
+    padding: 1rem;
+    background: var(--card-bg);
+    border: 1px solid rgba(255, 123, 0, 0.3);
+    border-radius: 5px;
+    color: white;
+    font-size: 1rem;
+    transition: border-color 0.3s;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: var(--fire-orange);
+    box-shadow: 0 0 10px rgba(255, 123, 0, 0.3);
+}
+
+.clear-btn {
+    padding: 1rem 1.5rem;
+    background: var(--fire-red);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background 0.3s;
+}
+
+.clear-btn:hover {
+    background: var(--fire-deep);
+}
+
+/* Category Tabs */
+.category-tabs {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.category-tab {
+    padding: 0.8rem 1.5rem;
+    background: var(--card-bg);
+    border: 1px solid rgba(255, 123, 0, 0.3);
+    border-radius: 25px;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-weight: 500;
+}
+
+.category-tab:hover {
+    background: rgba(255, 123, 0, 0.1);
+    border-color: var(--fire-orange);
+}
+
+.category-tab.active {
+    background: var(--fire-orange);
+    border-color: var(--fire-orange);
+    color: white;
+    box-shadow: 0 0 15px rgba(255, 123, 0, 0.5);
+}
+
+/* Commands Grid */
+.commands-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 1.5rem;
+}
+
+.command-card {
+    background: var(--card-bg);
+    border-radius: 10px;
+    padding: 1.5rem;
+    border: 1px solid rgba(255, 123, 0, 0.2);
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+}
+
+.command-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--fire-red), var(--fire-orange));
+    transform: scaleX(0);
+    transition: transform 0.3s;
+}
+
+.command-card:hover::before {
+    transform: scaleX(1);
+}
+
+.command-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(255, 69, 0, 0.3);
+    border: 1px solid var(--fire-orange);
+}
+
+.command-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.command-name {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--fire-yellow);
+}
+
+.command-category {
+    background: var(--fire-red);
+    color: white;
+    padding: 0.3rem 0.8rem;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.command-description {
+    margin-bottom: 1rem;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.command-usage {
+    background: rgba(0, 0, 0, 0.3);
+    padding: 0.8rem;
+    border-radius: 5px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9rem;
+    color: var(--fire-yellow);
+    border-left: 3px solid var(--fire-orange);
+}
+
+.command-examples {
+    margin-top: 1rem;
+}
+
+.command-example {
+    background: rgba(255, 123, 0, 0.1);
+    padding: 0.5rem;
+    border-radius: 3px;
+    font-size: 0.85rem;
+    margin-top: 0.5rem;
+    border-left: 2px solid var(--fire-orange);
+}
+
+/* Categories Grid */
+.categories-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.category-card {
+    background: var(--card-bg);
+    border-radius: 10px;
+    padding: 2rem;
+    text-align: center;
+    border: 1px solid rgba(255, 123, 0, 0.2);
+    transition: all 0.3s;
+    cursor: pointer;
+}
+
+.category-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(255, 69, 0, 0.3);
+    border: 1px solid var(--fire-orange);
+}
+
+.category-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.category-card h3 {
+    color: var(--fire-yellow);
+    margin-bottom: 1rem;
+}
+
+.category-commands {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    justify-content: center;
+    margin-top: 1rem;
+}
+
+.command-tag {
+    background: rgba(255, 123, 0, 0.2);
+    color: var(--fire-orange);
+    padding: 0.3rem 0.6rem;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    font-family: 'Courier New', monospace;
+}
+
+/* Games Showcase */
+.games-showcase {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.game-card {
+    background: var(--card-bg);
+    border-radius: 10px;
+    padding: 2rem;
+    text-align: center;
+    border: 1px solid rgba(255, 123, 0, 0.2);
+    transition: all 0.3s;
+}
+
+.game-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(255, 69, 0, 0.3);
+    border: 1px solid var(--fire-orange);
+}
+
+.game-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.game-card h3 {
+    color: var(--fire-yellow);
+    margin-bottom: 1rem;
+}
+
+.game-command {
+    margin-top: 1rem;
+}
+
+.game-command code {
+    background: rgba(255, 123, 0, 0.1);
+    color: var(--fire-yellow);
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    font-family: 'Courier New', monospace;
+    border: 1px solid rgba(255, 123, 0, 0.3);
+}
+
+/* Join Section */
+.join-section {
+    text-align: center;
+    padding: 3rem 2rem;
+    background: linear-gradient(145deg, var(--secondary-bg), rgba(30, 30, 30, 0.8));
+}
+
+.discord-button {
+    display: inline-flex;
+    align-items: center;
+    background: linear-gradient(90deg, #7289da, #5865f2);
+    color: white;
+    padding: 1rem 2rem;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 1.2rem;
+    transition: all 0.3s;
+    box-shadow: 0 5px 15px rgba(88, 101, 242, 0.4);
+    position: relative;
+    overflow: hidden;
+    border: none;
+    cursor: pointer;
+}
+
+.discord-button::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: 0.5s;
+}
+
+.discord-button:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(88, 101, 242, 0.6);
+}
+
+.discord-button:hover::before {
+    left: 100%;
+}
+
+.discord-icon {
+    margin-right: 10px;
+}
+
+.discord-members {
+    margin-top: 2rem;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.discord-member {
+    display: flex;
+    align-items: center;
+    background: var(--card-bg);
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    border: 1px solid var(--fire-orange);
+}
+
+.discord-member img {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin-right: 0.5rem;
+}
+
+/* Background Effects */
+.fire-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(ellipse at bottom, #1b1b1b 0%, #090a0f 100%);
+    z-index: -2;
+}
+
+.fire-glow {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 150%;
+    height: 150%;
+    background: radial-gradient(ellipse at center, rgba(255, 69, 0, 0.15) 0%, rgba(10, 10, 10, 0) 70%);
+    z-index: -1;
+    pointer-events: none;
+}
+
+.particles {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    z-index: -1;
+    pointer-events: none;
+}
+
+.particle {
+    position: absolute;
+    border-radius: 50%;
+    animation: float 15s infinite linear;
+}
+
+@keyframes float {
+    0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 0.8;
+    }
+    100% {
+        transform: translateY(-1000px) rotate(720deg);
+        opacity: 0;
+    }
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 20px rgba(255, 123, 0, 0.5);
+    }
+    50% {
+        box-shadow: 0 0 30px rgba(255, 69, 0, 0.8);
+    }
+    100% {
+        box-shadow: 0 0 20px rgba(255, 123, 0, 0.5);
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        padding: 1rem;
+    }
+    
+    h1 {
+        font-size: 2.5rem;
+    }
+    
+    h2 {
+        font-size: 2rem;
+    }
+    
+    .nav-container {
+        padding: 0.8rem 1rem;
+    }
+    
+    .nav-links {
+        position: fixed;
+        top: 60px;
+        left: 0;
+        width: 100%;
+        flex-direction: column;
+        background: rgba(10, 10, 10, 0.95);
+        padding: 1rem 0;
+        gap: 0;
+        transform: translateY(-150%);
+        transition: transform 0.3s ease;
+        border-bottom: 1px solid var(--fire-red);
+    }
+    
+    .nav-links.active {
+        transform: translateY(0);
+    }
+    
+    .nav-link {
+        width: 100%;
+        padding: 1rem 2rem;
+        text-align: center;
+        border-radius: 0;
+    }
+    
+    .nav-link:after {
+        display: none;
+    }
+    
+    .mobile-toggle {
+        display: block;
+    }
+    
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .categories-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .games-showcase {
+        grid-template-columns: 1fr;
+    }
+    
+    .commands-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .category-tabs {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .search-container {
+        flex-direction: column;
+    }
+}
+
+/* Home Page Styles */
+.hero-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    margin: 3rem 0;
+    align-items: center;
+}
+
+.hero-text h3 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    color: var(--fire-orange);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.hero-text p {
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+    color: #ccc;
+    line-height: 1.8;
+}
+
+.hero-buttons {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.btn {
+    display: inline-block;
+    padding: 1rem 2rem;
+    text-decoration: none;
+    border-radius: 50px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.btn.primary {
+    background: linear-gradient(45deg, var(--fire-red), var(--fire-orange));
+    color: white;
+    box-shadow: 0 4px 15px rgba(255, 69, 0, 0.3);
+}
+
+.btn.primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 69, 0, 0.4);
+}
+
+.btn.secondary {
+    background: transparent;
+    color: var(--fire-orange);
+    border-color: var(--fire-orange);
+}
+
+.btn.secondary:hover {
+    background: var(--fire-orange);
+    color: white;
+    transform: translateY(-2px);
+}
+
+.hero-features {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+}
+
+.feature-item {
+    background: var(--card-bg);
+    padding: 2rem;
+    border-radius: 15px;
+    text-align: center;
+    border: 1px solid rgba(255, 123, 0, 0.2);
+    transition: all 0.3s ease;
+}
+
+.feature-item:hover {
+    transform: translateY(-5px);
+    border-color: var(--fire-orange);
+    box-shadow: 0 10px 25px rgba(255, 123, 0, 0.2);
+}
+
+.feature-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.feature-item h4 {
+    font-size: 1.3rem;
+    margin-bottom: 0.5rem;
+    color: var(--fire-orange);
+}
+
+.feature-item p {
+    color: #ccc;
+    font-size: 0.9rem;
+}
+
+.quick-start {
+    margin: 4rem 0;
+    background: var(--card-bg);
+    padding: 3rem;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 123, 0, 0.2);
+}
+
+.quick-start h3 {
+    text-align: center;
+    font-size: 2rem;
+    margin-bottom: 3rem;
+    color: var(--fire-orange);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.quick-steps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+}
+
+.step {
+    display: flex;
+    align-items: flex-start;
+    gap: 1.5rem;
+}
+
+.step-number {
+    min-width: 50px;
+    height: 50px;
+    background: linear-gradient(45deg, var(--fire-red), var(--fire-orange));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: white;
+    flex-shrink: 0;
+}
+
+.step-content h4 {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+    color: var(--fire-orange);
+}
+
+.step-content p {
+    color: #ccc;
+    font-size: 0.9rem;
+    line-height: 1.6;
+}
+
+/* Responsive Home Page */
+@media (max-width: 768px) {
+    .hero-content {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+        text-align: center;
+    }
+    
+    .hero-buttons {
+        justify-content: center;
+    }
+    
+    .quick-steps {
+        grid-template-columns: 1fr;
+    }
+    
+    .step {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    
+    .hero-text h3 {
+        font-size: 2rem;
+    }
+    
+    .quick-start {
+        padding: 2rem;
+    }
+}
+    </style>
+</head>
+<body>
+    <div class="fire-background"></div>
+    <div class="fire-glow"></div>
+    <div class="particles" id="particles"></div>
+    
+    <nav class="nav-bar">
+        <div class="nav-container">
+            <a href="https://ignitionrage.github.io" class="logo">
+                <i>🔥</i>
+                Crayon Casino
+            </a>
+            <div class="nav-links" id="navLinks">
+                <a href="https://ignitionrage.github.io" class="nav-link active">Home</a>
+                <a href="#commands" class="nav-link">Commands</a>
+                <a href="#categories" class="nav-link">Categories</a>
+                <a href="#games" class="nav-link">Games</a>
+                <a href="#economy" class="nav-link">Economy</a>
+                <a href="#fun" class="nav-link">Fun</a>
+            </div>
+            <button class="mobile-toggle" id="mobileToggle">☰</button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <header>
+            <div class="github-link">
+                <img src="https://github.com/ignitionRage.png" alt="IgnitionRage Logo" class="github-logo" width="80" height="80">
+            </div>
+            <h1>Crayon Casino Commands</h1>
+            <p>Complete command reference for the IgnitionRage Twitch Bot</p>
+        </header>
+
+        <section id="home">
+            <div class="section-header">
+                <h2>Welcome to Crayon Casino</h2>
+                <p>Your ultimate Twitch bot for entertainment, games, and community engagement!</p>
+            </div>
+            
+            <div class="hero-content">
+                <div class="hero-text">
+                    <h3>🔥 IgnitionRage Bot</h3>
+                    <p>Experience the power of the Crayon Casino - a feature-rich Twitch bot that brings excitement, games, and community interaction to your stream!</p>
+                    <div class="hero-buttons">
+                        <a href="#commands" class="btn primary">Browse Commands</a>
+                        <a href="#featured-games" class="btn secondary">View Games</a>
+                    </div>
+                </div>
+                <div class="hero-features">
+                    <div class="feature-item">
+                        <div class="feature-icon">🎮</div>
+                        <h4>50+ Games</h4>
+                        <p>Slots, Blackjack, Roulette, Archery & More</p>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">🤖</div>
+                        <h4>AI Powered</h4>
+                        <p>Interactive AI with mood system</p>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">💰</div>
+                        <h4>Economy</h4>
+                        <p>Complete crayon currency system</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3>🎮 <span id="commandCount">0</span> Commands</h3>
+                    <p>Comprehensive command suite</p>
+                </div>
+                <div class="stat-card">
+                    <h3>🎯 <span id="categoryCount">0</span> Categories</h3>
+                    <p>Games, Economy, Fun & More</p>
+                </div>
+                <div class="stat-card">
+                    <h3>🔥 Fire Theme</h3>
+                    <p>IgnitionRage personality</p>
+                </div>
+            </div>
+            
+            <div class="quick-start">
+                <h3>Quick Start Guide</h3>
+                <div class="quick-steps">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h4>Invite the Bot</h4>
+                            <p>Add IgnitionRage to your Twitch channel</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h4>Set Up Commands</h4>
+                            <p>Configure mod permissions and settings</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h4>Start Playing</h4>
+                            <p>Use ?help to explore all commands</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="commands">
+            <div class="section-header">
+                <h2>All Commands</h2>
+                <p>Browse through all available bot commands</p>
+            </div>
+            
+            <div class="search-container">
+                <input type="text" id="commandSearch" placeholder="Search commands..." class="search-input">
+                <button id="clearSearch" class="clear-btn">Clear</button>
+            </div>
+
+            <div class="command-categories">
+                <div class="category-tabs">
+                    <button class="category-tab active" data-category="all">All Commands</button>
+                    <button class="category-tab" data-category="ai">🤖 AI</button>
+                    <button class="category-tab" data-category="games">🎮 Games</button>
+                    <button class="category-tab" data-category="economy">💰 Economy</button>
+                    <button class="category-tab" data-category="fun">😄 Fun</button>
+                    <button class="category-tab" data-category="utility">⚙️ Utility</button>
+                    <button class="category-tab" data-category="admin">👑 Admin</button>
+                </div>
+
+                <div class="commands-grid" id="commandsGrid">
+                    <!-- Commands will be dynamically loaded here -->
+                </div>
+            </div>
+        </section>
+
+        <section id="categories">
+            <div class="section-header">
+                <h2>Command Categories</h2>
+                <p>Explore commands by category</p>
+            </div>
+            
+            <div class="categories-grid">
+                <div class="category-card" data-category="ai">
+                    <div class="category-icon">🤖</div>
+                    <h3>AI Commands</h3>
+                    <p>Interact with IgnitionRage AI personality</p>
+                    <div class="category-commands">
+                        <span class="command-tag">?ai</span>
+                        <span class="command-tag">?mood</span>
+                        <span class="command-tag">?moods</span>
+                    </div>
+                </div>
+
+                <div class="category-card" data-category="games">
+                    <div class="category-icon">🎮</div>
+                    <h3>Games & Casino</h3>
+                    <p>Play various games and win crayons</p>
+                    <div class="category-commands">
+                        <span class="command-tag">?slots</span>
+                        <span class="command-tag">?roulette</span>
+                        <span class="command-tag">?blackjack</span>
+                        <span class="command-tag">?poker</span>
+                    </div>
+                </div>
+
+                <div class="category-card" data-category="economy">
+                    <div class="category-icon">💰</div>
+                    <h3>Economy System</h3>
+                    <p>Manage your crayons and transactions</p>
+                    <div class="category-commands">
+                        <span class="command-tag">?balance</span>
+                        <span class="command-tag">?give</span>
+                        <span class="command-tag">?leaderboard</span>
+                    </div>
+                </div>
+
+                <div class="category-card" data-category="fun">
+                    <div class="category-icon">😄</div>
+                    <h3>Fun & Social</h3>
+                    <p>Social interactions and fun commands</p>
+                    <div class="category-commands">
+                        <span class="command-tag">?hug</span>
+                        <span class="command-tag">?bite</span>
+                        <span class="command-tag">?slap</span>
+                        <span class="command-tag">?poke</span>
+                    </div>
+                </div>
+
+                <div class="category-card" data-category="utility">
+                    <div class="category-icon">⚙️</div>
+                    <h3>Utility</h3>
+                    <p>Helpful utility commands</p>
+                    <div class="category-commands">
+                        <span class="command-tag">?help</span>
+                        <span class="command-tag">?ping</span>
+                        <span class="command-tag">?uptime</span>
+                    </div>
+                </div>
+
+                <div class="category-card" data-category="admin">
+                    <div class="category-icon">👑</div>
+                    <h3>Admin & Moderation</h3>
+                    <p>Moderator and admin commands</p>
+                    <div class="category-commands">
+                        <span class="command-tag">?ban</span>
+                        <span class="command-tag">?timeout</span>
+                        <span class="command-tag">?permit</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="featured-games">
+            <div class="section-header">
+                <h2>Featured Games</h2>
+                <p>Popular games in the Crayon Casino</p>
+            </div>
+            
+            <div class="games-showcase">
+                <div class="game-card">
+                    <div class="game-icon">🎰</div>
+                    <h3>Slots</h3>
+                    <p>Try your luck with the slot machine!</p>
+                    <div class="game-command">
+                        <code>?slots [amount]</code>
+                    </div>
+                </div>
+
+                <div class="game-card">
+                    <div class="game-icon">🎲</div>
+                    <h3>Roulette</h3>
+                    <p>Bet on red, black, or green!</p>
+                    <div class="game-command">
+                        <code>?roulette [color] [amount]</code>
+                    </div>
+                </div>
+
+                <div class="game-card">
+                    <div class="game-icon">🃏</div>
+                    <h3>Blackjack</h3>
+                    <p>Classic blackjack against the dealer</p>
+                    <div class="game-command">
+                        <code>?blackjack [amount]</code>
+                    </div>
+                </div>
+
+                <div class="game-card">
+                    <div class="game-icon">🏹</div>
+                    <h3>Archery</h3>
+                    <p>Test your archery skills!</p>
+                    <div class="game-command">
+                        <code>?archery [distance] [power]</code>
+                    </div>
+                </div>
+
+                <div class="game-card">
+                    <div class="game-icon">🎪</div>
+                    <h3>Circus Games</h3>
+                    <p>Play various circus mini-games!</p>
+                    <div class="game-command">
+                        <code>?circus</code>
+                    </div>
+                </div>
+
+                <div class="game-card">
+                    <div class="game-icon">🕵️</div>
+                    <h3>Detective</h3>
+                    <p>Solve mysteries and cases!</p>
+                    <div class="game-command">
+                        <code>?detective</code>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="join-section">
+            <div class="section-header">
+                <h2>Join the Community</h2>
+                <p>Connect with us and stay updated!</p>
+            </div>
+            
+            <a href="https://discord.gg/gqkkp2JF4Q" class="discord-button" target="_blank">
+                <svg class="discord-icon" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .2-.152c.018-.014.041-.014.06-.002a14.273 14.273 0 0 0 12.138 0c.019-.012.041-.012.06.002a10.17 10.17 0 0 0 .2.152.077.077 0 0 1-.006.127 13.095 13.095 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/>
+                </svg>
+                Join Discord
+            </a>
+        </section>
+    </div>
+
+    <script>
+// Command data extracted from bot cogs
+const commands = [
+    // AI Commands
+    {
+        name: "ai",
+        category: "ai",
+        description: "Generate AI response with IgnitionRage personality",
+        usage: "?ai <your prompt>",
+        examples: ["?ai What's the weather like?", "?ai Tell me a joke"],
+        permissions: "all",
+        cooldown: "60s (varies by user level)"
+    },
+    {
+        name: "mood",
+        category: "admin",
+        description: "Set the current AI mood (mood admins only)",
+        usage: "?mood [mood]",
+        examples: ["?mood chill", "?mood hype", "?mood"],
+        permissions: "mood admin",
+        cooldown: "none"
+    },
+    {
+        name: "moods",
+        category: "ai",
+        description: "List all available AI moods",
+        usage: "?moods",
+        examples: ["?moods"],
+        permissions: "all",
+        cooldown: "none"
+    },
+    {
+        name: "ama",
+        category: "admin",
+        description: "Add a mood admin (Bacon_Space only)",
+        usage: "?ama <username>",
+        examples: ["?ama @username", "?ama username"],
+        permissions: "super admin",
+        cooldown: "none"
+    },
+    {
+        name: "rma",
+        category: "admin",
+        description: "Remove a mood admin (Bacon_Space only)",
+        usage: "?rma <username>",
+        examples: ["?rma @username", "?rma username"],
+        permissions: "super admin",
+        cooldown: "none"
+    },
+    {
+        name: "masters",
+        category: "admin",
+        description: "Show list of mood admins (Bacon_Space only)",
+        usage: "?masters",
+        examples: ["?masters"],
+        permissions: "super admin",
+        cooldown: "none"
+    },
+    {
+        name: "checkup",
+        category: "admin",
+        description: "Check Ollama connection status (mods only)",
+        usage: "?checkup",
+        examples: ["?checkup"],
+        permissions: "moderator",
+        cooldown: "none"
+    },
+    {
+        name: "delay",
+        category: "utility",
+        description: "Show cooldown information for the user",
+        usage: "?delay",
+        examples: ["?delay"],
+        permissions: "all",
+        cooldown: "none"
+    },
+    {
+        name: "addblock",
+        category: "admin",
+        description: "Add a word to the blocked words list (Bacon_Space only)",
+        usage: "?addblock <word>",
+        examples: ["?addblock badword"],
+        permissions: "super admin",
+        cooldown: "none"
+    },
+    {
+        name: "removeblock",
+        category: "admin",
+        description: "Remove a word from the blocked words list (Bacon_Space only)",
+        usage: "?removeblock <word>",
+        examples: ["?removeblock badword"],
+        permissions: "super admin",
+        cooldown: "none"
+    },
+    {
+        name: "blocklist",
+        category: "admin",
+        description: "Show current blocked words count (Bacon_Space only)",
+        usage: "?blocklist",
+        examples: ["?blocklist"],
+        permissions: "super admin",
+        cooldown: "none"
+    },
+    {
+        name: "reloadblocks",
+        category: "admin",
+        description: "Reload blocked words from JSON file (Bacon_Space only)",
+        usage: "?reloadblocks",
+        examples: ["?reloadblocks"],
+        permissions: "super admin",
+        cooldown: "none"
+    },
+    {
+        name: "banuser",
+        category: "admin",
+        description: "Ban a user from using AI (Bacon_Space only)",
+        usage: "?banuser <username>",
+        examples: ["?banuser username"],
+        permissions: "super admin",
+        cooldown: "none"
+    },
+    {
+        name: "unbanuser",
+        category: "admin",
+        description: "Unban a user from using AI (Bacon_Space only)",
+        usage: "?unbanuser <username>",
+        examples: ["?unbanuser username"],
+        permissions: "super admin",
+        cooldown: "none"
+    },
+
+    // Archery Commands
+    {
+        name: "archery",
+        category: "games",
+        description: "Take a shot at the archery range!",
+        usage: "?archery [distance] [power]",
+        examples: ["?archery 50 medium", "?archery 25 heavy"],
+        permissions: "all",
+        cooldown: "none"
+    },
+    {
+        name: "practice",
+        category: "games",
+        description: "Free practice mode to improve your archery skills",
+        usage: "?practice",
+        examples: ["?practice"],
+        permissions: "all",
+        cooldown: "none"
+    },
+    {
+        name: "archeryinfo",
+        category: "games",
+        description: "Show current archery conditions and your stats",
+        usage: "?archeryinfo",
+        examples: ["?archeryinfo"],
+        permissions: "all",
+        cooldown: "none"
+    },
+    {
+        name: "archerystats",
+        category: "games",
+        description: "View detailed archery statistics",
+        usage: "?archerystats [username]",
+        examples: ["?archerystats", "?archerystats @username"],
+        permissions: "all",
+        cooldown: "none"
+    },
+    {
+        name: "archeryleaderboard",
+        category: "games",
+        description: "Show top archers by different metrics",
+        usage: "?archeryleaderboard",
+        examples: ["?archeryleaderboard"],
+        permissions: "all",
+        cooldown: "none"
+    },
+    {
+        name: "equipment",
+        category: "games",
+        description: "View and upgrade your archery equipment",
+        usage: "?equipment",
+        examples: ["?equipment"],
+        permissions: "all",
+        cooldown: "none"
+    },
+    {
+        name: "upgrade",
+        category: "games",
+        description: "Upgrade your archery equipment",
+        usage: "?upgrade [bow/arrows] [type]",
+        examples: ["?upgrade bow hunting", "?upgrade arrows fire"],
+        permissions: "all",
+        cooldown: "none"
+    },
+
+    // Bite Commands
+    {
+        name: "bite",
+        category: "fun",
+        description: "Bite someone with a random message!",
+        usage: "?bite [username]",
+        examples: ["?bite @username", "?bite username"],
+        permissions: "all",
+        cooldown: "none"
+    },
+    {
+        name: "bitestats",
+        category: "fun",
+        description: "Check bite statistics for yourself or another user",
+        usage: "?bitestats [username]",
+        examples: ["?bitestats", "?bitestats @username"],
+        permissions: "all",
+        cooldown: "none"
+    },
+    {
+        name: "biteleaderboard",
+        category: "fun",
+        description: "Show top biters and most bitten users",
+        usage: "?biteleaderboard",
+        examples: ["?biteleaderboard"],
+        permissions: "all",
+        cooldown: "none"
+    },
+
+    // Circus Commands
+    {
+        name: "circus",
+        category: "games",
+        description: "Play today's featured circus game!",
+        usage: "?circus",
+        examples: ["?circus"],
+        permissions: "all",
+        cooldown: "1 minute"
+    },
+    {
+        name: "circusinfo",
+        category: "games",
+        description: "Show today's featured circus game and rules",
+        usage: "?circusinfo",
+        examples: ["?circusinfo"],
+        permissions: "all",
+        cooldown: "none"
+    },
+    {
+        name: "circusstats",
+        category: "games",
+        description: "Check circus statistics for yourself or another user",
+        usage: "?circusstats [username]",
+        examples: ["?circusstats", "?circusstats @username"],
+        permissions: "all",
+        cooldown: "none"
+    },
+    {
+        name: "circusleaderboard",
+        category: "games",
+        description: "Show top circus performers",
+        usage: "?circusleaderboard",
+        examples: ["?circusleaderboard"],
+        permissions: "all",
+        cooldown: "none"
+    },
+    {
+        name: "tickets",
+        category: "economy",
+        description: "Check your circus tickets balance",
+        usage: "?tickets",
+        examples: ["?tickets"],
+        permissions: "all",
+        cooldown: "none"
+    },
+
+    // Lick Commands
+    {
+        name: "lick",
+        category: "fun",
+        description: "Lick someone with a random message!",
+        usage: "?lick [username]",
+        examples: ["?lick @username", "?lick username"],
+        permissions: "all",
+        cooldown: "none"
+    },
+    {
+        name: "lickstats",
+        category: "fun",
+        description: "Check lick statistics for yourself or another user",
+        usage: "?lickstats [username]",
+        examples: ["?lickstats", "?lickstats @username"],
+        permissions: "all",
+        cooldown: "none"
+    },
+    {
+        name: "lickleaderboard",
+        category: "fun",
+        description: "Show the top lickers and most licked users",
+        usage: "?lickleaderboard",
+        examples: ["?lickleaderboard"],
+        permissions: "all",
+        cooldown: "none"
+    },
+
+    // Social Commands
+    {
+        name: "hug",
+        category: "fun",
+        description: "Give someone a hug",
+        usage: "?hug [username]",
+        examples: ["?hug @username", "?hug username"],
+        permissions: "all",
+        cooldown: "none"
+    },
+    {
+        name: "slap",
+        category: "fun",
+        description: "Slap someone playfully",
+        usage: "?slap [username]",
+        examples: ["?slap @username", "?slap username"],
+        permissions: "all",
+        cooldown: "none"
+    },
+    {
+        name: "poke",
+        category: "fun",
+        description: "Poke someone",
+        usage: "?poke [username]",
+        examples: ["?poke @username", "?poke username"],
+        permissions: "all",
+        cooldown: "none"
+    },
+    {
+        name: "fistbump",
+        category: "fun",
+        description: "Give someone a fist bump",
+        usage: "?fistbump [username]",
+        examples: ["?fistbump @username", "?fistbump username"],
+        permissions: "all",
+        cooldown: "none"
+    },
+    {
+        name: "bonk",
+        category: "fun",
+        description: "Bonk someone on the head",
+        usage: "?bonk [username]",
+        examples: ["?bonk @username", "?bonk username"],
+        permissions: "all",
+        cooldown: "none"
+    },
+
+    // Gambling Commands
+    {
+        name: "slots",
+        category: "games",
+        description: "Play the slot machine",
+        usage: "?slots [amount]",
+        examples: ["?slots 10", "?slots 50"],
+        aliases: ["slot", "Slots", "Slot", "spin"],
+        permissions: "all",
+        cooldown: "none"
+    },
+    {
+        name: "slotodds",
+        category: "games",
+        description: "Show slot machine odds",
+        usage: "?slotodds",
+        examples: ["?slotodds"],
+        aliases: ["odds"],
+        permissions: "all",
+        cooldown: "none"
+    },
+    {
+        name: "roulette",
+        category: "games",
+        description: "Start a roulette game",
+        usage: "?roulette",
+        examples: ["?roulette"],
+        aliases: ["r"],
+        permissions: "all",
+        cooldown: "none"
+    },
+    {
+        name: "bet",
+        category: "games",
+        description: "Place a bet in roulette",
+        usage: "?bet <amount> <bet_type>",
+        examples: ["?bet 10 red", "?bet 25 black", "?bet 5 green"],
+        permissions: "all",
+        cooldown: "none"
+    },
+    {
+        name: "bets",
+        category: "games",
+        description: "Show current roulette bets",
+        usage: "?bets",
+        examples: ["?bets"],
+        permissions: "all",
+        cooldown: "none"
+    },
+    {
+        name: "blackjack",
+        category: "games",
+        description: "Play blackjack",
+        usage: "?blackjack [amount]",
+        examples: ["?blackjack 10", "?blackjack 50"],
+        aliases: ["bj"],
+        permissions: "all",
+        cooldown: "none"
+    },
+    {
+        name: "bjall",
+        category: "games",
+        description: "Go all-in with all available crayons",
+        usage: "?bjall",
+        examples: ["?bjall"],
+        aliases: ["blackjackall", "allin", "yolo"],
+        permissions: "all",
+        cooldown: "none"
+    },
+    {
+        name: "hit",
+        category: "games",
+        description: "Hit in blackjack (draw another card)",
+        usage: "?hit",
+        examples: ["?hit"],
+        aliases: ["hitme"],
+        permissions: "all",
+        cooldown: "none"
+    },
+    {
+        name: "stand",
+        category: "games",
+        description: "Stand in blackjack (keep current hand)",
+        usage: "?stand",
+        examples: ["?stand"],
+        aliases: ["stay"],
+        permissions: "all",
+        cooldown: "none"
+    },
+    {
+        name: "gamestatus",
+        category: "games",
+        description: "Show current game status",
+        usage: "?gamestatus",
+        examples: ["?gamestatus"],
+        permissions: "all",
+        cooldown: "none"
+    },
+    {
+        name: "poker",
+        category: "games",
+        description: "Play poker",
+        usage: "?poker [amount]",
+        examples: ["?poker 10", "?poker 50"],
+        permissions: "all",
+        cooldown: "none"
+    },
+    {
+        name: "roll",
+        category: "games",
+        description: "Roll dice",
+        usage: "?roll [sides]",
+        examples: ["?roll 6", "?roll 20"],
+        permissions: "all",
+        cooldown: "none"
+    },
+    {
+        name: "gamble",
+        category: "games",
+        description: "Gamble with custom chance",
+        usage: "?gamble <amount> [chance%]",
+        examples: ["?gamble 100", "?gamble 50 25"],
+        permissions: "all",
+        cooldown: "none"
+    },
+    {
+        name: "ghelp",
+        category: "games",
+        description: "Help command for gambling",
+        usage: "?ghelp",
+        examples: ["?ghelp"],
+        permissions: "all",
+        cooldown: "none"
+    },
+    {
+        name: "pool",
+        category: "games",
+        description: "Fish for emotes in the pool",
+        usage: "?pool [bet] [pulls]",
+        examples: ["?pool 10", "?pool 5 3"],
+        aliases: ["pull"],
+        permissions: "all",
+        cooldown: "none"
+    },
+    {
+        name: "poolinfo",
+        category: "games",
+        description: "Show pool fishing information",
+        usage: "?poolinfo",
+        examples: ["?poolinfo"],
+        aliases: ["poolhelp"],
+        permissions: "all",
+        cooldown: "none"
+    },
+    {
+        name: "poolrates",
+        category: "games",
+        description: "Show pool emote rarity rates",
+        usage: "?poolrates [rarity]",
+        examples: ["?poolrates", "?poolrates legendary"],
+        aliases: ["rates"],
+        permissions: "all",
+        cooldown: "none"
+    },
+    {
+        name: "jackpot",
+        category: "games",
+        description: "Show jackpot information",
+        usage: "?jackpot",
+        examples: ["?jackpot"],
+        aliases: ["legendary"],
+        permissions: "all",
+        cooldown: "none"
+    },
+    {
+        name: "flip",
+        category: "games",
+        description: "Flip a coin - Heads or Tails",
+        usage: "?flip",
+        examples: ["?flip"],
+        permissions: "all",
+        cooldown: "90s"
+    },
+    {
+        name: "plinko",
+        category: "games",
+        description: "Play plinko",
+        usage: "?plinko [amount]",
+        examples: ["?plinko 10", "?plinko 50"],
+        permissions: "all",
+        cooldown: "none"
+    },
+
+    // Economy Commands
+    {
+        name: "crayons",
+        category: "economy",
+        description: "Quick way to check crayon balance",
+        usage: "?crayons [username]",
+        examples: ["?crayons", "?crayons @username"],
+        aliases: ["Crayons", "bal"],
+        permissions: "all",
+        cooldown: "none"
+    },
+    {
+        name: "claim",
+        category: "economy",
+        description: "Claim your daily bonus of 1000 crayons",
+        usage: "?claim",
+        examples: ["?claim"],
+        aliases: ["daily"],
+        permissions: "all",
+        cooldown: "24 hours"
+    },
+    {
+        name: "bonus",
+        category: "economy",
+        description: "Give crayons to another user (mods only)",
+        usage: "?bonus <username> <amount>",
+        examples: ["?bonus @username 100", "?bonus username 50"],
+        permissions: "moderator",
+        cooldown: "none"
+    },
+    {
+        name: "stats",
+        category: "economy",
+        description: "View your or another user's statistics",
+        usage: "?stats [username]",
+        examples: ["?stats", "?stats @username"],
+        permissions: "all",
+        cooldown: "none"
+    },
+    {
+        name: "top",
+        category: "economy",
+        description: "Show top players by crayon count",
+        usage: "?top [limit]",
+        examples: ["?top", "?top 10"],
+        permissions: "all",
+        cooldown: "none"
+    },
+    {
+        name: "bstats",
+        category: "economy",
+        description: "Show overall bot statistics",
+        usage: "?bstats",
+        examples: ["?bstats"],
+        permissions: "all",
+        cooldown: "none"
+    },
+    {
+        name: "convert",
+        category: "utility",
+        description: "Convert money between currencies",
+        usage: "?convert <amount> [from] [to]",
+        examples: ["?convert 100 CAD USD", "?convert 50"],
+        aliases: ["money", "currency", "exchange"],
+        permissions: "all",
+        cooldown: "3 per minute"
+    },
+    {
+        name: "cad",
+        category: "utility",
+        description: "Convert CAD to USD",
+        usage: "?cad <amount>",
+        examples: ["?cad 100"],
+        permissions: "all",
+        cooldown: "3 per minute"
+    },
+    {
+        name: "usd",
+        category: "utility",
+        description: "Convert USD to CAD",
+        usage: "?usd <amount> [target]",
+        examples: ["?usd 100", "?usd 50 EUR"],
+        permissions: "all",
+        cooldown: "3 per minute"
+    },
+    {
+        name: "currencies",
+        category: "utility",
+        description: "List some popular supported currencies",
+        usage: "?currencies",
+        examples: ["?currencies"],
+        aliases: ["currencylist"],
+        permissions: "all",
+        cooldown: "2 minutes per channel"
+    },
+    {
+        name: "rates",
+        category: "utility",
+        description: "Show exchange rates for a base currency",
+        usage: "?rates [base]",
+        examples: ["?rates", "?rates USD"],
+        aliases: ["exchangerates"],
+        permissions: "all",
+        cooldown: "3 minutes per channel"
+    },
+    {
+        name: "steam",
+        category: "utility",
+        description: "Get Steam store link for a game",
+        usage: "?steam [game_name]",
+        examples: ["?steam Counter-Strike", "?steam"],
+        permissions: "all",
+        cooldown: "none"
+    },
+
+    // Utility Commands
+    {
+        name: "help",
+        category: "utility",
+        description: "Show help information",
+        usage: "?help [command]",
+        examples: ["?help", "?help slots"],
+        permissions: "all",
+        cooldown: "none"
+    },
+    {
+        name: "ping",
+        category: "utility",
+        description: "Check bot latency",
+        usage: "?ping",
+        examples: ["?ping"],
+        permissions: "all",
+        cooldown: "none"
+    },
+    {
+        name: "uptime",
+        category: "utility",
+        description: "Check bot uptime",
+        usage: "?uptime",
+        examples: ["?uptime"],
+        permissions: "all",
+        cooldown: "none"
+    },
+
+    // Quest Commands
+    {
+        name: "quest",
+        category: "games",
+        description: "View and complete quests",
+        usage: "?quest [action]",
+        examples: ["?quest", "?quest daily", "?quest complete"],
+        permissions: "all",
+        cooldown: "none"
+    },
+    {
+        name: "quests",
+        category: "games",
+        description: "List all available quests",
+        usage: "?quests",
+        examples: ["?quests"],
+        permissions: "all",
+        cooldown: "none"
+    },
+
+    // Detective Commands
+    {
+        name: "detective",
+        category: "games",
+        description: "Solve mysteries and cases!",
+        usage: "?detective",
+        examples: ["?detective"],
+        permissions: "all",
+        cooldown: "none"
+    },
+
+    // Additional Fun Commands
+    {
+        name: "fistbump",
+        category: "fun",
+        description: "Give someone a fist bump",
+        usage: "?fistbump [username]",
+        examples: ["?fistbump @username", "?fistbump username"],
+        permissions: "all",
+        cooldown: "none"
+    },
+    {
+        name: "fistbumpstats",
+        category: "fun",
+        description: "Check fist bump statistics",
+        usage: "?fistbumpstats [username]",
+        examples: ["?fistbumpstats", "?fistbumpstats @username"],
+        permissions: "all",
+        cooldown: "none"
+    },
+
+    // Other Game Commands
+    {
+        name: "duel",
+        category: "games",
+        description: "Challenge someone to a duel",
+        usage: "?duel [username] [amount]",
+        examples: ["?duel @username 100", "?duel username 50"],
+        permissions: "all",
+        cooldown: "none"
+    },
+    {
+        name: "bowling",
+        category: "games",
+        description: "Play bowling",
+        usage: "?bowling [amount]",
+        examples: ["?bowling 10", "?bowling 50"],
+        permissions: "all",
+        cooldown: "none"
+    },
+
+    // Admin/System Commands
+    {
+        name: "reloadconfig",
+        category: "admin",
+        description: "Reload the bot configuration from config.json (Bacon_Space only)",
+        usage: "?reloadconfig",
+        examples: ["?reloadconfig"],
+        permissions: "super admin",
+        cooldown: "none"
+    },
+
+    // Social Commands
+    {
+        name: "so",
+        category: "utility",
+        description: "Shoutout to another streamer",
+        usage: "?so [username]",
+        examples: ["?so username"],
+        permissions: "moderator",
+        cooldown: "none"
+    },
+
+    // Content Commands
+    {
+        name: "joke",
+        category: "fun",
+        description: "Get a random joke",
+        usage: "?joke",
+        examples: ["?joke"],
+        permissions: "all",
+        cooldown: "none"
+    },
+    {
+        name: "wyr",
+        category: "fun",
+        description: "Would you rather question",
+        usage: "?wyr",
+        examples: ["?wyr"],
+        permissions: "all",
+        cooldown: "none"
+    },
+    {
+        name: "translate",
+        category: "utility",
+        description: "Translate text",
+        usage: "?translate <text> [target_language]",
+        examples: ["?translate hello spanish", "?translate bonjour english"],
+        permissions: "all",
+        cooldown: "none"
+    },
+    {
+        name: "7tv",
+        category: "utility",
+        description: "7TV related commands",
+        usage: "?7tv [action]",
+        examples: ["?7tv emotes", "?7tv info"],
+        permissions: "all",
+        cooldown: "none"
+    },
+    {
+        name: "live",
+        category: "utility",
+        description: "Check if a channel is live",
+        usage: "?live [channel]",
+        examples: ["?live", "?live username"],
+        permissions: "all",
+        cooldown: "none"
+    },
+    {
+        name: "mark",
+        category: "utility",
+        description: "Mark something",
+        usage: "?mark [item]",
+        examples: ["?mark important"],
+        permissions: "all",
+        cooldown: "none"
+    },
+    {
+        name: "boom",
+        category: "fun",
+        description: "Boom command",
+        usage: "?boom",
+        examples: ["?boom"],
+        permissions: "all",
+        cooldown: "none"
+    },
+    {
+        name: "clear",
+        category: "utility",
+        description: "Clear chat",
+        usage: "?clear",
+        examples: ["?clear"],
+        permissions: "moderator",
+        cooldown: "none"
+    },
+    {
+        name: "channelmanage",
+        category: "admin",
+        description: "Channel management commands",
+        usage: "?channelmanage [action]",
+        examples: ["?channelmanage info"],
+        permissions: "moderator",
+        cooldown: "none"
+    },
+    {
+        name: "reload",
+        category: "admin",
+        description: "Reload bot cogs",
+        usage: "?reload",
+        examples: ["?reload"],
+        permissions: "admin",
+        cooldown: "none"
+    },
+    {
+        name: "game",
+        category: "utility",
+        description: "Game information",
+        usage: "?game",
+        examples: ["?game"],
+        permissions: "all",
+        cooldown: "none"
+    },
+    {
+        name: "ir",
+        category: "fun",
+        description: "IgnitionRage specific command",
+        usage: "?ir",
+        examples: ["?ir"],
+        permissions: "all",
+        cooldown: "none"
+    }
+];
+
+// Update command statistics
+function updateCommandStats() {
+    const commandCount = commands.length;
+    const categories = new Set(commands.map(cmd => cmd.category));
+    const categoryCount = categories.size;
+
+    // Count commands per category
+    const categoryCounts = {};
+    commands.forEach(cmd => {
+        categoryCounts[cmd.category] = (categoryCounts[cmd.category] || 0) + 1;
+    });
+
+    // Update the main stats
+    const commandCountElement = document.getElementById('commandCount');
+    const categoryCountElement = document.getElementById('categoryCount');
+
+    if (commandCountElement) {
+        commandCountElement.textContent = commandCount;
+    }
+
+    if (categoryCountElement) {
+        categoryCountElement.textContent = categoryCount;
+    }
+
+    // Update category tabs with counts
+    const categoryTabs = document.querySelectorAll('.category-tab');
+    categoryTabs.forEach(tab => {
+        const category = tab.dataset.category;
+        if (category === 'all') {
+            tab.textContent = `All Commands (${commandCount})`;
+        } else if (categoryCounts[category]) {
+            // Capitalize first letter of category
+            const categoryName = category.charAt(0).toUpperCase() + category.slice(1);
+            tab.textContent = `${categoryName} (${categoryCounts[category]})`;
+        }
+    });
+
+    console.log(`Updated stats: ${commandCount} commands in ${categoryCount} categories`);
+}
+
+// Initialize the page
+document.addEventListener('DOMContentLoaded', function () {
+    initializeParticles();
+    updateCommandStats();
+    renderCommands('all');
+    setupEventListeners();
+    setupNavigation();
+});
+
+// Create floating particles
+function initializeParticles() {
+    const particlesContainer = document.getElementById('particles');
+    const particleCount = 50;
+
+    for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+
+        // Random size
+        const size = Math.random() * 4 + 1;
+        particle.style.width = size + 'px';
+        particle.style.height = size + 'px';
+
+        // Random position
+        particle.style.left = Math.random() * 100 + '%';
+        particle.style.top = Math.random() * 100 + '%';
+
+        // Random color (fire themed)
+        const colors = ['#ff4500', '#ff7b00', '#ffcc00', '#aa4203'];
+        particle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+
+        // Random animation delay
+        particle.style.animationDelay = Math.random() * 15 + 's';
+        particle.style.animationDuration = (Math.random() * 10 + 15) + 's';
+
+        particlesContainer.appendChild(particle);
+    }
+}
+
+// Render commands based on category
+function renderCommands(category = 'all') {
+    const commandsGrid = document.getElementById('commandsGrid');
+    commandsGrid.innerHTML = '';
+
+    const filteredCommands = category === 'all'
+        ? commands
+        : commands.filter(cmd => cmd.category === category);
+
+    filteredCommands.forEach(command => {
+        const commandCard = createCommandCard(command);
+        commandsGrid.appendChild(commandCard);
+    });
+
+    if (filteredCommands.length === 0) {
+        commandsGrid.innerHTML = '<p style="text-align: center; color: var(--fire-yellow);">No commands found in this category.</p>';
+    }
+}
+
+// Create command card element
+function createCommandCard(command) {
+    const card = document.createElement('div');
+    card.className = 'command-card';
+    card.dataset.category = command.category;
+    card.dataset.name = command.name.toLowerCase();
+
+    const categoryColors = {
+        ai: 'var(--fire-red)',
+        games: 'var(--fire-orange)',
+        economy: 'var(--fire-yellow)',
+        fun: '#ff69b4',
+        utility: '#4169e1',
+        admin: '#8b008b'
+    };
+
+    card.innerHTML = `
+        <div class="command-header">
+            <div class="command-name">?${command.name}</div>
+            <div class="command-category" style="background: ${categoryColors[command.category] || 'var(--fire-red)'}">
+                ${command.category.toUpperCase()}
+            </div>
+        </div>
+        <div class="command-description">${command.description}</div>
+        <div class="command-usage">${command.usage}</div>
+        <div class="command-examples">
+            <strong>Examples:</strong>
+            ${command.examples.map(example => `<div class="command-example">${example}</div>`).join('')}
+        </div>
+        <div style="margin-top: 1rem; font-size: 0.9rem; color: rgba(255,255,255,0.6);">
+            <strong>Permissions:</strong> ${command.permissions} | 
+            <strong>Cooldown:</strong> ${command.cooldown}
+        </div>
+    `;
+
+    return card;
+}
+
+// Setup event listeners
+function setupEventListeners() {
+    // Category tabs
+    const categoryTabs = document.querySelectorAll('.category-tab');
+    categoryTabs.forEach(tab => {
+        tab.addEventListener('click', function () {
+            // Remove active class from all tabs
+            categoryTabs.forEach(t => t.classList.remove('active'));
+            // Add active class to clicked tab
+            this.classList.add('active');
+            // Render commands for selected category
+            renderCommands(this.dataset.category);
+        });
+    });
+
+    // Search functionality
+    const searchInput = document.getElementById('commandSearch');
+    const clearButton = document.getElementById('clearSearch');
+
+    searchInput.addEventListener('input', function () {
+        const searchTerm = this.value.toLowerCase();
+        filterCommands(searchTerm);
+    });
+
+    clearButton.addEventListener('click', function () {
+        searchInput.value = '';
+        renderCommands(getCurrentCategory());
+    });
+
+    // Category cards click handlers
+    const categoryCards = document.querySelectorAll('.category-card');
+    categoryCards.forEach(card => {
+        card.addEventListener('click', function () {
+            const category = this.dataset.category;
+            // Switch to commands section
+            document.getElementById('commands').scrollIntoView({ behavior: 'smooth' });
+            // Activate the corresponding tab
+            const targetTab = document.querySelector(`.category-tab[data-category="${category}"]`);
+            if (targetTab) {
+                document.querySelectorAll('.category-tab').forEach(t => t.classList.remove('active'));
+                targetTab.classList.add('active');
+                renderCommands(category);
+            }
+        });
+    });
+}
+
+// Filter commands based on search term
+function filterCommands(searchTerm) {
+    const commandCards = document.querySelectorAll('.command-card');
+
+    commandCards.forEach(card => {
+        const name = card.dataset.name;
+        const description = card.querySelector('.command-description').textContent.toLowerCase();
+        const usage = card.querySelector('.command-usage').textContent.toLowerCase();
+
+        const matchesSearch = name.includes(searchTerm) ||
+            description.includes(searchTerm) ||
+            usage.includes(searchTerm);
+
+        card.style.display = matchesSearch ? 'block' : 'none';
+    });
+}
+
+// Get current active category
+function getCurrentCategory() {
+    const activeTab = document.querySelector('.category-tab.active');
+    return activeTab ? activeTab.dataset.category : 'all';
+}
+
+// Setup navigation
+function setupNavigation() {
+    const navLinks = document.querySelectorAll('.nav-link');
+    const mobileToggle = document.getElementById('mobileToggle');
+    const navLinksContainer = document.getElementById('navLinks');
+
+    // Handle nav link clicks
+    navLinks.forEach(link => {
+        link.addEventListener('click', function (e) {
+            e.preventDefault();
+
+            // Remove active class from all links
+            navLinks.forEach(l => l.classList.remove('active'));
+            // Add active class to clicked link
+            this.classList.add('active');
+
+            // Scroll to section
+            const targetId = this.getAttribute('href').substring(1);
+            const targetSection = document.getElementById(targetId);
+            if (targetSection) {
+                targetSection.scrollIntoView({ behavior: 'smooth' });
+            }
+
+            // Close mobile menu
+            navLinksContainer.classList.remove('active');
+        });
+    });
+
+    // Mobile menu toggle
+    mobileToggle.addEventListener('click', function () {
+        navLinksContainer.classList.toggle('active');
+    });
+
+    // Close mobile menu when clicking outside
+    document.addEventListener('click', function (e) {
+        if (!mobileToggle.contains(e.target) && !navLinksContainer.contains(e.target)) {
+            navLinksContainer.classList.remove('active');
+        }
+    });
+
+    // Update active nav link on scroll
+    window.addEventListener('scroll', function () {
+        let current = '';
+        const sections = document.querySelectorAll('section[id]');
+
+        sections.forEach(section => {
+            const sectionTop = section.offsetTop;
+            const sectionHeight = section.clientHeight;
+            if (scrollY >= (sectionTop - 200)) {
+                current = section.getAttribute('id');
+            }
+        });
+
+        navLinks.forEach(link => {
+            link.classList.remove('active');
+            if (link.getAttribute('href') === `#${current}`) {
+                link.classList.add('active');
+            }
+        });
+    });
+}
+
+// Utility functions
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
+
+// Add smooth scrolling behavior
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+            target.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+        }
+    });
+});
+    </script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ignition Rage Bot Commands</title>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://ignitionrage.github.io/cmds/styles.css">
 </head>
 <body>
