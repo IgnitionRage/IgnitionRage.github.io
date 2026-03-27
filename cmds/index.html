@@ -1766,6 +1766,15 @@ const commands = [
         cooldown: "none"
     },
     {
+        name: "admin",
+        category: "admin",
+        description: "Manage bot admins (admins only)",
+        usage: "?admin <action> [username]",
+        examples: ["?admin list", "?admin add username", "?admin remove username"],
+        permissions: "admin",
+        cooldown: "none"
+    },
+    {
         name: "stats",
         category: "economy",
         description: "View your or another user's statistics",
