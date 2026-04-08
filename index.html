@@ -4,7 +4,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="icon" type="image/png" sizes="16x16" href="https://github.com/IgnitionRage.png">
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Ignition Rage Stream Team - Gaming Excellence. Streaming Passion. Join our community of passionate gamers and streamers.">
+    <meta name="keywords" content="Ignition Rage, gaming, streaming, Twitch, community, esports, HomelessMidget, Bacon_Space">
+    <meta name="author" content="Ignition Rage">
+    <meta name="robots" content="index, follow">
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="Ignition Rage Stream Team">
+    <meta property="og:description" content="Gaming Excellence. Streaming Passion. Join our community of passionate gamers and streamers.">
+    <meta property="og:image" content="https://github.com/IgnitionRage.png">
+    <meta property="og:url" content="https://ignitionrage.github.io">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Ignition Rage">
+    
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Ignition Rage Stream Team">
+    <meta name="twitter:description" content="Gaming Excellence. Streaming Passion. Join our community of passionate gamers and streamers.">
+    <meta name="twitter:image" content="https://github.com/IgnitionRage.png">
+    <meta name="twitter:site" content="@IgnitionRage">
+    
+    <!-- Additional Meta Tags -->
+    <meta name="theme-color" content="#ff4500">
+    <meta name="msapplication-TileColor" content="#ff4500">
+    <meta name="application-name" content="Ignition Rage">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" sizes="16x16" href="https://github.com/IgnitionRage.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="https://github.com/IgnitionRage.png">
+    <link rel="apple-touch-icon" href="https://github.com/IgnitionRage.png">
+    
     <title>Ignition Rage Stream Team</title>
     <style>
          :root {
@@ -180,6 +211,12 @@
             background: rgba(0, 0, 0, 0.7);
         }
         
+        .founder-image a {
+            display: block;
+            text-decoration: none;
+            transition: transform 0.5s, box-shadow 0.5s;
+        }
+
         .founder-image img {
             width: 150px;
             height: 150px;
@@ -203,9 +240,18 @@
             }
         }
         
+        .founder-card:hover .founder-image a {
+            transform: scale(1.1);
+        }
+
         .founder-card:hover .founder-image img {
             transform: scale(1.1);
             box-shadow: 0 0 25px var(--fire-red);
+        }
+
+        .founder-image a:hover img {
+            box-shadow: 0 0 30px var(--fire-red);
+            border-color: var(--fire-yellow);
         }
         
         .founder-info {
@@ -321,20 +367,7 @@
             font-size: 0.9rem;
         }
         
-        .stream-schedule {
-            padding: 3rem 2rem;
-        }
-        
-        #twitch-embed {
-            width: 100%;
-            height: 480px;
-            margin-top: 2rem;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            border: 1px solid rgba(255, 123, 0, 0.3);
-        }
-        
+                
         .logo {
             max-width: 200px;
             margin-bottom: 2rem;
@@ -503,12 +536,6 @@
                 width: 100%;
                 max-width: 350px;
             }
-            #twitch-embed {
-                height: 300px;
-            }
-            .nav-container {
-                padding: 0.8rem 1rem;
-            }
             .nav-links {
                 position: fixed;
                 top: 60px;
@@ -559,7 +586,6 @@
                 <a href="https://ignitionrage.github.io/social" class="nav-link">Socials</a>
                 <a href="https://ignitionrage.github.io/calendar" class="nav-link">Calendar</a>
                 <a href="#join" class="nav-link">Join</a>
-                <a href="#streams" class="nav-link">Streams</a>
             </div>
             <button class="mobile-toggle" id="mobileToggle">
                 <i class="fas fa-bars"></i>
@@ -584,7 +610,9 @@
             <div class="founders-section">
                 <div class="founder-card">
                     <div class="founder-image">
-                        <img src="https://r2.fivemanage.com/image/HkHSRARxM1CL.png" alt="HomelessMidget" />
+                        <a href="https://twitch.tv/HomelesMidgets" target="_blank">
+                            <img src="https://r2.fivemanage.com/image/HkHSRARxM1CL.png" alt="HomelessMidget" />
+                        </a>
                     </div>
                     <div class="founder-info">
                         <h3 class="founder-name">HomelessMidget</h3>
@@ -595,7 +623,9 @@
 
                 <div class="founder-card">
                     <div class="founder-image">
-                        <img src="https://avatars.githubusercontent.com/u/166666971?v=4" alt="Bacon_Space" />
+                        <a href="https://twitch.tv/Bacon_Soace" target="_blank">
+                            <img src="https://avatars.githubusercontent.com/u/166666971?v=4" alt="Bacon_Space" />
+                        </a>
                     </div>
                     <div class="founder-info">
                         <h3 class="founder-name">Bacon_Space</h3>
@@ -622,16 +652,9 @@
             <div class="discord-members" id="discordMembers"></div>
         </section>
 
-        <section class="stream-schedule" id="streams">
-            <div class="section-header">
-                <h2>Upcoming Streams</h2>
             </div>
-            <div id="twitch-embed"></div>
-        </section>
-    </div>
 
-    <script src="https://player.twitch.tv/js/embed/v1.js"></script>
-
+    
     <script type="text/javascript">
         // Fetch GitHub organization avatar
         fetch('https://api.github.com/orgs/IgnitionRage')
@@ -722,14 +745,7 @@
                 particlesContainer.appendChild(particle);
             }
 
-            if (typeof Twitch !== 'undefined') {
-                new Twitch.Player("twitch-embed", {
-                    channel: "homelesmidgets",
-                    width: "100%",
-                    height: "100%"
-                });
-            }
-
+            
             const mobileToggle = document.getElementById('mobileToggle');
             const navLinks = document.getElementById('navLinks');
 
