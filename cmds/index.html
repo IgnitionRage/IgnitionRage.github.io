@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ignition Rage Bot Commands</title>
     <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" sizes="16x16" href="https://github.com/IgnitionRage.png">
     <style>
 :root {
     --fire-red: #ff4500;
@@ -1187,15 +1188,7 @@ section::before {
                     </div>
                 </div>
 
-                <div class="game-card">
-                    <div class="game-icon">Brain Blitz</div>
-                    <h3>Brain Blitz</h3>
-                    <p>Test your brain by finding matching pairs!</p>
-                    <div class="game-command">
-                        <code>?brain [size]</code>
-                    </div>
-                </div>
-            </div>
+                            </div>
         </section>
 
         <section class="join-section">
@@ -1671,11 +1664,11 @@ const commands = [
     {
         name: "roll",
         category: "games",
-        description: "Roll dice",
-        usage: "?roll [sides]",
-        examples: ["?roll 6", "?roll 20"],
+        description: "Roll dice (costs 10 crayons)",
+        usage: "?roll",
+        examples: ["?roll"],
         permissions: "all",
-        cooldown: "none"
+        cooldown: "20s"
     },
     {
         name: "gamble",
@@ -1738,7 +1731,7 @@ const commands = [
     {
         name: "flip",
         category: "games",
-        description: "Flip a coin - Heads or Tails",
+        description: "Flip a coin - Heads or Tails (costs 10 crayons)",
         usage: "?flip",
         examples: ["?flip"],
         permissions: "all",
@@ -2058,11 +2051,11 @@ const commands = [
     {
         name: "wyr",
         category: "fun",
-        description: "Would you rather question",
+        description: "Would you rather question (costs 10 crayons)",
         usage: "?wyr",
         examples: ["?wyr"],
         permissions: "all",
-        cooldown: "none"
+        cooldown: "10s"
     },
     {
         name: "translate",
@@ -2292,7 +2285,7 @@ const commands = [
     {
         name: "roll",
         category: "games",
-        description: "Roll a dice (1-6)",
+        description: "Roll a dice (1-6) - costs 10 crayons",
         usage: "?roll",
         examples: ["?roll"],
         permissions: "all",
@@ -2303,7 +2296,7 @@ const commands = [
     {
         name: "flip",
         category: "games",
-        description: "Flip a coin - Heads or Tails",
+        description: "Flip a coin - Heads or Tails (costs 10 crayons)",
         usage: "?flip",
         examples: ["?flip"],
         permissions: "all",
