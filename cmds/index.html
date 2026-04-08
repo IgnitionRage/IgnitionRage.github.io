@@ -1186,6 +1186,15 @@ section::before {
                         <code>?fish [amount]</code>
                     </div>
                 </div>
+
+                <div class="game-card">
+                    <div class="game-icon">Brain Blitz</div>
+                    <h3>Brain Blitz</h3>
+                    <p>Test your brain by finding matching pairs!</p>
+                    <div class="game-command">
+                        <code>?brain [size]</code>
+                    </div>
+                </div>
             </div>
         </section>
 
@@ -2639,12 +2648,16 @@ function updateCommandStats() {
     const categoryTabs = document.querySelectorAll('.category-tab');
     categoryTabs.forEach(tab => {
         const category = tab.dataset.category;
+        const originalText = tab.textContent;
+        
         if (category === 'all') {
-            tab.textContent = `All Commands (${commandCount})`;
+            tab.innerHTML = `All Commands (${commandCount})`;
         } else if (categoryCounts[category]) {
+            // Get the emoji icon from the original text
+            const emoji = originalText.match(/^[^\w\s]+/)?.[0] || '';
             // Capitalize first letter of category
             const categoryName = category.charAt(0).toUpperCase() + category.slice(1);
-            tab.textContent = `${categoryName} (${categoryCounts[category]})`;
+            tab.innerHTML = `${emoji} ${categoryName} (${categoryCounts[category]})`;
         }
     });
 
