@@ -1089,6 +1089,9 @@ section::before {
                         <span class="command-tag">?blackjack</span>
                         <span class="command-tag">?poker</span>
                         <span class="command-tag">?fish</span>
+                        <span class="command-tag">?crystalhunt</span>
+                        <span class="command-tag">?mine</span>
+                        <span class="command-tag">?stand</span>
                     </div>
                 </div>
 
@@ -1206,6 +1209,15 @@ section::before {
                     <p>Cast your line and catch various fish!</p>
                     <div class="game-command">
                         <code>?fish [amount]</code>
+                    </div>
+                </div>
+
+                <div class="game-card">
+                    <div class="game-icon">💎</div>
+                    <h3>Crystal Hunt</h3>
+                    <p>Mine crystals and reach 21 without busting!</p>
+                    <div class="game-command">
+                        <code>?crystalhunt [amount]</code>
                     </div>
                 </div>
 
@@ -2197,6 +2209,58 @@ const commands = [
         usage: "?fishevents",
         examples: ["?fishevents"],
         aliases: ["events"],
+        permissions: "all",
+        cooldown: "none"
+    },
+
+    // Crystal Hunt Commands
+    {
+        name: "crystalhunt",
+        category: "games",
+        description: "Start hunting crystals! Mine crystals to reach 21 without busting!",
+        usage: "?crystalhunt [amount]",
+        examples: ["?crystalhunt 50", "?crystalhunt 100", "?crystalhunt"],
+        aliases: ["hunt", "crystal"],
+        permissions: "all",
+        cooldown: "15 seconds"
+    },
+    {
+        name: "mine",
+        category: "games",
+        description: "Mine another crystal during an active crystal hunt",
+        usage: "?mine",
+        examples: ["?mine", "?dig", "?swing"],
+        aliases: ["dig", "swing"],
+        permissions: "all",
+        cooldown: "none (during active game)"
+    },
+    {
+        name: "stand",
+        category: "games",
+        description: "Stop mining and lock in your current score",
+        usage: "?stand",
+        examples: ["?stand", "?stay", "?stop"],
+        aliases: ["stay", "stop"],
+        permissions: "all",
+        cooldown: "none (during active game)"
+    },
+    {
+        name: "crystalodds",
+        category: "games",
+        description: "View odds for finding different crystal rarities",
+        usage: "?crystalodds",
+        examples: ["?crystalodds", "?huntodds"],
+        aliases: ["huntodds"],
+        permissions: "all",
+        cooldown: "none"
+    },
+    {
+        name: "crystalstats",
+        category: "games",
+        description: "View your crystal hunting statistics",
+        usage: "?crystalstats",
+        examples: ["?crystalstats", "?huntstats"],
+        aliases: ["huntstats"],
         permissions: "all",
         cooldown: "none"
     },
