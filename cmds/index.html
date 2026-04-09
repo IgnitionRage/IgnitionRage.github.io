@@ -1091,7 +1091,7 @@ section::before {
                         <span class="command-tag">?fish</span>
                         <span class="command-tag">?crystalhunt</span>
                         <span class="command-tag">?mine</span>
-                        <span class="command-tag">?stand</span>
+                        <span class="command-tag">?co</span>
                     </div>
                 </div>
 
@@ -2235,12 +2235,12 @@ const commands = [
         cooldown: "none (during active game)"
     },
     {
-        name: "stand",
+        name: "co",
         category: "games",
-        description: "Stop mining and lock in your current score",
-        usage: "?stand",
-        examples: ["?stand", "?stay", "?stop"],
-        aliases: ["stay", "stop"],
+        description: "Cash out and lock in your current score",
+        usage: "?co",
+        examples: ["?co", "?cashout", "?stop"],
+        aliases: ["cashout", "stop", "finish"],
         permissions: "all",
         cooldown: "none (during active game)"
     },
