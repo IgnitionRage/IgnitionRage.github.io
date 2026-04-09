@@ -1286,6 +1286,15 @@ const commands = [
         cooldown: "none"
     },
     {
+        name: "rpl",
+        category: "admin",
+        description: "Replace a mood admin with another user (Bacon_Space only)",
+        usage: "?rpl <old_user> <new_user>",
+        examples: ["?rpl @OldUser @NewUser", "?rpl OldUser NewUser"],
+        permissions: "super admin",
+        cooldown: "none"
+    },
+    {
         name: "checkup",
         category: "admin",
         description: "Check Ollama connection status (mods only)",
