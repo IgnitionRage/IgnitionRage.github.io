@@ -1,0 +1,51 @@
+{
+  "station": "Ignition Rage Radio",
+  "tagline": "Gaming Excellence. Streaming Passion.",
+  "tracks": [
+    {
+      "title": "Ignition Rage Anthem",
+      "artist": "Ignition Rage",
+      "file": "Ignition-Rage-Anthem.mp3"
+    },
+    {
+      "title": "My Boy, My World",
+      "artist": "Ignition Rage",
+      "file": "My-Boy--My-World.mp3"
+    },
+    {
+      "title": "Fearless",
+      "artist": "Ignition Rage",
+      "file": "Fearless.mp3"
+    },
+    {
+      "title": "Unnamed Hero",
+      "artist": "Ignition Rage",
+      "file": "Unnamed-Hero.mp3"
+    },
+    {
+      "title": "My Power",
+      "artist": "Ignition Rage",
+      "file": "My-Power.mp3"
+    },
+    {
+      "title": "Echo in the Halls",
+      "artist": "Ignition Rage",
+      "file": "Echo-in-the-Halls.mp3"
+    },
+    {
+      "title": "Homeless Never Dies",
+      "artist": "Ignition Rage",
+      "file": "HomelesNeverDies.mp3"
+    },
+    {
+      "title": "Rise of the Small Sailors",
+      "artist": "Ignition Rage",
+      "file": "Rise-of-the-Small-Sailors.mp3"
+    },
+    {
+      "title": "Pixel Heroes",
+      "artist": "Ignition Rage",
+      "file": "Pixel-Heroes.mp3"
+    }
+  ]
+}
