@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stream Raffle System - Twitch & Kick</title>
+    <!-- Kick uses Pusher for their WebSockets. We have to load it from their CDN. -->
+    <script src="https://js.pusher.com/8.3.0/pusher.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        :root {
+            --bg: #150d0a;
+            --surface: #241512;
+            --text: #ffe4d1;
+            --primary: #ff7a3d;
+            --twitch: #9146ff;
+            --kick: #53fc18;
+            --tiktok: #ff0050;
+            --success: #ffb347;
+            --danger: #ff4d4d;
+
+            /* notify palette — reworked to fire/ember instead of cyan/violet */
+            --cyan: #ff6a1a;
+            --violet: #d7263d;
+            --hot: #ff2d2d;
+            --ok: #ffb347;
+            --muted: #c9a08a;
+            --line: rgba(255, 106, 26, 0.45);
+            --panel: linear-gradient(
+                145deg,
+                rgba(40, 16, 8, 0.94) 0%,
+                rgba(26, 10, 6, 0.9) 55%,
+                rgba(18, 7, 4, 0.92) 100%
+            );
+            --accent: var(--cyan);
+        }
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background: radial-gradient(ellipse at top, #241109 0%, #150d0a 55%, #0d0705 100%);
+            color: var(--text);
+            display: flex;
+            justify-content: center;
+            padding: 2rem;
+            margin: 0;
+        }
+        .container {
+            background: var(--surface);
+            padding: 2rem;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 650px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.5), 0 0 40px rgba(255, 106, 26, 0.08);
+            border: 1px solid rgba(255, 122, 61, 0.15);
+        }
+        h1 { margin-top: 0; text-align: center; color: var(--primary); text-shadow: 0 0 16px rgba(255, 122, 61, 0.35); }
+        .controls {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .input-group {
+            display: flex;
+            gap: 0.5rem;
+        }
+        input {
+            flex: 1;
+            padding: 0.75rem;
+            border: 1px solid #4a2f22;
+            border-radius: 6px;
+            background: #120b08;
+            color: white;
+            font-size: 1rem;
+        }
+        button {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 6px;
+            color: #1a0e08;
+            font-weight: bold;
+            cursor: pointer;
+            transition: opacity 0.2s;
+            white-space: nowrap;
+        }
+        button:hover { opacity: 0.8; }
+        .btn-twitch { background: var(--twitch); color: white; }
+        .btn-kick { background: var(--kick); color: black; }
+        .btn-tiktok { background: var(--tiktok); color: white; }
+        .btn-manual { background: var(--primary); }
+        .btn-draw { background: var(--success); width: 100%; font-size: 1.2rem; margin-top: 1rem; padding: 1rem;}
+
+        .status-container {
+            background: #120b08;
+            padding: 1rem;
+            border-radius: 6px;
+            margin-bottom: 1.5rem;
+            border: 1px solid #4a2f22;
+        }
+        .status { font-size: 0.9rem; margin: 0.25rem 0; color: #c9a08a; }
+
+        .entrants-box {
+            background: #120b08;
+            border: 1px solid #4a2f22;
+            border-radius: 6px;
+            padding: 1rem;
+            min-height: 150px;
+            max-height: 250px;
+            overflow-y: auto;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            align-content: flex-start;
+        }
+        .entrant-tag {
+            background: #2e1a12;
+            padding: 0.25rem 0.5rem 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            border-left: 3px solid var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+        .tag-twitch { border-left-color: var(--twitch); }
+        .tag-kick { border-left-color: var(--kick); }
+        .tag-tiktok { border-left-color: var(--tiktok); }
+        .entrant-remove {
+            background: none;
+            border: none;
+            color: var(--danger);
+            font-size: 0.9rem;
+            font-weight: bold;
+            line-height: 1;
+            padding: 0.1rem 0.3rem;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        .entrant-remove:hover {
+            background: rgba(243, 139, 168, 0.2);
+            opacity: 1;
+        }
+
+        .winner-display {
+            display: none;
+            text-align: center;
+            margin-top: 2rem;
+            padding: 2rem;
+            background: #2e1a12;
+            border-radius: 8px;
+            border: 2px solid var(--success);
+        }
+        .winner-name {
+            font-size: 2.5rem;
+            color: var(--success);
+            font-weight: bold;
+            margin: 1rem 0;
+        }
+
+        /* ==== thommie-notify (unmodified notification styling) ==== */
+        .template { display: none !important; }
+
+        .notif-stack {
+            position: fixed;
+            top: 2.4vh;
+            left: 2.2vw;
+            width: min(360px, 28vw);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 9999;
+            pointer-events: none;
+        }
+
+        .notification {
+            position: relative;
+            display: none;
+            width: 100%;
+            padding: 12px 14px 14px;
+            border-radius: 12px;
+            border: 1px solid var(--line);
+            background: var(--panel);
+            color: var(--text);
+            box-shadow:
+                0 0 0 1px rgba(0, 229, 255, 0.1),
+                0 0 22px rgba(0, 229, 255, 0.16),
+                0 10px 28px rgba(0, 0, 0, 0.4);
+            overflow: hidden;
+            animation: notifIn 0.35s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+        }
+
+        @keyframes notifIn {
+            from { opacity: 0; transform: translateX(-18px) scale(0.96); }
+            to { opacity: 1; transform: translateX(0) scale(1); }
+        }
+
+        .notification.leaving { animation: notifOut 0.3s ease-in forwards; }
+
+        @keyframes notifOut {
+            to { opacity: 0; transform: translateX(-14px) scale(0.96); }
+        }
+
+        .notification::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 8px;
+            bottom: 8px;
+            width: 3px;
+            border-radius: 0 3px 3px 0;
+            background: var(--accent);
+            box-shadow: 0 0 10px var(--accent);
+        }
+
+        .notification .edge {
+            position: absolute;
+            left: 14px;
+            right: 14px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent 0%, rgba(0, 229, 255, 0.5) 20%, rgba(124, 92, 255, 0.5) 80%, transparent 100%);
+            pointer-events: none;
+        }
+        .notification .edge-top { top: 0; }
+        .notification .edge-bottom { bottom: 0; opacity: 0.5; }
+
+        .bignotif-container { display: flex; align-items: flex-start; gap: 12px; background: transparent; width: 100%; height: auto; }
+        .bignotif-icon {
+            float: none; padding: 0; margin: 0; width: 36px; height: 36px; min-width: 36px; border-radius: 10px;
+            display: flex; align-items: center; justify-content: center; font-size: 15px; color: var(--accent);
+            background: rgba(0, 229, 255, 0.08); border: 1px solid color-mix(in srgb, var(--accent) 40%, transparent);
+            box-shadow: 0 0 14px color-mix(in srgb, var(--accent) 25%, transparent); flex-shrink: 0;
+        }
+        .bignotif-icon svg {
+            width: 18px; height: 18px; display: block; color: var(--accent);
+            filter: drop-shadow(0 0 6px color-mix(in srgb, var(--accent) 55%, transparent));
+        }
+        .bignotif-message { flex: 1; min-width: 0; padding: 0; height: auto; }
+        .bignotif-title {
+            font-size: 10px !important; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase;
+            color: var(--accent); margin-bottom: 3px; text-shadow: 0 0 10px color-mix(in srgb, var(--accent) 45%, transparent);
+        }
+        .bignotif-text { font-weight: 500; font-size: 13px !important; line-height: 1.4; color: var(--text); }
+
+        .progress-bar { position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: rgba(0, 20, 40, 0.55); overflow: hidden; }
+        .progress-bar .progress {
+            height: 100%; width: 100%; transform-origin: left center;
+            background: linear-gradient(90deg, var(--cyan), var(--violet));
+            box-shadow: 0 0 8px rgba(0, 229, 255, 0.65);
+            animation: progressShrink linear forwards;
+        }
+        @keyframes progressShrink { from { transform: scaleX(1); } to { transform: scaleX(0); } }
+
+        .notification.success { --accent: var(--ok); }
+        .notification.error { --accent: var(--hot); }
+        .notification.primary,.notification.info { --accent: var(--cyan); }
+        .notification.twitch { --accent: var(--twitch); }
+        .notification.kick { --accent: var(--kick); }
+        .notification.tiktok { --accent: var(--tiktok); }
+    </style>
+</head>
+<body>
+
+<div class="notif-stack"></div>
+<div class="notification template" aria-hidden="true"></div>
+
+<div class="container">
+    <h1>🎟️ Multi-Stream Raffle</h1>
+
+    <div style="margin-bottom: 1rem;">
+        <input type="text" id="raffleKeyword" placeholder="Raffle Keyword (e.g., !raffle)" value="!raffle" style="width: 100%; box-sizing: border-box; text-align: center; font-size: 1.2rem;">
+    </div>
+
+    <div class="controls">
+        <!-- Twitch Auto-Connect -->
+        <div class="input-group">
+            <input type="text" id="twitchChannel" placeholder="Twitch Username">
+            <button class="btn-twitch" onclick="connectTwitch()">Connect Twitch</button>
+        </div>
+        <!-- Kick Auto-Connect (Experimental) -->
+        <div class="input-group">
+            <input type="text" id="kickChannel" placeholder="Kick Username">
+            <button class="btn-kick" onclick="connectKick()">Connect Kick</button>
+        </div>
+
+        <!-- TikTok Auto-Connect (via Euler Stream) -->
+        <div class="input-group">
+            <input type="text" id="tiktokChannel" placeholder="TikTok Username">
+            <button class="btn-tiktok" onclick="connectTikTok()">Connect TikTok</button>
+        </div>
+
+        <!-- Manual Entry (any platform, e.g. someone you saw in chat) -->
+        <div class="input-group">
+            <input type="text" id="manualName" placeholder="Manual Viewer Name">
+            <button class="btn-manual" onclick="addManualEntry()">Add Manually</button>
+        </div>
+    </div>
+
+    <div class="status-container">
+        <div class="status" id="statusTwitch">Twitch: Not connected.</div>
+        <div class="status" id="statusKick">Kick: Not connected.</div>
+        <div class="status" id="statusTiktok">TikTok: Not connected.</div>
+    </div>
+
+    <h3 style="margin-bottom: 0.5rem;">Entrants (<span id="entrantCount">0</span>)</h3>
+    <div class="entrants-box" id="entrantsBox"></div>
+
+    <button class="btn-draw" onclick="drawWinner()">🎉 DRAW WINNER</button>
+    <button style="width: 100%; margin-top: 0.5rem; background: #4a2f22; color: white;" onclick="clearRaffle()">Clear Raffle</button>
+
+    <div class="winner-display" id="winnerDisplay">
+        <h2>🏆 WINNER 🏆</h2>
+        <div class="winner-name" id="winnerName">username</div>
+    </div>
+</div>
+
+<script>
+    /* ==================================================================
+       thommie-notify — notification engine (adapted, no jQuery dependency
+       needed beyond what's already loaded; SVG icons inline, no FA)
+       ================================================================== */
+    const SVG = {
+        check: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>',
+        warn: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.3 3.9L1.8 18a2 2 0 001.7 3h16.9a2 2 0 001.7-3L12.7 3.9a2 2 0 00-3.4 0z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>',
+        info: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>',
+        star: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l2.6 5.7L21 9.6l-4.5 4.2L17.7 21 12 17.8 6.3 21l1.2-7.2L3 9.6l6.4-.9L12 3z"/></svg>',
+        twitch: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 3L3 7v13h5v3l3-3h4l5-5V3H4z"/><path d="M15 8v4M11 8v4"/></svg>',
+        kick: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h5v5l5-5h6l-8 8 8 9h-6l-5-5v5H4z"/></svg>',
+        tiktok: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3v10.5a3.5 3.5 0 11-3.5-3.5"/><path d="M16 3c0 2.5 2 4.5 4.5 4.5"/></svg>',
+    };
+
+    const TYPE_META = {
+        success: { title: 'Raffle',  svg: SVG.check },
+        error:   { title: 'Raffle',  svg: SVG.warn },
+        primary: { title: 'Raffle',  svg: SVG.info },
+        info:    { title: 'Raffle',  svg: SVG.info },
+        winner:  { title: 'Winner',  svg: SVG.star },
+        twitch:  { title: 'Twitch',  svg: SVG.twitch },
+        kick:    { title: 'Kick',    svg: SVG.kick },
+        tiktok:  { title: 'TikTok',  svg: SVG.tiktok },
+    };
+
+    function ensureStack() {
+        let stack = document.querySelector('.notif-stack');
+        if (!stack) {
+            stack = document.createElement('div');
+            stack.className = 'notif-stack';
+            document.body.appendChild(stack);
+        }
+        return stack;
+    }
+
+    function resolveMeta(type) {
+        const t = (type || 'primary').toLowerCase();
+        return TYPE_META[t] || { title: 'Raffle', svg: SVG.info };
+    }
+
+    function ShowNotif(data) {
+        const type = (data.type || 'primary').toLowerCase();
+        const length = data.length != null ? Number(data.length) : 3500;
+        const text = data.text != null ? String(data.text) : '';
+        const meta = resolveMeta(type);
+
+        const notification = document.createElement('div');
+        notification.className = 'notification ' + type;
+        notification.innerHTML =
+            '<div class="edge edge-top"></div>' +
+            '<div class="edge edge-bottom"></div>' +
+            '<div class="bignotif-container">' +
+                '<div class="bignotif-icon">' + meta.svg + '</div>' +
+                '<div class="bignotif-message">' +
+                    '<div class="bignotif-title">' + meta.title + '</div>' +
+                    '<div class="bignotif-text"></div>' +
+                '</div>' +
+            '</div>' +
+            '<div class="progress-bar"><div class="progress"></div></div>';
+
+        notification.querySelector('.bignotif-text').textContent = text;
+
+        const stack = ensureStack();
+        notification.style.display = 'block';
+        stack.appendChild(notification);
+
+        const progress = notification.querySelector('.progress');
+        progress.style.animationDuration = length + 'ms';
+
+        setTimeout(function () {
+            notification.classList.add('leaving');
+            setTimeout(function () {
+                notification.remove();
+            }, 320);
+        }, length);
+    }
+
+    // Kept for parity with the original resource, in case something posts
+    // a message the way SendNuiMessage would in-game.
+    window.addEventListener('message', function (event) {
+        const data = event.data || {};
+        if (data.action === 'show' || data.text != null) {
+            ShowNotif(data);
+        }
+    });
+
+    /* ==================================================================
+       Raffle logic — now firing notifications for connect/error/winner
+       events instead of (or alongside) the plain status text.
+       ================================================================== */
+    let entrants = new Map(); // Using Map to store name + platform
+
+    // --- PERSISTENCE (localStorage — more reliable than cookies for a
+    // page opened as a local file) ---
+    const STORAGE_KEY = 'ignitionRageRaffle';
+
+    function saveState() {
+        try {
+            const state = {
+                entrants: Array.from(entrants.entries()),
+                raffleKeyword: document.getElementById('raffleKeyword').value,
+                twitchChannel: document.getElementById('twitchChannel').value,
+                kickChannel: document.getElementById('kickChannel').value,
+                tiktokChannel: document.getElementById('tiktokChannel').value,
+                manualName: document.getElementById('manualName').value,
+            };
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+        } catch (e) {
+            console.warn('Could not save raffle state:', e);
+        }
+    }
+
+    function loadState() {
+        try {
+            const raw = localStorage.getItem(STORAGE_KEY);
+            if (!raw) return;
+            const state = JSON.parse(raw);
+
+            if (Array.isArray(state.entrants)) {
+                entrants = new Map(state.entrants);
+            }
+            if (state.raffleKeyword) document.getElementById('raffleKeyword').value = state.raffleKeyword;
+            if (state.twitchChannel) document.getElementById('twitchChannel').value = state.twitchChannel;
+            if (state.kickChannel) document.getElementById('kickChannel').value = state.kickChannel;
+            if (state.tiktokChannel) document.getElementById('tiktokChannel').value = state.tiktokChannel;
+            if (state.manualName) document.getElementById('manualName').value = state.manualName;
+        } catch (e) {
+            console.warn('Could not load raffle state:', e);
+        }
+    }
+    let twitchWs = null;
+    let kickPusher = null;
+
+    // --- SOUND EFFECT SETUP ---
+    const winSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3');
+    winSound.volume = 0.5;
+
+    function updateDisplay() {
+        const box = document.getElementById('entrantsBox');
+        document.getElementById('entrantCount').innerText = entrants.size;
+        box.innerHTML = '';
+        entrants.forEach((platform, name) => {
+            const tag = document.createElement('div');
+            tag.className = `entrant-tag tag-${platform}`;
+
+            const label = document.createElement('span');
+            label.innerText = name;
+            tag.appendChild(label);
+
+            const removeBtn = document.createElement('button');
+            removeBtn.className = 'entrant-remove';
+            removeBtn.innerText = '×';
+            removeBtn.title = `Remove ${name}`;
+            removeBtn.onclick = () => removeEntry(name);
+            tag.appendChild(removeBtn);
+
+            box.appendChild(tag);
+        });
+        saveState();
+    }
+
+    function addEntry(name, platform) {
+        if (entrants.has(name)) {
+            console.log('[Entrants] skipped duplicate:', { name, platform });
+            return;
+        }
+        entrants.set(name, platform);
+        console.log('[Entrants] added:', { name, platform, totalEntrants: entrants.size });
+        updateDisplay();
+    }
+
+    function removeEntry(name) {
+        const platform = entrants.get(name);
+        if (entrants.delete(name)) {
+            console.log('[Entrants] removed:', { name, platform, totalEntrants: entrants.size });
+            updateDisplay();
+            ShowNotif({ type: 'primary', text: `Removed ${name} from the raffle.`, length: 2500 });
+        } else {
+            console.warn('[Entrants] remove requested for name not in list:', name);
+        }
+    }
+
+    function addManualEntry() {
+        const input = document.getElementById('manualName');
+        const name = input.value.trim();
+        if (name) {
+            console.log('[Entrants] manual entry added:', name);
+            addEntry(name, 'manual');
+            input.value = '';
+            input.focus();
+        }
+    }
+
+    // --- TWITCH CONNECTION ---
+    function connectTwitch() {
+        const channel = document.getElementById('twitchChannel').value.trim().toLowerCase();
+        const keyword = document.getElementById('raffleKeyword').value.trim().toLowerCase();
+        const status = document.getElementById('statusTwitch');
+
+        if (!channel) return alert("Please enter a Twitch channel name");
+
+        console.log('[Twitch] connecting', { channel, keyword });
+
+        if (twitchWs) {
+            console.log('[Twitch] closing existing connection before reconnecting');
+            twitchWs.close();
+        }
+        status.innerText = `Connecting to Twitch #${channel}...`;
+
+        twitchWs = new WebSocket('wss://irc-ws.chat.twitch.tv:443');
+
+        twitchWs.onopen = () => {
+            console.log('[Twitch] onopen — socket established, sending CAP/PASS/NICK/JOIN');
+            twitchWs.send('CAP REQ :twitch.tv/tags twitch.tv/commands');
+            twitchWs.send('PASS SCHMOOPIIE');
+            twitchWs.send('NICK justinfan12345');
+            twitchWs.send(`JOIN #${channel}`);
+            status.innerText = `🟢 Twitch: Connected to #${channel}`;
+            status.style.color = 'var(--success)';
+            ShowNotif({ type: 'twitch', text: `Connected to Twitch #${channel}`, length: 3500 });
+        };
+
+        twitchWs.onmessage = (event) => {
+            const messages = event.data.split('\r\n');
+            messages.forEach(msg => {
+                if (!msg) return;
+                if (msg.startsWith('PING')) {
+                    console.log('[Twitch] PING received — sending PONG');
+                    twitchWs.send('PONG :tmi.twitch.tv');
+                } else {
+                    const match = msg.match(/:(\w+)!\w+@[\w\.]+\sPRIVMSG\s#\w+\s:(.*)/);
+                    if (match) {
+                        const username = match[1];
+                        const text = match[2].trim().toLowerCase();
+                        console.log('[Twitch] chat message:', { username, text });
+                        if (text === keyword) {
+                            console.log('[Twitch] keyword match — adding entrant:', username);
+                            addEntry(username, 'twitch');
+                        }
+                    } else {
+                        console.log('[Twitch] unhandled IRC line:', msg);
+                    }
+                }
+            });
+        };
+
+        twitchWs.onerror = (e) => {
+            console.error('[Twitch] onerror', e);
+            status.innerText = "🔴 Twitch: Error connecting.";
+            status.style.color = 'var(--danger)';
+            ShowNotif({ type: 'error', text: 'Twitch connection error.', length: 4000 });
+        };
+
+        twitchWs.onclose = (e) => {
+            console.log('[Twitch] onclose', { code: e.code, reason: e.reason, wasClean: e.wasClean });
+        };
+    }
+
+    // --- KICK CONNECTION (EXPERIMENTAL) ---
+    async function connectKick() {
+        const channel = document.getElementById('kickChannel').value.trim().toLowerCase();
+        const keyword = document.getElementById('raffleKeyword').value.trim().toLowerCase();
+        const status = document.getElementById('statusKick');
+
+        if (!channel) return alert("Please enter a Kick channel name");
+
+        console.log('[Kick] connecting', { channel, keyword });
+        status.innerText = `Attempting to bypass CORS and connect to Kick...`;
+        status.style.color = '#c9a08a';
+
+        // Public CORS proxies get rate-limited/blocked by Cloudflare fairly
+        // often, so we try a short list in order rather than relying on one.
+        const kickApiUrl = `https://kick.com/api/v1/channels/${channel}`;
+        const proxies = [
+            (url) => `https://corsproxy.io/?url=${encodeURIComponent(url)}`,
+            (url) => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
+            (url) => `https://thingproxy.freeboard.io/fetch/${url}`,
+        ];
+
+        try {
+            let data = null;
+            let lastError = null;
+
+            for (const buildUrl of proxies) {
+                const proxied = buildUrl(kickApiUrl);
+                try {
+                    console.log('[Kick] trying proxy:', proxied);
+                    const response = await fetch(proxied);
+                    if (!response.ok) throw new Error(`Proxy returned ${response.status}`);
+                    data = await response.json();
+                    console.log('[Kick] proxy succeeded:', proxied, data);
+                    break; // success, stop trying more proxies
+                } catch (err) {
+                    console.warn('[Kick] proxy failed:', proxied, err);
+                    lastError = err;
+                }
+            }
+
+            if (!data) throw lastError || new Error("All CORS proxies failed");
+
+            const chatroomId = data.chatroom.id;
+            console.log('[Kick] resolved chatroom ID:', chatroomId);
+
+            if (kickPusher) {
+                console.log('[Kick] disconnecting existing Pusher instance before reconnecting');
+                kickPusher.disconnect();
+            }
+
+            kickPusher = new Pusher('32cbd69e4b950bf97679', {
+                cluster: 'us2',
+                forceTLS: true
+            });
+
+            kickPusher.connection.bind('state_change', (states) => {
+                console.log('[Kick] Pusher connection state change:', states);
+            });
+            kickPusher.connection.bind('error', (err) => {
+                console.error('[Kick] Pusher connection error:', err);
+            });
+
+            const pusherChannel = kickPusher.subscribe(`chatrooms.${chatroomId}.v2`);
+
+            pusherChannel.bind('pusher:subscription_succeeded', () => {
+                console.log('[Kick] subscribed to chatroom channel:', `chatrooms.${chatroomId}.v2`);
+            });
+            pusherChannel.bind('pusher:subscription_error', (err) => {
+                console.error('[Kick] subscription error:', err);
+            });
+
+            pusherChannel.bind('App\\Events\\ChatMessageEvent', function(data) {
+                const text = data.content.trim().toLowerCase();
+                console.log('[Kick] chat message:', { sender: data.sender && data.sender.username, text });
+                if (text === keyword) {
+                    console.log('[Kick] keyword match — adding entrant:', data.sender.username);
+                    addEntry(data.sender.username, 'kick');
+                }
+            });
+
+            status.innerText = `🟢 Kick: Connected to ${channel}!`;
+            status.style.color = 'var(--kick)';
+            ShowNotif({ type: 'kick', text: `Connected to Kick ${channel}`, length: 3500 });
+
+        } catch (error) {
+            console.error('[Kick] connection failed:', error);
+            status.innerText = `🔴 Kick: Connection Failed (${error.message}). Cloudflare blocked the request.`;
+            status.style.color = 'var(--danger)';
+            ShowNotif({ type: 'error', text: `Kick connection failed: ${error.message}`, length: 4500 });
+        }
+    }
+
+    // --- TIKTOK CONNECTION (via Euler Stream — hosted signing service) ---
+    // WARNING: this key is embedded directly in this file. Do not publish
+    // this file anywhere public (GitHub Pages, a public repo, etc.) or
+    // anyone who views source can use your Euler Stream quota with it.
+    const EULER_API_KEY = 'euler_Y2YxNGJjNjBiYTc3YWUwZjlkY2YyZGVkYjJlNWMzNmY0MTQxYzc4OGVhZWU3ZjUxMzBhZTFh';
+    let tiktokWs = null;
+    let tiktokRetryCount = 0;
+    let tiktokNotLiveRetryCount = 0;
+    let tiktokRetryTimer = null;
+    let tiktokManualDisconnect = false;
+
+    // Generic transient upstream/signing errors — short backoff.
+    const TIKTOK_RETRYABLE_CODES = new Set([1011, 4500, 4556, 4557]);
+    const TIKTOK_MAX_RETRIES = 3;
+
+    // 4404 (NOT_LIVE) is often a false positive right when a stream starts
+    // (TikTok's own backend can take a bit to mark the room live), so it
+    // gets its own slower, more patient retry schedule.
+    const TIKTOK_NOT_LIVE_CODE = 4404;
+    const TIKTOK_NOT_LIVE_MAX_RETRIES = 4;
+    const TIKTOK_NOT_LIVE_DELAYS = [5000, 10000, 20000, 30000];
+
+    // Accepts a plain handle, an @handle, or a full profile/live URL and
+    // normalizes it down to just the unique_id TikTok/Euler expects.
+    function parseTikTokUsername(raw) {
+        let value = raw.trim();
+        const urlMatch = value.match(/tiktok\.com\/@([^/?#]+)/i);
+        if (urlMatch) {
+            value = urlMatch[1];
+        }
+        return value.replace(/^@/, '').trim();
+    }
+
+    function connectTikTok(isRetry) {
+        const username = parseTikTokUsername(document.getElementById('tiktokChannel').value);
+        document.getElementById('tiktokChannel').value = username;
+        const keyword = document.getElementById('raffleKeyword').value.trim().toLowerCase();
+        const status = document.getElementById('statusTiktok');
+
+        if (!username) return alert("Please enter a TikTok username");
+
+        tiktokManualDisconnect = false;
+        if (!isRetry) {
+            tiktokRetryCount = 0;
+            tiktokNotLiveRetryCount = 0;
+        }
+        clearTimeout(tiktokRetryTimer);
+        if (tiktokWs) tiktokWs.close();
+        status.innerText = `Connecting to TikTok @${username}...`;
+        status.style.color = '#c9a08a';
+
+        const wsUrl = `wss://ws.eulerstream.com?uniqueId=${encodeURIComponent(username)}&apiKey=${encodeURIComponent(EULER_API_KEY)}`;
+        console.log('[TikTok] connecting', { username, keyword, retryAttempt: tiktokRetryCount, url: wsUrl.replace(EULER_API_KEY, '***') });
+        tiktokWs = new WebSocket(wsUrl);
+
+        tiktokWs.onopen = (e) => {
+            console.log('[TikTok] onopen — connection established', e);
+            tiktokRetryCount = 0;
+            tiktokNotLiveRetryCount = 0;
+            status.innerText = `🟢 TikTok: Connected to @${username}`;
+            status.style.color = 'var(--tiktok)';
+            ShowNotif({ type: 'tiktok', text: `Connected to TikTok @${username}`, length: 3500 });
+        };
+
+        tiktokWs.onmessage = (event) => {
+            console.log('[TikTok] onmessage — raw event.data:', event.data, 'typeof:', typeof event.data);
+
+            // Euler Stream sends JSON frames with a `messages` array by
+            // default (event.data as string). If your account/connection
+            // is instead running in raw protobuf mode, event.data will be
+            // binary and this will just no-op silently — that needs the
+            // @eulerstream/euler-websocket-sdk decoder added in, so flag
+            // it if TikTok entries never show up despite "Connected".
+            if (typeof event.data !== 'string') {
+                console.warn('[TikTok] non-string frame received (likely binary protobuf) — not decoded. Length:', event.data && event.data.byteLength || event.data && event.data.size);
+                return;
+            }
+
+            let data;
+            try {
+                data = JSON.parse(event.data);
+            } catch (e) {
+                console.error('[TikTok] JSON.parse failed on message:', e, event.data);
+                return;
+            }
+            console.log('[TikTok] parsed message payload:', data);
+
+            if (!data || !Array.isArray(data.messages)) {
+                console.warn('[TikTok] message had no `messages` array — nothing to process', data);
+                return;
+            }
+
+            data.messages.forEach((msg) => {
+                const type = String(msg.type || msg.event || '').toLowerCase();
+                const rawText = msg.comment || msg.text || msg.content || '';
+                const text = String(rawText).trim().toLowerCase();
+                const user = msg.nickname || msg.uniqueId ||
+                    (msg.user && (msg.user.uniqueId || msg.user.nickname));
+
+                console.log('[TikTok] event:', { type, user, text, raw: msg });
+
+                if (type.includes('chat') && user && text === keyword) {
+                    console.log('[TikTok] keyword match — adding entrant:', user);
+                    addEntry(user, 'tiktok');
+                }
+            });
+        };
+
+        tiktokWs.onerror = (e) => {
+            console.error('[TikTok] onerror', e);
+            status.innerText = "🔴 TikTok: Error connecting.";
+            status.style.color = 'var(--danger)';
+            ShowNotif({ type: 'error', text: 'TikTok connection error.', length: 4000 });
+        };
+
+        tiktokWs.onclose = (e) => {
+            console.log('[TikTok] onclose', { code: e.code, reason: e.reason, wasClean: e.wasClean, manualDisconnect: tiktokManualDisconnect, retryCount: tiktokRetryCount, notLiveRetryCount: tiktokNotLiveRetryCount });
+
+            if (tiktokManualDisconnect) {
+                status.innerText = `TikTok: Disconnected (code ${e.code}).`;
+                status.style.color = '#c9a08a';
+                return;
+            }
+
+            // NOT_LIVE gets its own patient retry schedule — this is
+            // frequently a false positive from propagation delay right as
+            // a stream starts.
+            if (e.code === TIKTOK_NOT_LIVE_CODE && tiktokNotLiveRetryCount < TIKTOK_NOT_LIVE_MAX_RETRIES) {
+                const delay = TIKTOK_NOT_LIVE_DELAYS[tiktokNotLiveRetryCount];
+                tiktokNotLiveRetryCount++;
+                console.log(`[TikTok] NOT_LIVE (4404) — retry ${tiktokNotLiveRetryCount}/${TIKTOK_NOT_LIVE_MAX_RETRIES} in ${delay}ms`);
+                status.innerText = `TikTok: Not detected as live yet — rechecking (${tiktokNotLiveRetryCount}/${TIKTOK_NOT_LIVE_MAX_RETRIES})...`;
+                status.style.color = '#c9a08a';
+                tiktokRetryTimer = setTimeout(() => connectTikTok(true), delay);
+                return;
+            }
+
+            if (e.code === TIKTOK_NOT_LIVE_CODE) {
+                console.error('[TikTok] gave up on NOT_LIVE retries — likely a real mismatch (handle, followers-only, or region lock)');
+                status.innerText = `TikTok: Still shows not live after ${TIKTOK_NOT_LIVE_MAX_RETRIES} checks. Verify the handle matches the URL exactly, and that the stream isn't followers-only or region-locked.`;
+                status.style.color = 'var(--danger)';
+                ShowNotif({ type: 'error', text: `TikTok still reports not live after ${TIKTOK_NOT_LIVE_MAX_RETRIES} checks — check the handle, followers-only setting, or region lock.`, length: 6000 });
+                return;
+            }
+
+            const shouldRetry = TIKTOK_RETRYABLE_CODES.has(e.code) && tiktokRetryCount < TIKTOK_MAX_RETRIES;
+
+            if (shouldRetry) {
+                tiktokRetryCount++;
+                const delay = 2500 * tiktokRetryCount;
+                console.log(`[TikTok] retryable close code ${e.code} — retry ${tiktokRetryCount}/${TIKTOK_MAX_RETRIES} in ${delay}ms`);
+                status.innerText = `TikTok: Transient error (code ${e.code}) — retrying (${tiktokRetryCount}/${TIKTOK_MAX_RETRIES})...`;
+                status.style.color = '#c9a08a';
+                tiktokRetryTimer = setTimeout(() => connectTikTok(true), delay);
+            } else {
+                console.log('[TikTok] not retrying — final disconnect', { code: e.code, reason: e.reason });
+                status.innerText = `TikTok: Disconnected (code ${e.code}).`;
+                status.style.color = '#c9a08a';
+                if (tiktokRetryCount >= TIKTOK_MAX_RETRIES) {
+                    console.error(`[TikTok] gave up after ${TIKTOK_MAX_RETRIES} retries, last code ${e.code}`);
+                    ShowNotif({ type: 'error', text: `TikTok reconnect gave up after ${TIKTOK_MAX_RETRIES} tries (code ${e.code}).`, length: 5000 });
+                }
+            }
+        };
+    }
+
+    // --- RAFFLE LOGIC ---
+    function drawWinner() {
+        if (entrants.size === 0) {
+            console.warn('[Winner] draw attempted with zero entrants');
+            ShowNotif({ type: 'error', text: 'No entrants yet!', length: 3000 });
+            return;
+        }
+
+        const entrantsArray = Array.from(entrants.keys());
+        const winnerIndex = Math.floor(Math.random() * entrantsArray.length);
+        const winner = entrantsArray[winnerIndex];
+
+        console.log('[Winner] draw started', { totalEntrants: entrantsArray.length, entrants: entrantsArray, winnerIndex, winner });
+
+        const display = document.getElementById('winnerDisplay');
+        const nameEl = document.getElementById('winnerName');
+
+        display.style.display = 'block';
+
+        let shuffles = 0;
+        const interval = setInterval(() => {
+            nameEl.innerText = entrantsArray[Math.floor(Math.random() * entrantsArray.length)];
+            shuffles++;
+            if (shuffles > 20) {
+                clearInterval(interval);
+                nameEl.innerText = winner;
+
+                console.log('[Winner] draw finished:', { winner, platform: entrants.get(winner) });
+
+                winSound.currentTime = 0;
+                winSound.play().catch(e => console.log("[Winner] audio play failed:", e));
+
+                ShowNotif({ type: 'winner', text: `🏆 ${winner} wins the raffle!`, length: 6000 });
+            }
+        }, 50);
+    }
+
+    function clearRaffle() {
+        if (confirm("Are you sure you want to clear all entrants?")) {
+            console.log('[Entrants] clearing raffle', { previousCount: entrants.size, previousEntrants: Array.from(entrants.entries()) });
+            entrants.clear();
+            updateDisplay();
+            document.getElementById('winnerDisplay').style.display = 'none';
+            ShowNotif({ type: 'primary', text: 'Raffle cleared.', length: 2500 });
+        } else {
+            console.log('[Entrants] clear cancelled by user');
+        }
+    }
+
+    document.getElementById('manualName').addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') addManualEntry();
+    });
+
+    // Remember typed names/channels and the entrant list between visits.
+    ['raffleKeyword', 'twitchChannel', 'kickChannel', 'tiktokChannel', 'manualName'].forEach((id) => {
+        document.getElementById(id).addEventListener('change', saveState);
+    });
+
+    loadState();
+    updateDisplay();
+</script>
+</body>
+</html>
